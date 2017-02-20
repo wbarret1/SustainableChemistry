@@ -13,17 +13,26 @@ namespace ChemInfo
         AROMATIC = 2
     }
 
+    public enum Chirality
+    {
+        NONE = 0,
+        CLOCKWISE = 1,
+        COUNTER_CLOCKWISE = 2
+    }
+
 
     public class Atom
     {
         List<Bond> bondedAtoms;
         AtomType atomType;
+        Chirality chiral;
 
         public Atom(string element)
         {
             bondedAtoms = new List<Bond>();
             this.SetElement(element);
             atomType = AtomType.NONE;
+            chiral = Chirality.NONE;
         }
 
         public Atom(string element, AtomType type)
@@ -31,16 +40,27 @@ namespace ChemInfo
             bondedAtoms = new List<Bond>();
             this.SetElement(element);
             atomType = type;
+            chiral = Chirality.NONE;
+        }
+
+        public Atom(string element, AtomType type, Chirality chirality)
+        {
+            bondedAtoms = new List<Bond>();
+            this.SetElement(element);
+            atomType = type;
+            chiral = chirality;
         }
 
         ELEMENTS e;
         void SetElement(string element)
         {
             e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            string name = ChemInfo.Element.Name(e);
         }
 
         public ELEMENTS Element { get { return e; } }
-        public AtomType AtomType {
+        public AtomType AtomType
+        {
             get
             {
                 return atomType;
@@ -107,13 +127,105 @@ namespace ChemInfo
 
         public Atom[] BondedAtoms
         {
-            
             get
             {
                 List<Atom> atoms = new List<Atom>();
                 foreach (Bond bond in bondedAtoms)
                     atoms.Add(bond.connectedAtom);
                 return atoms.ToArray<Atom>();
+            }
+        }
+
+        int NumHydrogens
+        {
+            get
+            {
+                int retVal = 4;
+                switch (this.Element)
+                {
+                    case ELEMENTS.B:
+                        {
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 3 - this.BondedAtoms.Length;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                            }
+                            return retVal;
+                        }
+                    case ELEMENTS.C:
+                        {
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 3 - this.BondedAtoms.Length;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                            }
+                            return retVal;
+                        }
+                    case ELEMENTS.N:
+                        {
+                            retVal = 3;
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 0;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                                return retVal;
+                            }
+                        }
+                        return retVal;
+                    case ELEMENTS.O:
+                        {
+                            retVal = 2;
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 0;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                                return retVal;
+                            }
+                        }
+                        return retVal;
+                    case ELEMENTS.S:
+                        {
+                            retVal = 2;
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 0;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                                return retVal;
+                            }
+                        }
+                        return retVal;
+                    case ELEMENTS.P:
+                        {
+                            retVal = 2;
+                            if (this.atomType == AtomType.AROMATIC)
+                            {
+                                return 0;
+                            }
+                            foreach (Bond b in this.bondedAtoms)
+                            {
+                                retVal = retVal - (int)b.bondType;
+                                return retVal;
+                            }
+                        }
+                        return retVal;
+                    default:
+                        return 1 - BondedAtoms.Length;
+                }
             }
         }
     }

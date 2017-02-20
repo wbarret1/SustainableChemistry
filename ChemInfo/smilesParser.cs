@@ -34,28 +34,35 @@ namespace ChemInfo
 
         public Molecule Parse()
         {
-            Molecule m = new Molecule();
             if (m_smile == string.Empty)
             {
                 // we didn't make changes in the last loop, so something is wrong.
                 //
-                throw new Exception("No SMILES string has been provided");
+                return null;
+                //throw new Exception("No SMILES string has been provided");
             }
+            Molecule m = new Molecule();
             Atom a = null;
-            this.Parse(m_smile, m, ref a);
+            this.Parse(m_smile, m, ref a, BondStereo.NotStereoOrUseXYZ);
             return m;
         }
 
 
-        string Parse(string smile, Molecule molecule, ref Atom last)
+        string Parse(string smile, Molecule molecule, ref Atom last, BondStereo stereo)
         {
+            BondType nextBond = BondType.Single;
             Atom current = null;
             string smileLeftToParse = smile.Trim();
             string atomRegExPattern = @"^\[(\d*)([A-Z][a-z]?)([H]\d*)?((\+)*\d*)?((\-)*\d*)?(:\d+)?\]";
             string organicsRegExPattern = @"^[BCNOPSFI][lr]?";
             string aromaticAtomsRegExPattern = "^[bcnops]";
-            string ringRegExPattern = @"^(%*\d+)(\S+?)(\1)";
+            // A NOTE ABOUT RINGS... Rings use a one digit number, or a two digit nomber preceded by a % sign. The problem is that %0d
+            // is the same as d. That is a one digit number (d) matches %0d. To handle this, the ring match string includes a non-matching
+            // group containing %0. If a percent sign is there, followed by a zero, the 
+            string ringRegExPattern = @"^(?:%0)?(\d)(\S+?)(?:%0)?(\1)";
+            string ringRegExPattern2 = @"^(%\d\d)(\S+?)(\1)";
             string bondRegExPattern = @"^[-=#$:/\.]";
+            string chiralRegExPattern = @"^\[(C)(@@?)\]";
             int smileLeftLength = 0;
             while (smileLeftToParse.Length > 0)
             {
@@ -64,24 +71,27 @@ namespace ChemInfo
                     // we didn't make changes in the last loop, so something is wrong.
                     //
                     //System.Windows.Forms.MessageBox.Show("Remaining SMILES string is: " + smileLeftToParse, "Error in SMILES string!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    last = current;
                     return string.Empty;
                 }
                 smileLeftLength = smileLeftToParse.Length;
                 if (smileLeftToParse[0] == '(')
                 {
+                    smileLeftToParse = smileLeftToParse.Remove(0, 1);
                     if (!smileLeftToParse.Contains(")"))
                     {
                         //System.Windows.Forms.MessageBox.Show("No matching Close Parenthesis for branch." + System.Environment.NewLine + "Remaining SMILES string is: " + smileLeftToParse, "Error in SMILES string!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         //this.textBox1.Text = string.Empty;
+                        last = current;
                         return string.Empty;
                     }
-                    smileLeftToParse = smileLeftToParse.Remove(0, 1);
                     Atom temp = last;
-                    smileLeftToParse = Parse(smileLeftToParse, molecule, ref last);
+                    smileLeftToParse = Parse(smileLeftToParse, molecule, ref last, stereo);
                     last = temp;
                 }
                 if (smileLeftToParse[0] == ')')
                 {
+                    //last = current;
                     return smileLeftToParse.Remove(0, 1);
                 }
                 if (smileLeftToParse.IndexOf("*") == 0)
@@ -101,14 +111,25 @@ namespace ChemInfo
                     smileLeftToParse = smileLeftToParse.Remove(0, 3);
                 }
                 System.Text.RegularExpressions.Match ringMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, ringRegExPattern);
+                if (ringMatch.Length == 0) ringMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, ringRegExPattern2);
                 if (ringMatch.Length > 0)
                 {
                     smileLeftToParse = smileLeftToParse.Remove(0, ringMatch.Value.Length);
                     Atom temp = last;
-                    this.Parse(ringMatch.Groups[2].Value, molecule, ref last);
-                    molecule.AddBond(current, last, BondType.Single);
+                    string nextSmile = ringMatch.Groups[2].Value;
+                    int index = ringMatch.Value.IndexOf(ringMatch.Groups[1].Value);
+                    if (index > 0)
+                    {
+                        string ring = ringMatch.Value.Substring(0, index);
+                        if (nextSmile.IndexOf('(') == 0)
+                        {
+                            nextSmile = nextSmile.Insert(1, ring);
+                        }
+                    }
+                    this.Parse(nextSmile, molecule, ref temp, stereo);
+                    molecule.AddBond(temp, last, nextBond);
+                    nextBond = BondType.Single;
                     last = temp;
-                    //nodes.Add(new TreeNode("Ring " + ringMatch.Groups[1].Value + " Close"));
                 }
                 //System.Text.RegularExpressions.Match organicsRingMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, organicsRegExPattern);
                 //if (organicsRingMatch.Length > 0)
@@ -186,17 +207,32 @@ namespace ChemInfo
                         //this.textBox1.Text = string.Empty;
                         return string.Empty;
                     }
-                    current = new Atom(organicsMatch.Value);
+                    current = new Atom(organicsMatch.Value, AtomType.ORGANIC);
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, BondType.Aromatic);
+                    molecule.AddBond(current, last, nextBond);
+                    nextBond = BondType.Single;
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, organicsMatch.Value.Length);
+                    //current.Nodes.Add(new TreeNode("Organic Default"));
+                }
+                System.Text.RegularExpressions.Match chiralMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, chiralRegExPattern);
+                if (chiralMatch.Length > 0)
+                {
+                    Chirality c = Chirality.CLOCKWISE;
+                    if (chiralMatch.Groups[2].Value == "@@") c = Chirality.COUNTER_CLOCKWISE;
+                    current = new Atom(chiralMatch.Groups[1].Value, AtomType.ORGANIC, c);
+                    molecule.AddAtom(current);
+                    molecule.AddBond(current, last, nextBond);
+                    nextBond = BondType.Single;
+                    last = current;
+                    smileLeftToParse = smileLeftToParse.Remove(0, chiralMatch.Value.Length);
                     //current.Nodes.Add(new TreeNode("Organic Default"));
                 }
                 System.Text.RegularExpressions.Match aromatic = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, aromaticAtomsRegExPattern);
                 if (aromatic.Length > 0)
                 {
-                    current = new Atom(aromatic.Value.ToUpper());
+                    current = new Atom(aromatic.Value.ToUpper(), AtomType.AROMATIC);
+                    nextBond = BondType.Aromatic;
                     molecule.AddAtom(current);
                     molecule.AddBond(current, last, BondType.Aromatic);
                     last = current;
@@ -205,9 +241,13 @@ namespace ChemInfo
                 System.Text.RegularExpressions.Match bondMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, bondRegExPattern);
                 if (bondMatch.Length > 0)
                 {
+                    if (bondMatch.Value == "-") nextBond = BondType.Single;
+                    if (bondMatch.Value == "=") nextBond = BondType.Double;
+                    if (bondMatch.Value == "#") nextBond = BondType.Triple;
                     smileLeftToParse = smileLeftToParse.Remove(0, bondMatch.Value.Length);
                 }
             }
+            last = current;
             return string.Empty;
         }
     }

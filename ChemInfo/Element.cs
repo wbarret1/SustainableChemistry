@@ -136,12 +136,15 @@ namespace ChemInfo
         Aromatic = 0x8000
     };
 
-
     public static class Element
     {
-        static public string Symbol(ELEMENTS e)
+        static ChemInfo.list elements;
+
+        static Element()
         {
-            return e.ToString();
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ChemInfo.list));
+            System.Xml.XmlReader reader = System.Xml.XmlReader.Create(new System.IO.StringReader(Properties.Resources.elements));
+            elements = (list)serializer.Deserialize(reader);
         }
 
         static public bool ValidateSymbol(string symbol)
@@ -164,242 +167,610 @@ namespace ChemInfo
             return (ELEMENTS)0;
         }
 
-        static public int defaultValance(ELEMENTS element)
+        static public string Symbol(ELEMENTS e)
         {
-            switch (element)
-            {
-                case ELEMENTS.B:
-                    return 3;
-                case ELEMENTS.C:
-                    return 4;
-                case ELEMENTS.N:
-                    return 3;
-                case ELEMENTS.O:
-                    return 2;
-                case ELEMENTS.F:
-                    return 1;
-                case ELEMENTS.P:
-                    return 3;
-                case ELEMENTS.S:
-                    return 2;
-                case ELEMENTS.Cl:
-                    return 1;
-                case ELEMENTS.Br:
-                    return 1;
-                case ELEMENTS.I:
-                    return 1;
-            }
-            return 0;
+            return e.ToString();
         }
 
-        static public int[] Valances(ELEMENTS element)
+        static public string Symbol(int AtomicNumber)
         {
-            //int[] retVal = new int[0];
-            switch (element)
-            {
-                case ELEMENTS.B:
-                    return new int[] { 3 };
-                case ELEMENTS.C:
-                    return new int[] { 4 };
-                case ELEMENTS.N:
-                    return new int[] { 3, 5 };
-                case ELEMENTS.O:
-                    return new int[] { 2 };
-                case ELEMENTS.F:
-                    return new int[] { 1 };
-                case ELEMENTS.P:
-                    return new int[] { 3, 5 };
-                case ELEMENTS.S:
-                    return new int[] { 2, 4, 6 };
-                case ELEMENTS.Cl:
-                    return new int[] { 1 };
-                case ELEMENTS.Br:
-                    return new int[] { 1 };
-                case ELEMENTS.I:
-                    return new int[] { 1 };
-            }
-            return new int[] { 0 };
-        }
-
-        static public int defaultValance(string element)
-        {
-            switch (element)
-            {
-                case "B":
-                    return 3;
-                case "C":
-                    return 4;
-                case "N":
-                    return 3;
-                case "O":
-                    return 2;
-                case "F":
-                    return 1;
-                case "P":
-                    return 3;
-                case "S":
-                    return 2;
-                case "Cl":
-                    return 1;
-                case "Br":
-                    return 1;
-                case "I":
-                    return 1;
-            }
-            return 0;
-        }
-
-        static public int[] Valances(string element)
-        {
-            //int[] retVal = new int[0];
-            switch (element)
-            {
-                case "B":
-                    return new int[] { 3 };
-                case "C":
-                    return new int[] { 4 };
-                case "N":
-                    return new int[] { 3, 5 };
-                case "O":
-                    return new int[] { 2 };
-                case "F":
-                    return new int[] { 1 };
-                case "P":
-                    return new int[] { 3, 5 };
-                case "S":
-                    return new int[] { 2, 4, 6 };
-                case "Cl":
-                    return new int[] { 1 };
-                case "Br":
-                    return new int[] { 1 };
-                case "I":
-                    return new int[] { 1 };
-            }
-            return new int[] { 0 };
+            return ((ELEMENTS)AtomicNumber).ToString();
         }
 
         static public string Name(ELEMENTS e)
         {
-            if (e == ELEMENTS.WILD_CARD) return "*";
-            if (e == ELEMENTS.H) return "Hydrogen";
-            if (e == ELEMENTS.He) return "Helium";
-            if (e == ELEMENTS.Li) return "Lithium";
-            if (e == ELEMENTS.Be) return "Beryllium";
-            if (e == ELEMENTS.B) return "Boron";
-            if (e == ELEMENTS.C) return "Carbon";
-            if (e == ELEMENTS.N) return "Nitrogen";
-            if (e == ELEMENTS.O) return "Oxygen";
-            if (e == ELEMENTS.F) return "Fluorine";
-            if (e == ELEMENTS.Ne) return "Neon";
-            if (e == ELEMENTS.Na) return "Sodium";
-            if (e == ELEMENTS.Mg) return "Magnesium";
-            if (e == ELEMENTS.Al) return "Aluminium";
-            if (e == ELEMENTS.Si) return "Silicon";
-            if (e == ELEMENTS.P) return "Phosphorus";
-            if (e == ELEMENTS.S) return "Sulfur";
-            if (e == ELEMENTS.Cl) return "Chlorine";
-            if (e == ELEMENTS.Ar) return "Argon";
-            if (e == ELEMENTS.K) return "Potassium";
-            if (e == ELEMENTS.Ca) return "Calcium";
-            if (e == ELEMENTS.Sc) return "Scandium";
-            if (e == ELEMENTS.Ti) return "Titanium";
-            if (e == ELEMENTS.V) return "Vanadium";
-            if (e == ELEMENTS.Cr) return "Chromium";
-            if (e == ELEMENTS.Mn) return "Manganese";
-            if (e == ELEMENTS.Fe) return "Iron";
-            if (e == ELEMENTS.Co) return "Cobalt";
-            if (e == ELEMENTS.Ni) return "Nickel";
-            if (e == ELEMENTS.Cu) return "Copper";
-            if (e == ELEMENTS.Zn) return "Zinc";
-            if (e == ELEMENTS.Ga) return "Gallium";
-            if (e == ELEMENTS.Ge) return "Germanium";
-            if (e == ELEMENTS.As) return "Arsenic";
-            if (e == ELEMENTS.Se) return "Selenium";
-            if (e == ELEMENTS.Br) return "Bromine";
-            if (e == ELEMENTS.Kr) return "Krypton";
-            if (e == ELEMENTS.Rb) return "Rubidium";
-            if (e == ELEMENTS.Sr) return "Strontium";
-            if (e == ELEMENTS.Y) return "Yttrium";
-            if (e == ELEMENTS.Zr) return "Zirconium";
-            if (e == ELEMENTS.Nb) return "Niobium";
-            if (e == ELEMENTS.Mo) return "Molybdenum";
-            if (e == ELEMENTS.Tc) return "Technetium";
-            if (e == ELEMENTS.Ru) return "Ruthenium";
-            if (e == ELEMENTS.Rh) return "Rhodium";
-            if (e == ELEMENTS.Pd) return "Palladium";
-            if (e == ELEMENTS.Ag) return "Silver";
-            if (e == ELEMENTS.Cd) return "Cadmium";
-            if (e == ELEMENTS.In) return "Indium";
-            if (e == ELEMENTS.Sn) return "Tin";
-            if (e == ELEMENTS.Sb) return "Antimony";
-            if (e == ELEMENTS.Te) return "Tellurium";
-            if (e == ELEMENTS.I) return "Iodine";
-            if (e == ELEMENTS.Xe) return "Xenon";
-            if (e == ELEMENTS.Cs) return "Caesium";
-            if (e == ELEMENTS.Ba) return "Barium";
-            if (e == ELEMENTS.La) return "Lanthanum";
-            if (e == ELEMENTS.Ce) return "Cerium";
-            if (e == ELEMENTS.Pr) return "Praseodymium";
-            if (e == ELEMENTS.Nd) return "Neodymium";
-            if (e == ELEMENTS.Pm) return "Promethium";
-            if (e == ELEMENTS.Sm) return "Samarium";
-            if (e == ELEMENTS.Eu) return "Europium";
-            if (e == ELEMENTS.Gd) return "Gadolinium";
-            if (e == ELEMENTS.Tb) return "Terbium";
-            if (e == ELEMENTS.Dy) return "Dysprosium";
-            if (e == ELEMENTS.Ho) return "Holmium";
-            if (e == ELEMENTS.Er) return "Erbium";
-            if (e == ELEMENTS.Tm) return "Thulium";
-            if (e == ELEMENTS.Yb) return "Ytterbium";
-            if (e == ELEMENTS.Lu) return "Lutetium";
-            if (e == ELEMENTS.Hf) return "Hafnium";
-            if (e == ELEMENTS.Ta) return "Tantalum";
-            if (e == ELEMENTS.W) return "Tungsten";
-            if (e == ELEMENTS.Re) return "Rhenium";
-            if (e == ELEMENTS.Os) return "Osmium";
-            if (e == ELEMENTS.Ir) return "Iridium";
-            if (e == ELEMENTS.Pt) return "Platinum";
-            if (e == ELEMENTS.Au) return "Gold";
-            if (e == ELEMENTS.Hg) return "Mercury";
-            if (e == ELEMENTS.Tl) return "Thallium";
-            if (e == ELEMENTS.Pb) return "Lead";
-            if (e == ELEMENTS.Bi) return "Bismuth";
-            if (e == ELEMENTS.Po) return "Polonium";
-            if (e == ELEMENTS.At) return "Astatine";
-            if (e == ELEMENTS.Rn) return "Radon";
-            if (e == ELEMENTS.Fr) return "Francium";
-            if (e == ELEMENTS.Ra) return "Radium";
-            if (e == ELEMENTS.Ac) return "Actinium";
-            if (e == ELEMENTS.Th) return "Thorium";
-            if (e == ELEMENTS.Pa) return "Protactinium";
-            if (e == ELEMENTS.U) return "Uranium";
-            if (e == ELEMENTS.Np) return "Neptunium";
-            if (e == ELEMENTS.Pu) return "Plutonium";
-            if (e == ELEMENTS.Am) return "Americium";
-            if (e == ELEMENTS.Cm) return "Curium";
-            if (e == ELEMENTS.Bk) return "Berkelium";
-            if (e == ELEMENTS.Cf) return "Californium";
-            if (e == ELEMENTS.Es) return "Einsteinium";
-            if (e == ELEMENTS.Fm) return "Fermium";
-            if (e == ELEMENTS.Md) return "Mendelevium";
-            if (e == ELEMENTS.No) return "Nobelium";
-            if (e == ELEMENTS.Lr) return "Lawrencium";
-            if (e == ELEMENTS.Rf) return "Rutherfordium";
-            if (e == ELEMENTS.Db) return "Dubnium";
-            if (e == ELEMENTS.Sg) return "Seaborgium";
-            if (e == ELEMENTS.Bh) return "Bohrium";
-            if (e == ELEMENTS.Hs) return "Hassium";
-            if (e == ELEMENTS.Mt) return "Meitnerium";
-            if (e == ELEMENTS.Ds) return "Darmstadtium";
-            if (e == ELEMENTS.Rg) return "Roentgenium";
-            if (e == ELEMENTS.Cn) return "Copernicium";
-            if (e == ELEMENTS.Nh) return "Nihonium";
-            if (e == ELEMENTS.Fl) return "Flerovium";
-            if (e == ELEMENTS.Mc) return "Moscovium";
-            if (e == ELEMENTS.Lv) return "Livermorium";
-            if (e == ELEMENTS.Ts) return "Tennessine";
-            if (e == ELEMENTS.Og) return "Oganesson";
+            listAtom atom = (listAtom)elements.atom[(int)e];
+            listAtomLabel a = (listAtomLabel)((listAtom)elements.atom[(int)e]).Items[2];
+            return a.value;
+        }
+
+        static public string Name(int AtomicNumber)
+        {
+            listAtomLabel a = (listAtomLabel)((listAtom)elements.atom[AtomicNumber]).Items[2];
+            return a.value;
+        }
+
+        static public string Name(string symbol)
+        {
+            return Element.Name(Element.GetElementForSymbol(symbol));
+        }
+
+        static public String LookupValue(ELEMENTS e, string dictRef)
+        {
+            listAtom atom = (listAtom)elements.atom[(int)e];
+            foreach (object item in atom.Items)
+            {
+                if (item.GetType() == typeof(ChemInfo.listAtomScalar))
+                {
+                    listAtomScalar scalar = (listAtomScalar)item;
+                    if (scalar.dictRef  == "bo:mass")
+                    {
+                        return scalar.Value; ;
+                    }
+                }
+            }
+            listAtomLabel a = (listAtomLabel)((listAtom)elements.atom[(int)e]).Items[2];
             return string.Empty;
+        }
+
+        static public double Mass(ELEMENTS e)
+        {
+            return Convert.ToDouble(Element.LookupValue(e, "bo:mass"));
+        }
+
+        static public double Mass(int AtomicNumber)
+        {
+            return Element.Mass((ELEMENTS)AtomicNumber);
+        }
+
+        static public double Mass(string symbol)
+        {
+            return Element.Mass(Element.GetElementForSymbol(symbol));
+        }
+
+        static public double ExactMass(ELEMENTS e)
+        {
+            return Convert.ToDouble(Element.LookupValue(e, "bo:exactMass"));
+        }
+
+        static public double ExactMass(int AtomicNumber)
+        {
+            return Element.Mass((ELEMENTS)AtomicNumber);
+        }
+
+        static public double ExactMass(string symbol)
+        {
+            return Element.Mass(Element.GetElementForSymbol(symbol));
+        }
+
+        static public int Period(ELEMENTS e)
+        {
+            return Convert.ToInt32(Element.LookupValue(e, "bo:period"));
+        }
+
+        static public int Period(int AtomicNumber)
+        {
+            return Element.Period((ELEMENTS)AtomicNumber);
+        }
+
+        static public int Period(string symbol)
+        {
+            return Element.Period(Element.GetElementForSymbol(symbol));
+        }
+
+        static public int Group(ELEMENTS e)
+        {
+            return Convert.ToInt32(Element.LookupValue(e, "bo:group"));
+        }
+
+        static public int Group(int AtomicNumber)
+        {
+            return Element.Period((ELEMENTS)AtomicNumber);
+        }
+
+        static public int Group(string symbol)
+        {
+            return Element.Period(Element.GetElementForSymbol(symbol));
+        }
+
+        static public string ElecctronConfiguration(ELEMENTS e)
+        {
+            return Element.LookupValue(e, "bo:electronicConfiguration");
+        }
+
+        static public string ElecctronConfiguration(int AtomicNumber)
+        {
+            return Element.ElecctronConfiguration((ELEMENTS)AtomicNumber);
+        }
+
+        static public string ElecctronConfiguration(string symbol)
+        {
+            return Element.ElecctronConfiguration(Element.GetElementForSymbol(symbol));
+        }
+
+
+
+        // <atom id = "H" >
+        //  < scalar dataType="xsd:Integer" dictRef="bo:atomicNumber">1</scalar>
+        //  <label dictRef = "bo:symbol" value="H" />
+        //  <label dictRef = "bo:name" xml:lang="en" value="Hydrogen" />
+        //  <scalar dataType = "xsd:float" dictRef="bo:mass" units="units:atmass">1.008</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:exactMass" units="units:atmass">1.007825032</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:ionization" units="units:ev">13.5984</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:electronAffinity" units="units:ev" errorValue="3">0.75420375</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:electronegativityPauling" units="boUnits:paulingScaleUnit">2.20</scalar>
+        //  <scalar dataType = "xsd:string" dictRef="bo:nameOrigin" xml:lang="en">Greek 'hydro' and 'gennao' for 'forms water'</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:radiusCovalent" units="units:ang">0.37</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:radiusVDW" units="units:ang">1.2</scalar>
+        //  <array title = "color" dictRef="bo:elementColor" size="3" dataType="xsd:float">1.00 1.00 1.00</array>
+        //  <scalar dataType = "xsd:float" dictRef="bo:boilingpoint"  units="siUnits:kelvin">20.28</scalar>
+        //  <scalar dataType = "xsd:float" dictRef="bo:meltingpoint"  units="siUnits:kelvin">14.01</scalar>
+        //  <scalar dataType = "xsd:string" dictRef="bo:periodTableBlock">s</scalar>
+        //  <array dataType = "xsd:string" dictRef="bo:discoveryCountry">uk</array>
+        //  <scalar dataType = "xsd:date" dictRef="bo:discoveryDate">1766</scalar>
+        //  <array dataType = "xsd:string" dictRef="bo:discoverers">C.Cavendish</array>
+        //  <scalar dataType = "xsd:int" dictRef="bo:period">1</scalar>
+        //  <scalar dataType = "xsd:int" dictRef="bo:group">1</scalar>
+        //  <scalar dataType = "xsd:string" dictRef="bo:electronicConfiguration">1s1</scalar>
+        //  <scalar dataType = "xsd:string" dictRef="bo:family">Non-Metal</scalar>
+        //</atom>
+    }
+
+
+
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.xml-cml.org/schema", IsNullable = false)]
+    public partial class list
+    {
+
+        private listMetadata[] metadataListField;
+
+        private listAtom[] atomField;
+
+        private string idField;
+
+        private string conventionField;
+
+        private string titleField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("metadata", IsNullable = false)]
+        public listMetadata[] metadataList
+        {
+            get
+            {
+                return this.metadataListField;
+            }
+            set
+            {
+                this.metadataListField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("atom")]
+        public listAtom[] atom
+        {
+            get
+            {
+                return this.atomField;
+            }
+            set
+            {
+                this.atomField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string id
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string convention
+        {
+            get
+            {
+                return this.conventionField;
+            }
+            set
+            {
+                this.conventionField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string title
+        {
+            get
+            {
+                return this.titleField;
+            }
+            set
+            {
+                this.titleField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    public partial class listMetadata
+    {
+
+        private string nameField;
+
+        private string contentField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string content
+        {
+            get
+            {
+                return this.contentField;
+            }
+            set
+            {
+                this.contentField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    public partial class listAtom
+    {
+
+        private object[] itemsField;
+
+        private string idField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("array", typeof(listAtomArray))]
+        [System.Xml.Serialization.XmlElementAttribute("label", typeof(listAtomLabel))]
+        [System.Xml.Serialization.XmlElementAttribute("scalar", typeof(listAtomScalar))]
+        public object[] Items
+        {
+            get
+            {
+                return this.itemsField;
+            }
+            set
+            {
+                this.itemsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string id
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    public partial class listAtomArray
+    {
+
+        private string titleField;
+
+        private string dictRefField;
+
+        private byte sizeField;
+
+        private bool sizeFieldSpecified;
+
+        private string dataTypeField;
+
+        private string delimiterField;
+
+        private string valueField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string title
+        {
+            get
+            {
+                return this.titleField;
+            }
+            set
+            {
+                this.titleField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string dictRef
+        {
+            get
+            {
+                return this.dictRefField;
+            }
+            set
+            {
+                this.dictRefField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public byte size
+        {
+            get
+            {
+                return this.sizeField;
+            }
+            set
+            {
+                this.sizeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool sizeSpecified
+        {
+            get
+            {
+                return this.sizeFieldSpecified;
+            }
+            set
+            {
+                this.sizeFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string dataType
+        {
+            get
+            {
+                return this.dataTypeField;
+            }
+            set
+            {
+                this.dataTypeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string delimiter
+        {
+            get
+            {
+                return this.delimiterField;
+            }
+            set
+            {
+                this.delimiterField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value
+        {
+            get
+            {
+                return this.valueField;
+            }
+            set
+            {
+                this.valueField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    public partial class listAtomLabel
+    {
+
+        private string dictRefField;
+
+        private string valueField;
+
+        private string langField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string dictRef
+        {
+            get
+            {
+                return this.dictRefField;
+            }
+            set
+            {
+                this.dictRefField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string value
+        {
+            get
+            {
+                return this.valueField;
+            }
+            set
+            {
+                this.valueField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/XML/1998/namespace")]
+        public string lang
+        {
+            get
+            {
+                return this.langField;
+            }
+            set
+            {
+                this.langField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.xml-cml.org/schema")]
+    public partial class listAtomScalar
+    {
+
+        private string dataTypeField;
+
+        private string dictRefField;
+
+        private string unitsField;
+
+        private byte errorValueField;
+
+        private bool errorValueFieldSpecified;
+
+        private string langField;
+
+        private string valueField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string dataType
+        {
+            get
+            {
+                return this.dataTypeField;
+            }
+            set
+            {
+                this.dataTypeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string dictRef
+        {
+            get
+            {
+                return this.dictRefField;
+            }
+            set
+            {
+                this.dictRefField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string units
+        {
+            get
+            {
+                return this.unitsField;
+            }
+            set
+            {
+                this.unitsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public byte errorValue
+        {
+            get
+            {
+                return this.errorValueField;
+            }
+            set
+            {
+                this.errorValueField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool errorValueSpecified
+        {
+            get
+            {
+                return this.errorValueFieldSpecified;
+            }
+            set
+            {
+                this.errorValueFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/XML/1998/namespace")]
+        public string lang
+        {
+            get
+            {
+                return this.langField;
+            }
+            set
+            {
+                this.langField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value
+        {
+            get
+            {
+                return this.valueField;
+            }
+            set
+            {
+                this.valueField = value;
+            }
         }
     }
 }

@@ -16,13 +16,21 @@ namespace SustainableChemistry
         {
             InitializeComponent();
             this.listView1.Columns.Add("Name", -2, HorizontalAlignment.Left);
-            string[] directories = System.IO.Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ToxRuns", "StructureData", System.IO.SearchOption.AllDirectories);
-            int i = 0;
-            foreach (string directory in directories)
+            string[] directories = new string[0];
+            try
             {
-                System.Drawing.Image image = System.Drawing.Image.FromFile(directory + "\\structure.png");
+                directories = System.IO.Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ToxRuns", "StructureData", System.IO.SearchOption.AllDirectories);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Test has not been installed.", "Test Not Installed.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                throw new Exception("Test not installed", ex);
+            }
+            for ( int i = 0; i < directories.Length; i++)
+            {
+                System.Drawing.Image image = System.Drawing.Image.FromFile(directories[i] + "\\structure.png");
                 imageList1.Images.Add(image);
-                System.IO.DirectoryInfo info = System.IO.Directory.GetParent(directory);
+                System.IO.DirectoryInfo info = System.IO.Directory.GetParent(directories[i]);
                 ListViewItem item = new ListViewItem(info.Name) { ImageIndex = i++ };
                 this.listView1.Items.Add(item);
             }

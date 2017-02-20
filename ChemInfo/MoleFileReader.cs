@@ -134,7 +134,8 @@ namespace ChemInfo
             string version = lines[3].Substring(33, 6);
             for (int i = 0; i < numAtoms; i++)
             {
-                Atom a = molecule.AddAtom(lines[4 + i].Substring(31, 3).Replace(" ", string.Empty));
+                Atom a = new ChemInfo.Atom(lines[4 + i].Substring(31, 3).Trim());
+                molecule.AddAtom(a);
                 // xxxxx.xxxxyyyyy.yyyyzzzzz.zzzz aaaddcccssshhhbbbvvvHHHrrriiimmmnnneee
                 a.x = Convert.ToDouble(lines[4 + i].Substring(0, 10));
                 a.y = Convert.ToDouble(lines[4 + i].Substring(10, 10));

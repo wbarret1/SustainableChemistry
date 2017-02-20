@@ -48,7 +48,95 @@
     <Compile Include="Molecule.cs" />
     <Compile Include="MoleFileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="smilesParser.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="bodr\.gitignore" />
+    <None Include="bodr\acinclude.m4" />
+    <None Include="bodr\AUTHORS" />
+    <None Include="bodr\autogen.sh" />
+    <None Include="bodr\bibtexml-xslt\COPYING" />
+    <None Include="bodr\bibtexml-xslt\Makefile.am" />
+    <None Include="bodr\bodr.pc.in" />
+    <None Include="bodr\ChangeLog" />
+    <None Include="bodr\configure.ac" />
+    <None Include="bodr\COPYING" />
+    <None Include="bodr\crystal\Makefile.am" />
+    <None Include="bodr\crystal\space-groups.bibxml" />
+    <None Include="bodr\dicts\Makefile.am" />
+    <None Include="bodr\elements\boilingpoint.bibxml" />
+    <None Include="bodr\elements\crystalstructures.bibxml" />
+    <None Include="bodr\elements\dates.bibxml" />
+    <None Include="bodr\elements\electron-affinity.bibxml" />
+    <None Include="bodr\elements\electroneg-pauling.bibxml" />
+    <None Include="bodr\elements\electronic-configuration.bibxml" />
+    <None Include="bodr\elements\exact-masses.bibxml" />
+    <None Include="bodr\elements\ionization.bibxml" />
+    <None Include="bodr\elements\Makefile.am" />
+    <None Include="bodr\elements\mass.bibxml" />
+    <None Include="bodr\elements\meltingpoint.bibxml" />
+    <None Include="bodr\elements\nameorigin.bibxml" />
+    <None Include="bodr\elements\names.bibxml" />
+    <None Include="bodr\elements\radii-covalent.bibxml" />
+    <None Include="bodr\elements\radii-vdw.bibxml" />
+    <None Include="bodr\elements\symbols.bibxml" />
+    <None Include="bodr\INSTALL" />
+    <None Include="bodr\isotopes\isotopes.bibxml" />
+    <None Include="bodr\isotopes\Makefile.am" />
+    <None Include="bodr\Makefile.am" />
+    <None Include="bodr\NEWS" />
+    <None Include="bodr\README" />
+    <None Include="bodr\schemas\bibtexml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bodr\schemas\cml25.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="bodr\schemas\dictionary.schematron" />
+    <None Include="bodr\schemas\elements.schematron" />
+    <None Include="bodr\schemas\isotopes.schematron" />
+    <None Include="bodr\schemas\Makefile.am" />
+    <None Include="bodr\scripts\babel-elements.pl" />
+    <None Include="bodr\scripts\dumper.pl" />
+    <None Include="bodr\scripts\Makefile.am" />
+    <None Include="bodr\scripts\tidy.pl" />
+    <None Include="bodr\tests\Makefile.am" />
+    <None Include="bodr\THANKS" />
+    <None Include="bodr\TODO" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bodr\bibtexml-xslt\extended.xsl" />
+    <Content Include="bodr\bibtexml-xslt\harvard-helper.xsl" />
+    <Content Include="bodr\bibtexml-xslt\html-common.xsl" />
+    <Content Include="bodr\bibtexml-xslt\html-harvard.xsl" />
+    <Content Include="bodr\crystal\space-groups.xml" />
+    <Content Include="bodr\dicts\blueobelisk-dictionary.xml" />
+    <Content Include="bodr\dicts\siUnitsDict.xml" />
+    <Content Include="bodr\dicts\unitsDict.xml" />
+    <Content Include="bodr\elements\basic.xsl" />
+    <Content Include="bodr\elements\crystalstructures.xml" />
+    <Content Include="bodr\elements\elements.xml" />
+    <Content Include="bodr\elements\owl2xhtml.xsl" />
+    <Content Include="bodr\isotopes\isotopes.xml" />
+    <Content Include="bodr\residues\resdata.txt" />
+    <Content Include="bodr\spectra\spectra.xml" />
+    <Content Include="bodr\tests\AtWt.xsl" />
+    <Content Include="bodr\typing\aromatic.txt" />
+    <Content Include="bodr\typing\atomtyp.txt" />
+    <Content Include="bodr\typing\bondtyp.txt" />
+    <Content Include="bodr\typing\types.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

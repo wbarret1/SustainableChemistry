@@ -84,16 +84,18 @@ namespace ChemInfo
 
         public void AddAtom(Atom a)
         {
+            if (this.atoms.Contains(a)) return;
             atoms.Add(a);
             ringsFound = false;
         }
 
-        public Atom AddAtom(string element)
+        public void AddAtom(string element)
         {
             Atom a = new Atom(element);
+            if (this.atoms.Contains(a)) return;
             atoms.Add(a);
             ringsFound = false;
-            return a;
+            return;
         }
 
         //public void AddBond(int atomOne, int atomTwo)

@@ -36,5 +36,10 @@ namespace SustainableChemistry
                 this.Close();
             }
         }
+
+        private void smilesInput_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

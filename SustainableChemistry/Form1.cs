@@ -38,7 +38,15 @@ namespace SustainableChemistry
 
         private void importFormTESTToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TestResults test = new TestResults();
+            TestResults test = null;
+            try
+            {
+                test = new TestResults();
+            }
+            catch (Exception)
+            {
+                return;
+            }
             test.ShowDialog();
             string filepath = test.FilePath;
             if (!string.IsNullOrEmpty(filepath))
@@ -58,6 +66,7 @@ namespace SustainableChemistry
             parser.SMILE = smiles.SMILES;
             molecule = parser.Parse();
             this.listBox1.Items.Clear();
+            if (molecule == null) return;
             molecule.FindRings();
         }
 
