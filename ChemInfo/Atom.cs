@@ -6,59 +6,158 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
-    public enum AtomType
+
+    public enum AtomType 
     {
-        NONE = 0,
-        ORGANIC = 1,
-        AROMATIC = 2
+        NONE = 0x00,
+        ORGANIC = 0x01,
+        AROMATIC = 0x03
     }
 
-    public enum Chirality
+    [Flags]
+    public enum Chirality 
     {
-        NONE = 0,
-        CLOCKWISE = 1,
-        COUNTER_CLOCKWISE = 2
+        UNSPECIFIED = 0x00,
+        TETRAHEDRAL_CLOCKWISE = 0x01,
+        TETRAHEDRAL_COUNTER_CLOCKWISE = 0x02,
+        OTHER = 0x04,
+        CIP_S = 0x10,
+        CIP_R = 0x20
     }
 
+    class IntArrayTypeConverter : System.ComponentModel.TypeConverter
+    {
+        public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
+        {
+            if ((typeof(int[])).IsAssignableFrom(destinationType))
+                return true;
 
+            return base.CanConvertTo(context, destinationType);
+        }
+
+        public override Object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object value, System.Type destinationType)
+        {
+            if ((typeof(System.String)).IsAssignableFrom(destinationType) && (typeof(int[]).IsAssignableFrom(value.GetType())))
+            {
+                string retVal = string.Empty;
+                int[] v = (int[])value;
+                if (v.Length > 1)
+                {
+                    for (int i = 0; i < v.Length - 1; i++)
+                    {
+                        retVal = retVal + v[i].ToString() + " , ";
+                    }
+                }
+                retVal = retVal + v[v.Length - 1];
+                return retVal;
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    };
+
+    class AtomTypeConverter : System.ComponentModel.ExpandableObjectConverter
+    {
+        public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
+        {
+            if ((typeof(string)).IsAssignableFrom(destinationType))
+                return true;
+
+            return base.CanConvertTo(context, destinationType);
+        }
+
+        public override Object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object value, System.Type destinationType)
+        {
+            if ((typeof(System.String)).IsAssignableFrom(destinationType) && (typeof(Atom).IsAssignableFrom(value.GetType())))
+            {
+                return ((Atom)value).AtomicName;
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    };
+
+    [System.ComponentModel.TypeConverter (typeof(AtomTypeConverter))]
     public class Atom
     {
-        List<Bond> bondedAtoms;
-        AtomType atomType;
+        BondCollection bondedAtoms;
+        int degree;
+        ELEMENTS e;
+        int isotope;
+        int charge;
         Chirality chiral;
+        AtomType atomType;
 
+        // Constructors
         public Atom(string element)
         {
-            bondedAtoms = new List<Bond>();
-            this.SetElement(element);
+            bondedAtoms = new ChemInfo.BondCollection();
+            e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            degree = 0;
+            isotope = 0;
+            charge = 0;
+            chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
-            chiral = Chirality.NONE;
+            chiral = Chirality.UNSPECIFIED;
         }
 
         public Atom(string element, AtomType type)
         {
-            bondedAtoms = new List<Bond>();
-            this.SetElement(element);
+            bondedAtoms = new ChemInfo.BondCollection();
+            e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            degree = 0;
+            isotope = 0;
+            charge = 0;
+            chiral = Chirality.UNSPECIFIED;
             atomType = type;
-            chiral = Chirality.NONE;
+            chiral = Chirality.UNSPECIFIED;
         }
 
         public Atom(string element, AtomType type, Chirality chirality)
         {
-            bondedAtoms = new List<Bond>();
-            this.SetElement(element);
-            atomType = type;
+            bondedAtoms = new ChemInfo.BondCollection();
+            degree = 0;
+            isotope = 0;
+            charge = 0;
+            chiral = Chirality.UNSPECIFIED;
+            atomType = AtomType.NONE;
             chiral = chirality;
         }
 
-        ELEMENTS e;
-        void SetElement(string element)
+        [System.ComponentModel.TypeConverter(typeof(Atom))]
+        public Atom(string element, int isotope)
         {
-            e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
-            string name = ChemInfo.Element.Name(e);
+            bondedAtoms = new ChemInfo.BondCollection();
+            degree = 0;
+            isotope = (byte)isotope;
+            charge = 0;
+            chiral = Chirality.UNSPECIFIED;
+            atomType = AtomType.NONE;
+            chiral = Chirality.UNSPECIFIED;
         }
 
         public ELEMENTS Element { get { return e; } }
+
+        public int AtomicNumber
+        {
+            get
+            {
+                return (int)e;
+            }
+        }
+
+        public int Isotope
+        {
+            get
+            {
+                return (int)isotope;
+            }
+            set
+            {
+                isotope = (byte)value;
+            }
+        }
+
         public AtomType AtomType
         {
             get
@@ -71,9 +170,6 @@ namespace ChemInfo
             }
         }
 
-        public double x { get; set; } = 0.0;
-        public double y { get; set; } = 0.0;
-        public double z { get; set; } = 0.0;
         public string AtomicSymbol
         {
             get
@@ -89,24 +185,10 @@ namespace ChemInfo
                 return ChemInfo.Element.Name(e);
             }
         }
-        public int massDiff { get; set; } = 0;
-        public int charge { get; set; } = 0;
-        public int stereoParity { get; set; } = 0;
-        public int hydrogenCount { get; set; } = 0;
-        public int stereoCareBox { get; set; } = 0;
-        public int valence { get; set; } = 0;
-        //public int HO;
-        public string rNotUsed { get; set; } = string.Empty;
-        public string iNotUsed { get; set; } = string.Empty;
-        public int atomMapping { get; set; } = 0;
-        public int inversionRetension { get; set; } = 0;
-        public int exactChange { get; set; } = 0;
 
         public void AddBond(Atom atom, BondType type)
         {
-            Bond b = new Bond();
-            b.connectedAtom = atom;
-            b.bondType = type;
+            Bond b = new Bond(atom, type);
             switch (type)
             {
                 case BondType.Single:
@@ -123,110 +205,161 @@ namespace ChemInfo
                     break;
             }
             this.bondedAtoms.Add(b);
+            degree = (byte)this.bondedAtoms.Count;
         }
 
-        public Atom[] BondedAtoms
+        [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]
+        public BondCollection BondedAtoms
         {
             get
-            {
-                List<Atom> atoms = new List<Atom>();
-                foreach (Bond bond in bondedAtoms)
-                    atoms.Add(bond.connectedAtom);
-                return atoms.ToArray<Atom>();
+            {                
+                return this.bondedAtoms;
             }
         }
 
-        int NumHydrogens
+        public int Degree
         {
             get
             {
-                int retVal = 4;
+                return this.bondedAtoms.Count;
+            }
+        }
+
+        public int numberOfBonds
+        {
+            get
+            {
+                int retVal = 0;
+                foreach (Bond b in this.bondedAtoms)
+                {
+                    if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
+                    if (b.BondType == BondType.Double) retVal = retVal + 2;
+                    if (b.BondType == BondType.Triple) retVal = retVal + 3;
+                }
+                return retVal;
+            }
+        }
+
+        [System.ComponentModel.TypeConverter(typeof(IntArrayTypeConverter))]
+        public int[] possibleValences
+        {
+            get
+            {
                 switch (this.Element)
                 {
                     case ELEMENTS.B:
-                        {
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 3 - this.BondedAtoms.Length;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                            }
-                            return retVal;
-                        }
+                        return new int[] { 3 };
                     case ELEMENTS.C:
-                        {
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 3 - this.BondedAtoms.Length;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                            }
-                            return retVal;
-                        }
+                        return new int[] { 4 };
                     case ELEMENTS.N:
-                        {
-                            retVal = 3;
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 0;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                                return retVal;
-                            }
-                        }
-                        return retVal;
+                        return new int[] { 3,5 };
                     case ELEMENTS.O:
-                        {
-                            retVal = 2;
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 0;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                                return retVal;
-                            }
-                        }
-                        return retVal;
+                        return new int[] { 2 };
                     case ELEMENTS.S:
-                        {
-                            retVal = 2;
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 0;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                                return retVal;
-                            }
-                        }
-                        return retVal;
+                        return new int[] { 2,4,6 };
                     case ELEMENTS.P:
-                        {
-                            retVal = 2;
-                            if (this.atomType == AtomType.AROMATIC)
-                            {
-                                return 0;
-                            }
-                            foreach (Bond b in this.bondedAtoms)
-                            {
-                                retVal = retVal - (int)b.bondType;
-                                return retVal;
-                            }
-                        }
-                        return retVal;
+                        return new int[] { 3,5 };
                     default:
-                        return 1 - BondedAtoms.Length;
+                        return new int[0];
                 }
             }
         }
+
+
+        public int NumHydrogens
+        {
+            get
+            {
+                if (this.atomType == AtomType.ORGANIC)
+                {
+                    return this.Valence - this.numberOfBonds;
+                }
+                if (this.atomType == AtomType.AROMATIC)
+                {
+                    switch (this.Element)
+                    {
+                        case ELEMENTS.B:
+                            return 2;
+                        case ELEMENTS.C:
+                            return 3 - this.bondedAtoms.Count;
+                        case ELEMENTS.N:
+                            return 0;
+                        case ELEMENTS.O:
+                            return 0;
+                        case ELEMENTS.S:
+                            return 2;
+                        case ELEMENTS.P:
+                            return 1;
+                        default:
+                            return 0;
+                    }
+                }
+                return 0;
+            }
+        }
+
+        public int Charge
+        {
+            get
+            {
+                return charge;
+            }
+            set
+            {
+                charge = value;
+            }
+        }
+
+        public int Valence {
+            get
+            {
+                int[] possible = this.possibleValences;
+                if (possible.Length == 1) return possible[0];
+                foreach (int i in possible)
+                {
+                    if (this.numberOfBonds <= i) return i;
+                }
+                return 0;
+            }
+        }
+
+        public Chirality Chirality
+        {
+            get
+            {
+                return this.chiral;
+            }
+            set
+            {
+                chiral = value;
+            }
+        }
+
+        // Values from the Atom Table of a Mole File.
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public double x { get; set; } = 0.0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public double y { get; set; } = 0.0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public double z { get; set; } = 0.0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int massDiff { get; set; } = 0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int stereoParity { get; set; } = 0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int hydrogenCount { get; set; } = 0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int stereoCareBox { get; set; } = 0;
+        //public int HO;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public string rNotUsed { get; set; } = string.Empty;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public string iNotUsed { get; set; } = string.Empty;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int atomMapping { get; set; } = 0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int inversionRetension { get; set; } = 0;
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int exactChange { get; set; } = 0;
     }
 }

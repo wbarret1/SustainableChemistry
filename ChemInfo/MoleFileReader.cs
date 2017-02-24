@@ -142,11 +142,11 @@ namespace ChemInfo
                 a.z = Convert.ToDouble(lines[4 + i].Substring(20, 10));
                 string text = lines[4 + i].Substring(34, 2);
                 a.massDiff = Convert.ToInt32(lines[4 + i].Substring(34, 2));
-                a.charge = Convert.ToInt32(lines[4 + i].Substring(36, 3));
+                a.Charge = Convert.ToInt32(lines[4 + i].Substring(36, 3));
                 a.stereoParity = Convert.ToInt32(lines[4 + i].Substring(39, 3));
                 a.hydrogenCount = Convert.ToInt32(lines[4 + i].Substring(42, 3));
                 a.stereoCareBox = Convert.ToInt32(lines[4 + i].Substring(45, 3));
-                a.valence = Convert.ToInt32(lines[4 + i].Substring(48, 3));
+                //a.Valence = Convert.ToInt32(lines[4 + i].Substring(48, 3));
                 // string H0 = lines[4 + i].Substring(51, 3);
                 // a.HO = Convert.ToInt32(lines[4 + i].Substring(51, 3));
                 a.rNotUsed = lines[4 + i].Substring(54, 3);
@@ -157,22 +157,23 @@ namespace ChemInfo
             }
             for (int i = 0; i < numBonds; i++)
             {
-                Bond b = new Bond();
+                //Bond b = new Bond();
                 // 111222tttsssxxxrrrccc
                 string line = lines[4 + numAtoms + i];
                 int firstAtom = Convert.ToInt32(lines[4 + numAtoms + i].Substring(0, 3));
                 int secondAtom = Convert.ToInt32(lines[4 + numAtoms + i].Substring(3, 3));
-                b.bondType = (BondType)Convert.ToInt32(lines[4 + numAtoms + i].Substring(6, 3));
-                b.bondStereo = (BondStereo)Convert.ToInt32(lines[4 + numAtoms + i].Substring(9, 3));
-                b.xNotUsed = lines[4 + numAtoms + i].Substring(12, 3);
-                b.bondTopology = (BondTopology)Convert.ToInt32(lines[4 + numAtoms + i].Substring(15, 3));
-                int reactingCenter = Convert.ToInt32(lines[4 + numAtoms + i].Substring(18, 3));
-                if (reactingCenter == 13) b.reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.bondOrderChanges | BondReactingCenterStatus.aCenter;
-                else if (reactingCenter == 12) b.reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.bondOrderChanges;
-                else if (reactingCenter == 9) b.reactingCenter = BondReactingCenterStatus.bondOrderChanges | BondReactingCenterStatus.aCenter;
-                else if (reactingCenter == 5) b.reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.aCenter;
-                else b.reactingCenter = (BondReactingCenterStatus)reactingCenter;
-                molecule.AddBond(molecule.GetAtoms()[firstAtom - 1], molecule.GetAtoms()[secondAtom - 1], b.bondType);
+                BondType bondType = (BondType)Convert.ToInt32(lines[4 + numAtoms + i].Substring(6, 3));
+                BondStereo bondStereo = (BondStereo)Convert.ToInt32(lines[4 + numAtoms + i].Substring(9, 3));
+                string xNotUsed = lines[4 + numAtoms + i].Substring(12, 3);
+                BondTopology bondTopology = (BondTopology)Convert.ToInt32(lines[4 + numAtoms + i].Substring(15, 3));
+                int rc = Convert.ToInt32(lines[4 + numAtoms + i].Substring(18, 3));
+                BondReactingCenterStatus reactingCenter = BondReactingCenterStatus.Unmarked;
+                if (rc == 13) reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.bondOrderChanges | BondReactingCenterStatus.aCenter;
+                else if (rc == 12) reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.bondOrderChanges;
+                else if (rc == 9) reactingCenter = BondReactingCenterStatus.bondOrderChanges | BondReactingCenterStatus.aCenter;
+                else if (rc == 5) reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.aCenter;
+                else reactingCenter = (BondReactingCenterStatus)rc;
+                molecule.AddBond(molecule.GetAtoms()[firstAtom - 1], molecule.GetAtoms()[secondAtom - 1], bondType, bondStereo, bondTopology, reactingCenter);
             }
             return molecule;
         }

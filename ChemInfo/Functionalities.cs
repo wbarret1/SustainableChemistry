@@ -16,12 +16,12 @@ namespace ChemInfo
             {
                 if (a1.Element == ELEMENTS.P)
                 {
-                    if (a1.BondedAtoms.Length == 4)
+                    if (a1.BondedAtoms.Count == 4)
                     {
                         bool allOxygen = true;
-                        foreach (Atom a2 in a1.BondedAtoms)
+                        foreach (Bond b in a1.BondedAtoms)
                         {
-                            if (a2.Element != ELEMENTS.O) allOxygen = false;
+                            if (b.ConnectedAtom.Element != ELEMENTS.O) allOxygen = false;
                         }
                         if (allOxygen) retVal.Add(a1);
                     }
@@ -90,7 +90,7 @@ namespace ChemInfo
             List<Atom> retVal = new List<Atom>();
             foreach (Atom a in m.GetAtoms())
             {
-                if (a.BondedAtoms.Length > 2) retVal.Add(a);
+                if (a.BondedAtoms.Count > 2) retVal.Add(a);
             }
             return retVal.ToArray();
         }
@@ -163,33 +163,33 @@ namespace ChemInfo
                 //Atom[] bonded = a.BondedAtoms;
                 //for (int j = 0; j < bonded.Length; j++)
                 // If it connected to two other atoms...
-                foreach (Atom bonded in a.BondedAtoms)
+                foreach (Bond bond in a.BondedAtoms)
                 {
-                    switch (bonded.Element)
+                    switch (bond.ConnectedAtom.Element)
                     {
                         case ELEMENTS.C:
-                            C.Add(bonded);
+                            C.Add(bond.ConnectedAtom);
                             break;
                         case ELEMENTS.N:
-                            N.Add(bonded);
+                            N.Add(bond.ConnectedAtom);
                             break;
                         case ELEMENTS.O:
-                            O.Add(bonded);
+                            O.Add(bond.ConnectedAtom);
                             break;
                         case ELEMENTS.P:
-                            P.Add(bonded);
+                            P.Add(bond.ConnectedAtom);
                             break;
                         case ELEMENTS.S:
-                            S.Add(bonded);
+                            S.Add(bond.ConnectedAtom);
                             break;
                     }
                 }
 
-                if (a.BondedAtoms.Length == 2)
+                if (a.BondedAtoms.Count == 2)
                 {
 
                 }
-                if (a.BondedAtoms.Length == 3)
+                if (a.BondedAtoms.Count == 3)
                 {
                     if (C.Count == 3)
                     {
@@ -228,7 +228,7 @@ namespace ChemInfo
                         retVal.Add("phosphorodithioite");
                     }
                 }
-                if (a.BondedAtoms.Length == 4)
+                if (a.BondedAtoms.Count == 4)
                 {
                     if (O.Count == 4)
                     {

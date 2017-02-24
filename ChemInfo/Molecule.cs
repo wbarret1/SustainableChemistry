@@ -6,54 +6,6 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
-    public enum BondType
-    {
-        Single = 1,
-        Double = 2,
-        Triple = 3,
-        Aromatic = 4,
-        SingleOrDouble = 5,
-        SingleOrAromatic = 6,
-        DoubleOrAromatic = 7,
-        Any = 8
-    }
-
-    public enum BondStereo
-    {
-        NotStereoOrUseXYZ = 0,
-        Up = 1,
-        cisOrTrans = 3,
-        Down = 4,
-        Either = 6,
-    }
-
-    public enum BondTopology
-    {
-        Either = 0,
-        Ring = 1,
-        Chain = 3,
-    }
-
-    [Flags]
-    public enum BondReactingCenterStatus
-    {
-        notACenter = -1,
-        Unmarked = 0,
-        aCenter = 1,
-        noChange = 2,
-        bondMadeOrBroken = 4,
-        bondOrderChanges = 8
-    }
-
-    public struct Bond
-    {
-        public Atom connectedAtom;
-        public BondType bondType;
-        public BondStereo bondStereo;
-        public string xNotUsed;
-        public BondTopology bondTopology;
-        public BondReactingCenterStatus reactingCenter;
-    }
 
     //functional group based upon Kidus' fragments from TEST.
     public struct group
@@ -98,24 +50,7 @@ namespace ChemInfo
             return;
         }
 
-        //public void AddBond(int atomOne, int atomTwo)
-        //{
-        //    atoms[atomOne].AddBond(atoms[atomTwo]);
-        //    atoms[atomTwo].AddBond(atoms[atomOne]);
-        //    ringsFound = false;
-        //}
-
-        //public void AddBond(Atom atomOne, Atom atomTwo)
-        //{
-        //    if (atomTwo != null)
-        //    {
-        //        atomOne.AddBond(atomTwo);
-        //        atomTwo.AddBond(atomOne);
-        //        ringsFound = false;
-        //    }
-        //}
-
-        public void AddBond(Atom atomOne, Atom atomTwo, BondType type)
+        public void AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
             if (atomTwo != null)
             {
@@ -135,7 +70,7 @@ namespace ChemInfo
                 cycles = new List<List<Atom>>();
                 foreach (Atom a in atoms)
                 {
-                    search(a, a, finished, myStack, cycles);
+                    depthFirstSearch(a, a, finished, myStack, cycles);
                 }
                 this.ExtractRings();
                 this.FusedRings();
@@ -144,28 +79,28 @@ namespace ChemInfo
             return this.convertToArrayArray(cycles);
         }
 
-        void search(Atom current, Atom parent, bool[] f, Stack<Atom> stack, List<List<Atom>> cycles)
+        void depthFirstSearch(Atom current, Atom parent, bool[] f, Stack<Atom> stack, List<List<Atom>> cycles)
         {
             stack.Push(current);
-            foreach (Atom next in current.BondedAtoms)
+            foreach (Bond next in current.BondedAtoms)
             {
-                if (next != parent)
+                if (next.ConnectedAtom != parent)
                 {
-                    if (stack.Contains(next))
+                    if (stack.Contains(next.ConnectedAtom))
                     {
                         List<Atom> cycle = new List<Atom>();
                         foreach (Atom a in stack)
                         {
                             cycle.Add(a);
-                            if (a == next) break;
+                            if (a == next.ConnectedAtom) break;
                         }
                         cycles.Add(cycle);
                         stack.Pop();
                         return;
                     }
-                    else if (!f[atoms.IndexOf(next)])
+                    else if (!f[atoms.IndexOf(next.ConnectedAtom)])
                     {
-                        search(next, current, f, stack, cycles);
+                        depthFirstSearch(next.ConnectedAtom, current, f, stack, cycles);
                     }
                 }
             }
@@ -209,7 +144,7 @@ namespace ChemInfo
                     {
                         if (m.Count == cycles[i].Count)
                         {
-                            Atom[] start = m[0].BondedAtoms;
+                            BondCollection start = m[0].BondedAtoms;
                             int first = cycles[j].IndexOf(m[0]);
                             int last = cycles[j].IndexOf(m[m.Count - 1]);
                             if (last < first)
@@ -237,10 +172,10 @@ namespace ChemInfo
                         }
                         else
                         {
-                            Atom[] start = m[0].BondedAtoms;
-                            Atom[] end = m[m.Count - 1].BondedAtoms;
-                            Atom bridge = null;
-                            foreach (Atom n in end)
+                            BondCollection start = m[0].BondedAtoms;
+                            BondCollection end = m[m.Count - 1].BondedAtoms;
+                            Bond bridge = null;
+                            foreach (Bond n in end)
                             {
                                 if (start.Contains(n)) bridge = n;
                             }
@@ -250,7 +185,7 @@ namespace ChemInfo
                                 {
                                     cycles[j].Remove(m[k]);
                                 }
-                                cycles[j].Insert(cycles[j].IndexOf(m[0]) + 1, bridge);
+                                cycles[j].Insert(cycles[j].IndexOf(m[0]) + 1, bridge.ConnectedAtom);
                             }
                         }
                     }
@@ -328,5 +263,49 @@ namespace ChemInfo
         {
             return list1.Count - list2.Count;
         }
+
+        void canonizerWeinginger()
+        {
+            // Step 1. Set Initial Invariants and go to Step 3.
+            // The initial invariants are handled by the comparer.
+            // Step 3. Sort the vector.
+            this.atoms.Sort(atomInvariantComparerWeinginger);
+
+            // Step 4. RankException Atomic Vector
+
+            // Step 5. If not invariant, go to Step 2.
+
+            // Step 6. Save partition as symmetry class.
+
+            // Step 7. If highest rank is smaller than the number of nodes, break ties and go to Step 2.
+
+            // Step 8. Else done
+            return;
+
+            // Step 2. 
+            {
+
+            }
+        }
+
+        int atomInvariantComparerWeinginger(Atom atom1, Atom atom2)
+        {
+            // Number of connections is the first test.
+            if (atom1.Degree != atom2.Degree) return atom1.Degree - atom2.Degree;
+            // Followed by the number of non-hydrogen bonds.
+            if (atom1.numberOfBonds > atom2.numberOfBonds) return atom1.numberOfBonds - atom2.numberOfBonds;
+            //Then atomic number        
+            if (atom1.AtomicNumber > atom2.AtomicNumber) return atom1.AtomicNumber - atom2.AtomicNumber;
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+            if (atom1.Charge > atom2.Charge) return atom1.Charge - atom2.Charge;
+            // Next is number of attached hydrogens.
+            if (atom1.hydrogenCount > atom2.hydrogenCount) return atom1.hydrogenCount - atom2.hydrogenCount;
+            //Then simple connectivity.
+
+            return 0;
+        }
+
+
     }
 }

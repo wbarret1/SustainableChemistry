@@ -98,7 +98,7 @@ namespace ChemInfo
                 {
                     current = new Atom("*");
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, BondType.SingleOrAromatic);
+                    molecule.AddBond(current, last, BondType.SingleOrAromatic, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.Unmarked);
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, 1);
                 }
@@ -106,7 +106,7 @@ namespace ChemInfo
                 {
                     current = new Atom("*");
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, BondType.SingleOrAromatic);
+                    molecule.AddBond(current, last, BondType.SingleOrAromatic, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.Unmarked);
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, 3);
                 }
@@ -127,7 +127,7 @@ namespace ChemInfo
                         }
                     }
                     this.Parse(nextSmile, molecule, ref temp, stereo);
-                    molecule.AddBond(temp, last, nextBond);
+                    molecule.AddBond(temp, last, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Ring, BondReactingCenterStatus.Unmarked);
                     nextBond = BondType.Single;
                     last = temp;
                 }
@@ -190,7 +190,7 @@ namespace ChemInfo
                     int atomClass = 0;
                     if (atomMatch.Groups[8].Value.Length > 0) atomClass = Convert.ToInt32(atomMatch.Groups[8].Value.Remove(0, 1));
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, BondType.SingleOrAromatic);
+                    molecule.AddBond(current, last, BondType.SingleOrAromatic, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.Unmarked);
                     last = current;
                     //current.Nodes.Add("Charge = " + charge.ToString());
                     //current.Nodes.Add("Number Of Hydrogens = " + hydrogens.ToString());
@@ -209,7 +209,7 @@ namespace ChemInfo
                     }
                     current = new Atom(organicsMatch.Value, AtomType.ORGANIC);
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, nextBond);
+                    molecule.AddBond(current, last, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.Unmarked);
                     nextBond = BondType.Single;
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, organicsMatch.Value.Length);
@@ -218,11 +218,11 @@ namespace ChemInfo
                 System.Text.RegularExpressions.Match chiralMatch = System.Text.RegularExpressions.Regex.Match(smileLeftToParse, chiralRegExPattern);
                 if (chiralMatch.Length > 0)
                 {
-                    Chirality c = Chirality.CLOCKWISE;
-                    if (chiralMatch.Groups[2].Value == "@@") c = Chirality.COUNTER_CLOCKWISE;
+                    Chirality c = Chirality.TETRAHEDRAL_CLOCKWISE;
+                    if (chiralMatch.Groups[2].Value == "@@") c = Chirality.TETRAHEDRAL_COUNTER_CLOCKWISE;
                     current = new Atom(chiralMatch.Groups[1].Value, AtomType.ORGANIC, c);
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, nextBond);
+                    molecule.AddBond(current, last, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.Unmarked);
                     nextBond = BondType.Single;
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, chiralMatch.Value.Length);
@@ -234,7 +234,7 @@ namespace ChemInfo
                     current = new Atom(aromatic.Value.ToUpper(), AtomType.AROMATIC);
                     nextBond = BondType.Aromatic;
                     molecule.AddAtom(current);
-                    molecule.AddBond(current, last, BondType.Aromatic);
+                    molecule.AddBond(current, last, BondType.Aromatic, BondStereo.NotStereoOrUseXYZ, BondTopology.Ring, BondReactingCenterStatus.Unmarked);
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, 1);
                 }

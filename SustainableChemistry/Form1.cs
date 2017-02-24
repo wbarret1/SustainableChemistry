@@ -68,6 +68,13 @@ namespace SustainableChemistry
             this.listBox1.Items.Clear();
             if (molecule == null) return;
             molecule.FindRings();
+            TreeNodeCollection nodes = treeView1.Nodes;
+            foreach (ChemInfo.Atom a in molecule.GetAtoms())
+            {
+                TreeNode node = new TreeNode(a.AtomicSymbol);
+                node.Tag = a;
+                nodes.Add(node);
+            }
         }
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -75,6 +82,11 @@ namespace SustainableChemistry
             listBox1.Items.Clear();
             string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
             listBox1.Items.AddRange(phos);
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            this.propertyGrid1.SelectedObject = treeView1.SelectedNode.Tag;
         }
     }
 }
