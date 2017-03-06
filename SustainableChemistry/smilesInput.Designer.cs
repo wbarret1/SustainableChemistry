@@ -75,7 +75,6 @@
             this.MinimizeBox = false;
             this.Name = "smilesInput";
             this.Text = "Enter Smiles";
-            this.Load += new System.EventHandler(this.smilesInput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

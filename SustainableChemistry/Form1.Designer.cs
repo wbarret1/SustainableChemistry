@@ -42,6 +42,8 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -50,6 +52,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -121,6 +124,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
@@ -184,6 +188,27 @@
             this.tabPage2.Text = "Functionalities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.moleculeViewer1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(536, 434);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // moleculeViewer1
+            // 
+            this.moleculeViewer1.AutoScroll = true;
+            this.moleculeViewer1.AutoSize = true;
+            this.moleculeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.moleculeViewer1.Location = new System.Drawing.Point(0, 0);
+            this.moleculeViewer1.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.moleculeViewer1.Name = "moleculeViewer1";
+            this.moleculeViewer1.Size = new System.Drawing.Size(536, 434);
+            this.moleculeViewer1.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +228,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,6 +251,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private MoleculeViewer moleculeViewer1;
     }
 }
 

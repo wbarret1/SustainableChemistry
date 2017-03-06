@@ -20,7 +20,8 @@ namespace ChemInfo
     {
         List<Atom> atoms;
         List<List<Atom>> cycles;
-        List<List<Atom>> fusedRings;
+        bool[,] touching;
+        bool[,] fused;
         bool ringsFound;
 
         public Molecule()
@@ -195,67 +196,20 @@ namespace ChemInfo
 
         void FusedRings()
         {
-            fusedRings = new List<List<Atom>>();
-            bool[] touched = new bool[cycles.Count];
-            bool[] fused = new bool[cycles.Count];
-            List<int[]> touching = new List<int[]>();
-            List<List<int>> groups = new List<List<int>>();
-            for (int i = 0; i < cycles.Count; i++)
+            touching = new bool[cycles.Count, cycles.Count];
+            fused = new bool[cycles.Count, cycles.Count];
+            for(int i = 0; i < cycles.Count; i++)
             {
-                touched[i] = false;
-                fused[i] = false;
-                for (int j = i + 1; j < cycles.Count; j++)
+                for (int j = i+1; j < cycles.Count; j++)
                 {
-                    touched[i] = true;
-                    List<Atom> m = matches(cycles[j], cycles[i]);
-                    if (m.Count > 1)
+                    int common = 0;
+                    foreach(Atom a in cycles[j])
                     {
-                        int[] f = new int[2];
-                        f[0] = i;
-                        f[1] = j;
-                        touching.Add(f);
+                        if (cycles[i].Contains(a)) common = common + 1;
                     }
+                    if (common == 1) touching[i, j] = true;
+                    if (common == 2) fused[i, j] = true;
                 }
-            }
-            foreach (int[] ar in touching)
-            {
-                if (!fused[ar[0]] && !fused[ar[1]])
-                {
-                    List<int> g = new List<int>();
-                    fused[ar[0]] = true;
-                    fused[ar[1]] = true;
-                    g.AddRange(ar);
-                    groups.Add(g);
-                }
-                else if (!fused[ar[0]] && fused[ar[1]])
-                {
-                    foreach (List<int> g in groups)
-                    {
-                        if (g.Contains(ar[1])) g.Add(ar[0]);
-                        fused[ar[0]] = true;
-                    }
-                }
-                else if (fused[ar[0]] && !fused[ar[1]])
-                {
-                    foreach (List<int> g in groups)
-                    {
-                        if (g.Contains(ar[0])) g.Add(ar[1]);
-                        fused[ar[1]] = true;
-                    }
-                }
-            }
-            foreach (List<int> g in groups)
-            {
-                List<Atom> atoms = new List<Atom>();
-                for (int i = 0; i < g.Count; i++)
-                {
-                    List<Atom> a = cycles[g[i]];
-                    foreach (Atom at in a)
-                    {
-                        if (!atoms.Contains(at)) atoms.Add(at);
-                    }
-                }
-                fusedRings.Add(atoms);
             }
         }
 
@@ -306,6 +260,34 @@ namespace ChemInfo
             return 0;
         }
 
-
+        public void LocateAtoms2D(Atom a, int angle, bool[] visited)
+        {
+            int degreeSep;
+            int bondAngle = angle;
+            if (a != null)
+            {
+                if (visited[this.atoms.IndexOf(a)]) return;
+                visited[this.atoms.IndexOf(a)] = true;
+                degreeSep = 360 / this.atoms[0].Degree;
+            }
+            else
+            {
+                visited = new bool[this.atoms.Count];
+                for (int i = 0; i < this.atoms.Count; i++) visited[i] = false;
+                this.atoms[0].X_2D = 0;
+                this.atoms[0].Y_2D = 0;
+                degreeSep = 360 / this.atoms[0].Degree;
+                this.atoms[0].Angle_2D = degreeSep / 2;
+                this.LocateAtoms2D(this.atoms[0], bondAngle, visited);
+                return;
+            }
+            for (int i = 0; i < a.BondedAtoms.Count; i++)
+            {
+                bondAngle = (a.Angle_2D + degreeSep)%360;
+                a.BondedAtoms[i].ConnectedAtom.Angle_2D = a.Angle_2D + bondAngle;
+                a.BondedAtoms[i].SetConnectedAtomLocation();
+                this.LocateAtoms2D(a.BondedAtoms[i].ConnectedAtom, bondAngle, visited);
+            }
+        }
     }
 }

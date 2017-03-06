@@ -199,9 +199,17 @@ namespace ChemInfo
                 if (item.GetType() == typeof(ChemInfo.listAtomScalar))
                 {
                     listAtomScalar scalar = (listAtomScalar)item;
-                    if (scalar.dictRef  == "bo:mass")
+                    if (scalar.dictRef == dictRef)
                     {
                         return scalar.Value; ;
+                    }
+                }
+                if (item.GetType() == typeof(ChemInfo.listAtomArray))
+                {
+                    listAtomArray array = (listAtomArray)item;
+                    if (array.dictRef == dictRef)
+                    {
+                        return array.Value; ;
                     }
                 }
             }
@@ -282,6 +290,26 @@ namespace ChemInfo
         static public string ElecctronConfiguration(string symbol)
         {
             return Element.ElecctronConfiguration(Element.GetElementForSymbol(symbol));
+        }
+
+        static public int[] ElementColor(ELEMENTS e)
+        {
+            string[] temp = LookupValue(e, "bo:elementColor").Split(' ');
+            int[] retVal = new int[3];
+            retVal[0] = (int)(Convert.ToDouble(temp[0]) * 255);
+            retVal[1] = (int)(Convert.ToDouble(temp[1]) * 255);
+            retVal[2] = (int)(Convert.ToDouble(temp[2]) * 255);
+            return retVal;
+        }
+
+        static public int[] ElementColor(int AtomicNumber)
+        {
+            return Element.ElementColor((ELEMENTS)AtomicNumber);
+        }
+
+        static public int[] DefaultColor(string symbol)
+        {
+            return Element.ElementColor(Element.GetElementForSymbol(symbol));
         }
 
 

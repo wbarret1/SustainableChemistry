@@ -35,11 +35,6 @@ namespace SustainableChemistry
                 m_Smile = this.textBox1.Text.Trim();
                 this.Close();
             }
-        }
-
-        private void smilesInput_Load(object sender, EventArgs e)
-        {
-
-        }
+        }        
     }
 }

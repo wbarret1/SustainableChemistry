@@ -87,7 +87,11 @@ namespace ChemInfo
         int charge;
         Chirality chiral;
         AtomType atomType;
-
+        int color;
+        int _x = 0;
+        int _y = 0;
+        int _angle = 0;
+        
         // Constructors
         public Atom(string element)
         {
@@ -99,6 +103,7 @@ namespace ChemInfo
             chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
             chiral = Chirality.UNSPECIFIED;
+            this.SetColor(ChemInfo.Element.ElementColor(e));
         }
 
         public Atom(string element, AtomType type)
@@ -111,6 +116,7 @@ namespace ChemInfo
             chiral = Chirality.UNSPECIFIED;
             atomType = type;
             chiral = Chirality.UNSPECIFIED;
+            this.SetColor(ChemInfo.Element.ElementColor(e));
         }
 
         public Atom(string element, AtomType type, Chirality chirality)
@@ -122,6 +128,7 @@ namespace ChemInfo
             chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
             chiral = chirality;
+            this.SetColor(ChemInfo.Element.ElementColor(e));
         }
 
         [System.ComponentModel.TypeConverter(typeof(Atom))]
@@ -134,6 +141,7 @@ namespace ChemInfo
             chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
             chiral = Chirality.UNSPECIFIED;
+            this.SetColor(ChemInfo.Element.ElementColor(e));
         }
 
         public ELEMENTS Element { get { return e; } }
@@ -186,9 +194,75 @@ namespace ChemInfo
             }
         }
 
+        void SetColor(int[] argb)
+        {
+            if (argb.Length == 3) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]).ToArgb();
+            else if (argb.Length == 4) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]).ToArgb();
+            else color = System.Drawing.Color.Black.ToArgb();
+        }
+
+        public System.Drawing.Color Color
+        {
+            get
+            {
+                return System.Drawing.Color.FromArgb(color);
+            }
+            set
+            {
+                color = value.ToArgb();
+            }
+        }
+
+        public System.Drawing.Point Location
+        {
+            get
+            {
+                return new System.Drawing.Point(_x, _y);
+            }
+        }
+
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int X_2D
+        {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                _x = value;
+            }
+        }
+
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int Y_2D
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                _y = value;
+            }
+        }
+        [System.ComponentModel.BrowsableAttribute(false)]
+        public int Angle_2D
+        {
+            get
+            {
+                return _angle;
+            }
+            set
+            {
+                _angle = value;
+            }
+        }
+
+
         public void AddBond(Atom atom, BondType type)
         {
-            Bond b = new Bond(atom, type);
+            Bond b = new Bond(this, atom, type);
             switch (type)
             {
                 case BondType.Single:
@@ -212,7 +286,7 @@ namespace ChemInfo
         public BondCollection BondedAtoms
         {
             get
-            {                
+            {
                 return this.bondedAtoms;
             }
         }

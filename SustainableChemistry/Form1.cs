@@ -69,12 +69,14 @@ namespace SustainableChemistry
             if (molecule == null) return;
             molecule.FindRings();
             TreeNodeCollection nodes = treeView1.Nodes;
+            nodes.Clear();
             foreach (ChemInfo.Atom a in molecule.GetAtoms())
             {
                 TreeNode node = new TreeNode(a.AtomicSymbol);
                 node.Tag = a;
                 nodes.Add(node);
             }
+            this.moleculeViewer1.Molecule = molecule;
         }
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -87,6 +89,11 @@ namespace SustainableChemistry
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             this.propertyGrid1.SelectedObject = treeView1.SelectedNode.Tag;
+        }
+
+        private void moleculeViewer1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
