@@ -45,6 +45,7 @@ namespace ChemInfo
             Atom a = null;
             this.Parse(m_smile, m, ref a, BondStereo.NotStereoOrUseXYZ);
             m.LocateAtoms2D(null, 0, null);
+            m.GetLocationBounds();
             return m;
         }
 

@@ -278,15 +278,50 @@ namespace ChemInfo
                 this.atoms[0].Y_2D = 0;
                 degreeSep = 360 / this.atoms[0].Degree;
                 this.atoms[0].Angle_2D = degreeSep / 2;
-                this.LocateAtoms2D(this.atoms[0], bondAngle, visited);
+                this.LocateAtoms2D(this.atoms[0], degreeSep / 2, visited);
                 return;
             }
             for (int i = 0; i < a.BondedAtoms.Count; i++)
             {
-                bondAngle = (a.Angle_2D + degreeSep)%360;
-                a.BondedAtoms[i].ConnectedAtom.Angle_2D = a.Angle_2D + bondAngle;
+                bondAngle = (bondAngle + degreeSep)% 360;
+                a.BondedAtoms[i].Angle = bondAngle;
                 a.BondedAtoms[i].SetConnectedAtomLocation();
                 this.LocateAtoms2D(a.BondedAtoms[i].ConnectedAtom, bondAngle, visited);
+            }
+        }
+
+        public void GetLocationBounds()
+        {
+            int top = 0;
+            int bottom = 0;
+            int left = 0;
+            int right = 0;
+            foreach(Atom a in this.atoms)
+            {
+                if (top > a.X_2D) top = a.X_2D;
+                if (bottom < a.X_2D) bottom = a.X_2D;
+                if (left > a.Y_2D) left = a.Y_2D;
+                if (right < a.Y_2D) right = a.Y_2D;
+            }
+            m_Location = new System.Drawing.Point(top, left);
+            m_Size = new System.Drawing.Size(right - left, bottom - top);                
+        }
+
+        System.Drawing.Point m_Location;
+        System.Drawing.Size m_Size;
+        public System.Drawing.Point Location
+        {
+            get
+            {
+                return m_Location;
+            }
+        }
+
+        public System.Drawing.Size Size
+        {
+            get
+            {
+                return m_Size;
             }
         }
     }

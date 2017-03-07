@@ -361,6 +361,52 @@ namespace SustainableChemistry
             g.EndContainer(gCon);
             g.Transform = myOriginalMatrix;
         }
+
+        public void DrawSelectedObject(System.Drawing.Graphics g, GraphicObject selectedObject, double Scale)
+        {
+            System.Drawing.Drawing2D.GraphicsContainer gCon1 = g.BeginContainer();
+            g.ScaleTransform((float)Scale, (float)Scale, System.Drawing.Drawing2D.MatrixOrder.Append);
+            System.Drawing.Drawing2D.GraphicsContainer gCon2 = g.BeginContainer();
+            g.PageUnit = System.Drawing.GraphicsUnit.Pixel;
+
+            if (selectedObject != null)
+            {
+                System.Drawing.Pen selectionPen = new System.Drawing.Pen(System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor.HotTrack));
+                selectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                selectionPen.Width = 1;
+
+                if (selectedObject.Rotation != 0)
+                {
+                    System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
+                    myMatrix.RotateAt((float)selectedObject.Rotation, new System.Drawing.PointF((float)selectedObject.X, (float)selectedObject.Y), System.Drawing.Drawing2D.MatrixOrder.Append);
+                    g.Transform = myMatrix;
+                }
+
+                ////only draw the select box for units, not streams
+                ////Type* cUnit = __typeof(ICapeUnit);
+                ////if(cUnit->IsInstanceOfType(selectedObject))
+                ////	  g->DrawRectangle(selectionPen, selectedObject->get_X()-3, selectedObject->get_Y()-3, selectedObject->get_Width()+1, selectedObject->get_Height()+1);
+                ////Type* cUnit = __typeof(GraphicUnitOp);
+                //if (selectedObject.GetType() == typeof(GraphicUnitOp))
+                //{
+                //    g->DrawRectangle(selectionPen, selectedObject->X - 3, selectedObject->Y - 3, selectedObject->Width + 6, selectedObject->Height + 6);
+                //}
+                //else if(selectedObject->GetType() == __typeof(GraphicStream))
+                //{
+                //	Color colorBefore = selectedObject->get_Linecolor();
+                //	selectedObject->set_Linecolor(Color::FromKnownColor(KnownColor::HotTrack));
+                //	selectedObject->Draw(g);
+                //	selectedObject->set_Linecolor(colorBefore);
+                //}
+                //else
+                //{
+                //	MessageBox::Show("Selected object of illegal type");
+                //}
+            }
+            g.EndContainer(gCon2);
+            g.EndContainer(gCon1);
+        }
+
     }
 
     public abstract class CShapeGraphic : GraphicObject

@@ -32,13 +32,15 @@
             // 
             // MoleculeViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MaximumSize = new System.Drawing.Size(1333, 1231);
             this.Name = "MoleculeViewer";
+            this.Size = new System.Drawing.Size(200, 185);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MoleculeViewer_Paint);
             this.ResumeLayout(false);
 

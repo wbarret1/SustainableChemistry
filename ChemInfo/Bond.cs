@@ -155,7 +155,7 @@ namespace ChemInfo
 
         public void SetConnectedAtomLocation()
         {
-            int endX = this.m_ParentAtom.X_2D - (int)(this.m_length * Math.Sin(Math.PI*180/m_Angle));
+            int endX = this.m_ParentAtom.X_2D + (int)(this.m_length * Math.Sin(Math.PI*180/m_Angle));
             int endY = this.m_ParentAtom.Y_2D + (int)(this.m_length * Math.Cos(Math.PI * 180 / m_Angle));
             this.m_connectedAtom.X_2D = endX;
             this.m_connectedAtom.Y_2D = endY;
