@@ -95,6 +95,7 @@ namespace SustainableChemistry
         }
 
         // Properties 
+        public object Tag { get; set; } = null;
 
         public virtual bool AutoSize
         {
@@ -354,7 +355,7 @@ namespace SustainableChemistry
             System.Drawing.Drawing2D.GraphicsContainer gCon = g.BeginContainer();
             System.Drawing.Drawing2D.Matrix myOriginalMatrix = g.Transform;
             g.ScaleTransform((float)Scale, (float)Scale);
-           foreach(GraphicObject obj in this)
+            foreach (GraphicObject obj in this)
             {
                 obj.Draw(g);
             }
@@ -380,33 +381,20 @@ namespace SustainableChemistry
                     System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
                     myMatrix.RotateAt((float)selectedObject.Rotation, new System.Drawing.PointF((float)selectedObject.X, (float)selectedObject.Y), System.Drawing.Drawing2D.MatrixOrder.Append);
                     g.Transform = myMatrix;
-                }
-
-                ////only draw the select box for units, not streams
-                ////Type* cUnit = __typeof(ICapeUnit);
-                ////if(cUnit->IsInstanceOfType(selectedObject))
-                ////	  g->DrawRectangle(selectionPen, selectedObject->get_X()-3, selectedObject->get_Y()-3, selectedObject->get_Width()+1, selectedObject->get_Height()+1);
-                ////Type* cUnit = __typeof(GraphicUnitOp);
-                //if (selectedObject.GetType() == typeof(GraphicUnitOp))
-                //{
-                //    g->DrawRectangle(selectionPen, selectedObject->X - 3, selectedObject->Y - 3, selectedObject->Width + 6, selectedObject->Height + 6);
-                //}
-                //else if(selectedObject->GetType() == __typeof(GraphicStream))
-                //{
-                //	Color colorBefore = selectedObject->get_Linecolor();
-                //	selectedObject->set_Linecolor(Color::FromKnownColor(KnownColor::HotTrack));
-                //	selectedObject->Draw(g);
-                //	selectedObject->set_Linecolor(colorBefore);
-                //}
-                //else
-                //{
-                //	MessageBox::Show("Selected object of illegal type");
-                //}
+                }                
             }
             g.EndContainer(gCon2);
             g.EndContainer(gCon1);
         }
 
+        public GraphicObject FindObjectAtPoint(System.Drawing.Point pt)
+        {
+            foreach (GraphicObject drawObj in this)
+            {
+                if (drawObj.HitTest(pt)) return drawObj;
+            }
+            return null;
+        }
     }
 
     public abstract class CShapeGraphic : GraphicObject
@@ -540,7 +528,7 @@ namespace SustainableChemistry
         {
             System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
             System.Drawing.Drawing2D.Matrix myMatrix = new System.Drawing.Drawing2D.Matrix();
-            System.Drawing.Pen myPen = new System.Drawing.Pen(this.m_lineColor, (float)this.m_lineWidth);
+            System.Drawing.Pen myPen = new System.Drawing.Pen(this.m_lineColor, (float)this.m_lineWidth+2);
             float X = (float)this.X;
             float Y = (float)this.Y;
             gp.AddLine(X, Y, X + m_Size.Width, Y + m_Size.Height);
@@ -613,6 +601,84 @@ namespace SustainableChemistry
         }
     };
 
+    public class GraphicBond : GraphicObjectCollection
+    {
+
+        public GraphicBond() : base() { }
+
+        public GraphicBond(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor, ChemInfo.Bond bond)
+        {
+            //this.SetStartPosition(new System.Drawing.Point(startX, startY));
+            //this.SetEndPosition(new System.Drawing.Point(endX, endY));
+            this.Add(new CLineGraphic(startX, startY, endX, endY, 1, System.Drawing.Color.Black));
+            //this.m_AutoSize = false;
+        }
+
+        //System.Drawing.Point GetStartPosition()
+        //{
+        //    return ((GraphicObject)this).GetPosition();
+        //}
+
+        //void SetStartPosition(System.Drawing.Point Value)
+        //{
+        //    this.SetPosition(Value);
+        //}
+
+        //System.Drawing.Point GetEndPosition()
+        //{
+        //    System.Drawing.Point endPosition = new System.Drawing.Point(this.m_Position.X, this.m_Position.Y);
+        //    endPosition.X += this.m_Size.Width;
+        //    endPosition.Y += this.m_Size.Height;
+        //    return endPosition;
+        //}
+
+        //void SetEndPosition(System.Drawing.Point Value)
+        //{
+        //    this.Width = Value.X - m_Position.X;
+        //    this.Height = Value.Y - m_Position.Y;
+        //}
+
+        //public override void Draw(System.Drawing.Graphics g)
+        //{
+        //    System.Drawing.Drawing2D.GraphicsContainer gContainer = g.BeginContainer();
+        //    System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
+        //    float X = (float)this.X;
+        //    float Y = (float)this.Y;
+        //    if (m_Rotation != 0)
+        //    {
+        //        myMatrix.RotateAt((float)(m_Rotation), new System.Drawing.PointF(X, Y), System.Drawing.Drawing2D.MatrixOrder.Append);
+        //        g.Transform = myMatrix;
+        //    }
+        //    System.Drawing.Pen myPen = new System.Drawing.Pen(m_lineColor, (float)m_lineWidth);
+
+        //    g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
+        //    g.EndContainer(gContainer);
+        //}
+
+        //void Draw(System.Drawing.Graphics g, System.Drawing.Drawing2D.AdjustableArrowCap customStartCap, System.Drawing.Drawing2D.AdjustableArrowCap customEndCap)
+        //{
+        //    System.Drawing.Drawing2D.GraphicsContainer gContainer = g.BeginContainer();
+        //    System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
+
+        //    float X = (float)this.X;
+        //    float Y = (float)this.Y;
+        //    if (m_Rotation != 0)
+        //    {
+        //        myMatrix.RotateAt((float)m_Rotation, new System.Drawing.PointF(X, Y), System.Drawing.Drawing2D.MatrixOrder.Append);
+        //        g.Transform = myMatrix;
+        //    }
+        //    System.Drawing.Pen myPen = new System.Drawing.Pen(m_lineColor, (float)m_lineWidth);
+
+        //    // put startcaps and endcaps on lines
+        //    if (customStartCap != null) myPen.CustomStartCap = customStartCap;
+        //    if (customEndCap != null) myPen.CustomEndCap = customEndCap;
+
+        //    g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
+        //    g.EndContainer(gContainer);
+        //}
+    }
+
+
     public class CTextGraphics : GraphicObject
     {
         protected System.Drawing.Font m_Font = System.Drawing.SystemFonts.DefaultFont;
@@ -622,30 +688,38 @@ namespace SustainableChemistry
         public CTextGraphics() : base() { }
         public CTextGraphics(System.Drawing.Point graphicPosition, String text, System.Drawing.Font textFont, System.Drawing.Color textColor) : base(graphicPosition)
         {
+            SetPosition(graphicPosition);
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
+            m_AutoSize = true;
         }
 
         public CTextGraphics(int posX, int posY, String text, System.Drawing.Font textFont, System.Drawing.Color textColor) : base(posX, posY)
         {
+            SetPosition(new System.Drawing.Point(posX, posY));
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
+            m_AutoSize = true;
         }
 
         public CTextGraphics(System.Drawing.Point graphicPosition, String text, System.Drawing.Font textFont, System.Drawing.Color textColor, double rotation) : base(graphicPosition, rotation)
         {
+            SetPosition(graphicPosition);
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
+            m_AutoSize = true;
         }
 
         CTextGraphics(int posX, int posY, String text, System.Drawing.Font textFont, System.Drawing.Color textColor, double rotation) : base(posX, posY, rotation)
         {
+            SetPosition(new System.Drawing.Point(posX, posY));
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
+            m_AutoSize = true;
         }
 
         public System.Drawing.Font Font

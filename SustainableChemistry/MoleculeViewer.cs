@@ -10,247 +10,115 @@ using System.Windows.Forms;
 
 namespace SustainableChemistry
 {
-    public delegate void SelectionChanged(Object sender, SelectionChangedEventArgs args);
-    public delegate void StatusUpdate(Object sender, StatusUpdateEventArgs args);
-    public delegate void GraphicObjectsChanged(Object sender, GraphicObjectsChangedEventsArgs args);
-
-    public class SelectionChangedEventArgs : System.EventArgs
-    {
-
-        GraphicObject m_SelectedObject;
-        GraphicObject[] m_SelectedObjects;
-
-        public SelectionChangedEventArgs(GraphicObject selectedObject)
-        {
-            m_SelectedObject = selectedObject;
-            m_SelectedObjects = new GraphicObject[0];
-        }
-
-
-        public SelectionChangedEventArgs(GraphicObject[] selectedObjects)
-        {
-            m_SelectedObject = null;
-            if (selectedObjects.Length > 0) m_SelectedObject = selectedObjects[0];
-            m_SelectedObjects = selectedObjects;
-        }
-
-        public Object SelectedObject
-        {
-            get
-            {
-                return m_SelectedObject;
-            }
-        }
-
-        public Object SelectedObjects
-        {
-            get
-            {
-                return m_SelectedObjects;
-            }
-        }
-    };
-
-    public enum StatusUpdateType
-    {
-        ObjectRotated = 0,
-        ObjectMoved = 1,
-        ObjectDeleted = 2,
-        SurfaceZoomChanged = 3,
-        FileLoaded = 4,
-        FileSaved = 5,
-        SelectionChanged = 6
-    };
-
-    public class StatusUpdateEventArgs : System.EventArgs
-    {
-        StatusUpdateType m_UpdateType;
-        GraphicObject m_SelectedObject;
-        GraphicObject[] m_SelectedObjects;
-        String m_Message;
-        Point m_Coord;
-        double m_Amount;
-
-        public StatusUpdateEventArgs(StatusUpdateType UpdateType, GraphicObject Selection, String StatusMessage, Point Coord, double Amt)
-        {
-            m_UpdateType = UpdateType;
-            m_SelectedObject = Selection;
-            m_SelectedObjects = new GraphicObject[1];
-            m_SelectedObjects[0] = Selection;
-            m_Message = StatusMessage;
-            m_Coord = Coord;
-            m_Amount = Amt;
-        }
-
-
-        public StatusUpdateEventArgs(StatusUpdateType UpdateType, GraphicObject[] Selection, String StatusMessage, Point Coord, double Amt)
-        {
-            m_UpdateType = UpdateType;
-            m_SelectedObject = null;
-            if (Selection.Length > 0) m_SelectedObject = Selection[0];
-            m_SelectedObjects = Selection;
-            m_Message = StatusMessage;
-            m_Coord = Coord;
-            m_Amount = Amt;
-        }
-
-        public StatusUpdateType Type
-        {
-            get
-            {
-                return m_UpdateType;
-            }
-        }
-
-        public GraphicObject SelectedObject
-        {
-            get
-            {
-                return m_SelectedObject;
-            }
-        }
-
-        public GraphicObject[] SelectedObjects
-        {
-            get
-            {
-                return m_SelectedObjects;
-            }
-        }
-
-        public String Message
-        {
-            get
-            {
-                return m_Message;
-            }
-        }
-        public System.Drawing.Point Coordinates
-        {
-            get
-            {
-                return m_Coord;
-            }
-        }
-
-        public double Amount
-        {
-            get
-            {
-                return m_Amount;
-            }
-        }
-    };
-
-    public enum GraphicObjectsChangedType
-    {
-        Edited = 0,
-        Added = 1,
-        Cut = 2,
-        Copied = 3,
-        Pasted = 4,
-        Deleted = 5,
-        DeleteAll = 6
-    };
-
-
-    public class GraphicObjectsChangedEventsArgs : System.EventArgs
-    {
-        Object m_ChangedObject;
-        GraphicObjectsChangedType m_ChangeType;
-
-        public GraphicObjectsChangedEventsArgs(Object newObject, GraphicObjectsChangedType type)
-        {
-            m_ChangedObject = newObject;
-            m_ChangeType = type;
-        }
-
-        public Object ChangedObject
-        {
-            get
-            {
-                return m_ChangedObject;
-            }
-        }
-
-        public GraphicObjectsChangedType ChangeType
-        {
-            get
-            {
-                return m_ChangeType;
-            }
-        }
-    };
 
     public partial class MoleculeViewer : UserControl
     {
         // Member variables...
         //Properties...
-        //      bool m_AddingStream;
-        //      bool m_DrawingLine;
-        //Color m_GridLineColor;// As Color = Color.LightBlue
-        //      System.Drawing.Drawing2D.DashStyle m_GridLineDashStyle;
-        //      int m_GridLineWidth;// As Integer = 1
-        //      double m_GridSize;// A Single = 50
-        //      Color m_MarginColor;// AsColor = Color.Green
-        //      System.Drawing.Drawing2D.DashStyle m_MarginLineDashStyle;
-        //      int m_MarginLineWidth;// As Integer = 1
-        //      double m_MinimumGridSize;
-        //      bool m_Modified;// Modified is set to false indictaing no changes are made to a newly opened flowsheet
-        //      Color m_NonPrintingAreaColor;// As Color = Color.Gray
-        //      bool m_PrintGrid;// As Boolean = True
-        //      bool m_PrintMargins;// As Boolean = True
-        System.Drawing.Rectangle m_SelectionRectangle = new System.Drawing.Rectangle(0, 0, 850, 1100);
+        [System.ComponentModel.Category("Layout")]
+        //public System.Drawing.Rectangle SurfaceBounds { get; set; } = new System.Drawing.Rectangle(0, 0, 1100, 850);
+        GraphicObjectCollection m_DrawingObjects = new GraphicObjectCollection();
+        bool Modified { get; set; } = false;// Modified is set to false indictaing no changes are made to a newly opened flowsheet
+        bool m_DrawingLine = false;
+
+        // Selection Rectangle Properties...
+        System.Drawing.Rectangle m_SelectionRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
         bool m_SelectionDragging = false;// As Boolean = False
-        //      bool m_ShowGrid;// As Boolean = True
-        //      bool m_ShowMargins;// As Boolean = True
-        //System.Drawing.Rectangle m_SurfaceBounds;// AsNew Rectangle(0, 0, 850, 1100)
-        //      System.Drawing.Rectangle m_SurfaceMargins;
-
-        int m_HorizRes;// As Integer = 300
-        int m_VertRes;// As Integer = 300
-        double m_Zoom;// As Single = 0.5
-        System.Drawing.Point m_Location;
+        System.Drawing.Point dragOffset = new System.Drawing.Point(0, 0);
 
 
-        //      bool m_DraggingSelectedObject;// As Boolean = False
-        //      bool m_RotatingSelectedObject;// As Boolean = False
-        //      double startingRotation;// As Single = 0
-        //      double originalRotation;// As Single = 0
-        //      List<Point> m_Points;
-        //int sel_corner;
-        //      bool resizing;
-        //      Point dragOffset;
-        //      SizeDirection sz_direct;
-        //      int sel_line;
+        //Grid Properties...
+        [System.ComponentModel.Category("Appearance")]
+        public bool ShowGrid { get; set; } = false;
+        [System.ComponentModel.Category("Appearance")]
+        public System.Drawing.Color GridLineColor { get; set; } = System.Drawing.Color.LightBlue;
+        [System.ComponentModel.Category("Appearance")]
+        public System.Drawing.Drawing2D.DashStyle GridLineDashStyle { get; set; } = System.Drawing.Drawing2D.DashStyle.Solid;
+        [System.ComponentModel.Category("Appearance")]
+        public int GridLineWidth { get; set; } = 1;
+        [System.ComponentModel.Category("Appearance")]
+        public double GridSize { get; set; } = 50;
+        [System.ComponentModel.Category("Appearance")]
+        public double MinimumGridSize { get; set; } = 1;
+
+        //Margins Properties...
+        [System.ComponentModel.Category("Appearance")]
+        public bool ShowMargins { get; set; } = false;
+        [System.ComponentModel.Category("Appearance")]
+        public System.Drawing.Drawing2D.DashStyle MarginLineDashStyle { get; set; } = System.Drawing.Drawing2D.DashStyle.Solid;
+        [System.ComponentModel.Category("Appearance")]
+        public System.Drawing.Color MarginColor { get; set; } = System.Drawing.Color.Green;
+        [System.ComponentModel.Category("Appearance")]
+        public int MarginLineWidth { get; set; } = 1;
+        [System.ComponentModel.Category("Layout")]
+        public System.Drawing.Rectangle SurfaceMargins { get; set; } = new System.Drawing.Rectangle(100, 100, 900, 650);
+
+        int m_HorizRes = 300;
+        int m_VertRes = 300;
+        double m_Zoom = 0.5;
+
+        //Printing Properties...
+        [System.ComponentModel.Category("Appearance")]
+        public System.Drawing.Color NonPrintingAreaColor { get; set; } = System.Drawing.Color.Gray;
+        [System.ComponentModel.Category("Behavior")]
+        public bool PrintGrid { get; set; } = false;
+        [System.ComponentModel.Category("Behavior")]
+        public bool PrintMargins { get; set; } = false;
+
+        System.Drawing.Point m_Location = new System.Drawing.Point(0, 0);
 
 
-        GraphicObjectCollection m_DrawingObjects;// As New GraphicObjectCollection()
+        bool m_DraggingSelectedObject = false;
+        bool m_RotatingSelectedObject = false;
+        double startingRotation = 0;
+        double originalRotation = 0;
+        List<Point> m_Points;
+        int sel_corner;
+        bool resizing = false;
+        SizeDirection sz_direct;
+        int sel_line;
+
+
         public MoleculeViewer()
         {
             InitializeComponent();
-            this.m_DrawingObjects = new GraphicObjectCollection();
-            m_Zoom = 1.0;
         }
 
-        //Public Events
-        event SelectionChanged OnSelectionChanged;
-        event StatusUpdate OnStatusUpdate;
-        event GraphicObjectsChanged OnGraphicObjectsChanged;
+        [System.ComponentModel.Category("Property Changed")]
+        public delegate void SelectionChangedHandler(Object sender, SelectionChangedEventArgs args);
+        public delegate void StatusUpdateHandler(Object sender, StatusUpdateEventArgs args);
+        public delegate void GraphicObjectsChangedHandler(Object sender, GraphicObjectsChangedEventsArgs args);
+
+        ////Public Events
+        public event SelectionChangedHandler SelectionChanged;
+        public event StatusUpdateHandler StatusUpdate;
+        public event GraphicObjectsChangedHandler GraphicObjectsChanged;
+
 
         public ChemInfo.Molecule Molecule
         {
             set
             {
-                this.m_DrawingObjects.Clear();
+                m_DrawingObjects.Clear();
                 ChemInfo.Molecule m = value;
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
-                    m_DrawingObjects.Add(new CTextGraphics(a.X_2D - m.Location.X, a.Y_2D - m.Location.Y, a.AtomicSymbol, this.Font, a.Color));
+                    CTextGraphics text = new CTextGraphics(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, a.AtomicSymbol, this.Font, a.Color);
+                    text.Tag = a;
+                    m_DrawingObjects.Add(text);
                     foreach (ChemInfo.Bond bond in a.BondedAtoms)
-                        m_DrawingObjects.Add(new CLineGraphic(a.X_2D - m.Location.X, a.Y_2D - m.Location.Y, bond.ConnectedAtom.X_2D - m.Location.X, bond.ConnectedAtom.Y_2D - m.Location.Y, 1, Color.Black));
+                    {
+                        CLineGraphic line = new CLineGraphic(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, bond.ConnectedAtom.Location.X - m.Location.X, bond.ConnectedAtom.Location.Y - m.Location.Y, 1, Color.Black);
+                        line.Tag = bond;
+                        m_DrawingObjects.Add(line);
+    //                    GraphicBond bond = new GraphicBond(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, bond.ConnectedAtom.Location.X - m.Location.X,
+    //bond.ConnectedAtom.Location.Y - m.Location.Y, 1, Color.Black, bond);
+    //                    //line.Tag = bond;
+    //                    m_DrawingObjects.Add(bond);
+
+                    }
                 }
-                m_Location = m.Location;
+                this.Location = m.Location;
                 m_Zoom = this.Size.Height / m.Size.Height;
                 double test = this.Size.Width / m.Size.Width;
                 if (test > m_Zoom) m_Zoom = test;
@@ -259,34 +127,32 @@ namespace SustainableChemistry
             }
         }
 
+        //public GraphicObjectCollection DrawingObjects
+        //{
+        //    get
+        //    {
+        //        return m_DrawingObjects;
+        //    }
+        //    set
+        //    {
+        //        m_DrawingObjects = value;
+        //    }
+        //}
+
+        int m_SelectedIndex = -1;
         public GraphicObject SelectedObject
         {
             get
             {
-                for (int i = 0; i < m_DrawingObjects.Count; i++)
-                {
-                    if (((GraphicObject)(m_DrawingObjects[i])).Selected) return (GraphicObject)m_DrawingObjects[i];
-                }
+                if (m_SelectedIndex >= 0) return m_DrawingObjects[m_SelectedIndex];
                 return null;
             }
 
             set
             {
-                for (int i = 0; i < m_DrawingObjects.Count; i++)
-                {
-                    ((GraphicObject)m_DrawingObjects[i]).Selected = false;
-                    if ((GraphicObject)m_DrawingObjects[i] == value) ((GraphicObject)m_DrawingObjects[i]).Selected = true;
-                }
-                if (value == null)
-                {
-                    GraphicObject gObj = null;
-                    OnStatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, gObj,
-                        "No Object Selected", new System.Drawing.Point(0, 0), 0.0));
-                    OnSelectionChanged(this, new SelectionChangedEventArgs(gObj));
-                    return;
-                }
-                OnSelectionChanged(this, new SelectionChangedEventArgs(value));
-                OnStatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
+                m_SelectedIndex = m_DrawingObjects.IndexOf(value);
+                if (SelectionChanged != null) SelectionChanged(this, new SelectionChangedEventArgs(value));
+                if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
                     "Selected Object Changed", value.GetPosition(), 0.0));
             }
         }
@@ -324,17 +190,16 @@ namespace SustainableChemistry
                             ((GraphicObject)m_DrawingObjects[i]).Selected = true;
                     }
                 }
-                OnSelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
+                if (SelectionChanged!=null) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
                 Point location = new System.Drawing.Point(0, 0);
                 if (this.SelectedObjects.Length > 0)
                 {
                     location = value[0].GetPosition();
                 }
-                OnStatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
+                if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
                     "Selected Object Changed", location, 0.0));
             }
         }
-
         public double Zoom
         {
             get
@@ -346,54 +211,121 @@ namespace SustainableChemistry
                 if (value > 0.05)
                     m_Zoom = value;
                 else m_Zoom = 0.05;
-                /*OnStatusUpdate(this, gcnew StatusUpdateEventArgs(StatusUpdateType::SurfaceZoomChanged, 
-                    this->SelectedObjects, String::Format("Zoom set to {0}", (this->m_Zoom * 100)), 
-                    Point (0,0), this->m_Zoom));*/
+                if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SurfaceZoomChanged, 
+                    this.SelectedObjects, String.Format("Zoom set to {0}", (this.m_Zoom * 100)), 
+                    new System.Drawing.Point (0,0), this.m_Zoom));
                 this.Invalidate();
             }
         }
 
-        private void MoleculeViewer_Paint(object sender, PaintEventArgs e)
+        // Public Methods
+        double GetFitWidthZoom()
         {
-            //sender;
-            //	try{
-
-            System.Drawing.Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            //get the dpi settings of the graphics context,
-            //for example; 96dpi on screen, 600dpi for the printer
-            //used to adjust grid and margin sizing.
-            this.m_HorizRes = (int)(g.DpiX);
-            this.m_VertRes = (int)(g.DpiY);
-
-            //handle the possibility that the viewport is scrolled,
-            //adjust my origin coordintates to compensate
-            Point pt = this.AutoScrollPosition;
-            g.TranslateTransform((float)(pt.X), (float)(pt.Y));
-
-
-            ////Draw dashed line margin indicators, over top of objects
-            //if (m_ShowGrid)
-            //    DrawGrid(g);
-            //if (m_ShowMargins)
-            //    DrawMargins(g);
-            //draw the actual objects onto the page, on top of the grid
-            //pass the graphics resolution onto the objects
-            //so that images and other objects can be sized
-            //correct taking the dpi into consideration.
-            this.m_DrawingObjects.HorizontalResolution = (int)(g.DpiX);
-            this.m_DrawingObjects.VerticalResolution = (int)(g.DpiY);
-            this.m_DrawingObjects.DrawObjects(g, m_Zoom);
-            //doesn't really draw the selected object, but instead the
-            //selection indicator, a dotted outline around the selected object
-            this.m_DrawingObjects.DrawSelectedObject(g, this.SelectedObject, this.m_Zoom);
-
-            //draw selection rectangle (click and drag to select interface)
-            //on top of everything else, but transparent
-            if (m_SelectionDragging)
+            System.Drawing.Rectangle bounds = ConvertToPixels(this.Bounds);
+            System.Drawing.Size display = this.Size;
+            double fitWidth = (double)display.Width / (double)bounds.Width;
+            int newHeight = (int)(fitWidth * bounds.Height);
+            if (display.Height < newHeight)
             {
-                DrawSelectionRectangle(g);
+                this.AutoScrollMargin = new System.Drawing.Size(this.AutoScrollMargin.Height, 18);
+                fitWidth = (double)(display.Width - 17) / (double)bounds.Width;
             }
+            return fitWidth;
+        }
+
+        double GetFitHeightZoom()
+        {
+            System.Drawing.Rectangle bounds = ConvertToPixels(this.Bounds);
+            System.Drawing.Size display = this.Size;
+            double fitHeight = (double)display.Height / (double)bounds.Height;
+            int newWidth = (int)(fitHeight * bounds.Width);
+            if (display.Width < newWidth)
+            {
+                this.AutoScrollMargin = new System.Drawing.Size(18, this.AutoScrollMargin.Width);
+                fitHeight = (double)(display.Height - 17) / (double)bounds.Height;
+            }
+            return fitHeight;
+        }
+
+        // Private Methods
+        double ConvertToHPixels(double value)
+        {
+            return (value * m_HorizRes);
+        }
+
+        double ConvertToVPixels(double value)
+        {
+            return (value * m_VertRes);
+        }
+
+        System.Drawing.Rectangle ConvertDSToInches(System.Drawing.Rectangle rect)
+        {
+            return new System.Drawing.Rectangle((int)((double)rect.X / (double)m_HorizRes * 100),
+                (int)(((double)rect.Y) / ((double)m_VertRes) * 100),
+                (int)((double)(rect.Width) / ((double)(m_HorizRes) * 100)),
+                (int)((double)(rect.Height) / ((double)(m_VertRes) * 100)));
+        }
+
+        System.Drawing.Rectangle ConvertToPixels(System.Drawing.Rectangle rect)
+        {
+            //'convert from 100ths of an inch to pixels
+            return new System.Drawing.Rectangle((int)(ConvertToHPixels(rect.X)) / 100,
+                (int)(ConvertToVPixels(rect.Y)) / 100,
+                (int)(ConvertToHPixels(rect.Width)) / 100,
+                (int)(ConvertToVPixels(rect.Height)) / 100);
+        }
+
+        System.Drawing.Rectangle ZoomRectangle(System.Drawing.Rectangle originalRect)
+        {
+            return new System.Drawing.Rectangle((int)(originalRect.X * m_Zoom),
+                (int)(originalRect.Y * m_Zoom),
+                (int)(originalRect.Width * m_Zoom),
+                (int)(originalRect.Height * m_Zoom));
+
+        }
+
+        System.Drawing.Rectangle DeZoomRectangle(System.Drawing.Rectangle originalRect)
+        {
+            return new System.Drawing.Rectangle((int)(originalRect.X / m_Zoom),
+                (int)(originalRect.Y / m_Zoom),
+                (int)(originalRect.Width / m_Zoom),
+                (int)(originalRect.Height / m_Zoom));
+        }
+
+        void DrawGrid(Graphics g)
+        {
+            System.Drawing.Rectangle bounds = this.ClientRectangle;
+            double horizGridSize = (ConvertToHPixels(this.GridSize / 100 * m_Zoom));
+            double vertGridSize = (ConvertToVPixels(this.GridSize / 100 * m_Zoom));
+            //bounds = ZoomRectangle(bounds);
+            if (AutoScrollMinSize.Height != bounds.Height &&
+                AutoScrollMinSize.Width != bounds.Width)
+            {
+                AutoScrollMinSize = new System.Drawing.Size(bounds.Width, bounds.Height);
+            }
+            g.Clear(this.NonPrintingAreaColor);
+            g.FillRectangle(new SolidBrush(this.BackColor), bounds);
+
+            System.Drawing.Pen gridPen = new System.Drawing.Pen(this.GridLineColor, (float)this.GridLineWidth);
+            gridPen.DashStyle = this.GridLineDashStyle;
+
+            for (int i = (int)vertGridSize; i < bounds.Height - 1; i = i + (int)vertGridSize)
+            {
+                g.DrawLine(gridPen, 0, i, bounds.Width, i);
+            }
+            for (int i = (int)horizGridSize; i < bounds.Width - 1; i = i + (int)horizGridSize)
+            {
+                g.DrawLine(gridPen, i, 0, i, bounds.Height);
+            }
+        }
+
+        void DrawMargins(Graphics g)
+        {
+            System.Drawing.Rectangle margins = ZoomRectangle(ConvertToPixels(this.SurfaceMargins));
+            System.Drawing.Pen marginPen = new System.Drawing.Pen(this.MarginColor);
+            marginPen.DashStyle = this.MarginLineDashStyle;
+            marginPen.Width = (float)this.MarginLineWidth;
+            g.DrawRectangle(marginPen, margins);
         }
 
         void DrawSelectionRectangle(Graphics g)
@@ -425,5 +357,394 @@ namespace SustainableChemistry
 
             g.FillRectangle(selectionBrush, normalizedRectangle);
         }
+
+        void MoleculeViewer_Paint(object sender, PaintEventArgs e)
+        {
+            //sender;
+            //	try{
+
+            System.Drawing.Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            //get the dpi settings of the graphics context,
+            //for example; 96dpi on screen, 600dpi for the printer
+            //used to adjust grid and margin sizing.
+            m_HorizRes = (int)(g.DpiX);
+            m_VertRes = (int)(g.DpiY);
+
+            //handle the possibility that the viewport is scrolled,
+            //adjust my origin coordintates to compensate
+            Point pt = this.AutoScrollPosition;
+            g.TranslateTransform((float)(pt.X), (float)(pt.Y));
+
+
+            //Draw dashed line margin indicators, over top of objects
+            if (this.ShowGrid)
+                DrawGrid(g);
+            if (this.ShowMargins)
+                DrawMargins(g);
+            //draw the actual objects onto the page, on top of the grid
+            //pass the graphics resolution onto the objects
+            //so that images and other objects can be sized
+            //correct taking the dpi into consideration.
+            m_DrawingObjects.HorizontalResolution = (int)(g.DpiX);
+            m_DrawingObjects.VerticalResolution = (int)(g.DpiY);
+            m_DrawingObjects.DrawObjects(g, m_Zoom);
+            //doesn't really draw the selected object, but instead the
+            //selection indicator, a dotted outline around the selected object
+            m_DrawingObjects.DrawSelectedObject(g, this.SelectedObject, this.m_Zoom);
+
+            //draw selection rectangle (click and drag to select interface)
+            //on top of everything else, but transparent
+            if (m_SelectionDragging)
+            {
+                DrawSelectionRectangle(g);
+            }
+        }
+
+        System.Drawing.Point gscTogoc(System.Drawing.Point gsPT)
+        {
+            return new System.Drawing.Point((int)((gsPT.X - this.AutoScrollPosition.X) / this.Zoom), (int)((gsPT.Y - this.AutoScrollPosition.Y) / this.Zoom));
+        }
+
+        System.Drawing.Point gscTogoc(int X, int Y)
+        {
+            return new System.Drawing.Point((int)((X - this.AutoScrollPosition.X) / this.Zoom), (int)((Y - this.AutoScrollPosition.Y) / this.Zoom));
+        }
+
+        System.Drawing.Point gocTogsc(System.Drawing.Point goPT)
+        {
+            return new System.Drawing.Point((int)((goPT.X) * this.m_Zoom), (int)((goPT.Y) * this.m_Zoom));
+        }
+
+        System.Drawing.Point gocTogsc(int X, int Y)
+        {
+            return new System.Drawing.Point((int)(X * m_Zoom), (int)(Y * m_Zoom));
+        }
+
+        double AngleToPoint(System.Drawing.Point Origin, System.Drawing.Point Target)
+        {
+            //'a cool little utility function, 
+            //'given two points finds the angle between them....
+            //'forced me to recall my highschool math, 
+            //'but the task is made easier by a special overload to
+            //'Atan that takes X,Y co-ordinates.
+            double Angle;
+            Target.X = Target.X - Origin.X;
+            Target.Y = Target.Y - Origin.Y;
+            Angle = Math.Atan2(Target.Y, Target.X) / (Math.PI / 180);
+            return Angle;
+        }
+
+        private void MoleculeViewer_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.Cursor == System.Windows.Forms.Cursors.Cross) return;
+            System.Drawing.Point mousePT = gscTogoc(e.X, e.Y);
+            this.Invalidate();
+
+            if (this.Cursor == System.Windows.Forms.Cursors.Arrow)
+            {
+                this.SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
+                if (this.SelectedObject != null)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                    {
+                        m_RotatingSelectedObject = true;
+                        startingRotation = AngleToPoint(this.SelectedObject.GetPosition(), mousePT);
+                        originalRotation = this.SelectedObject.Rotation;
+                    }
+                    else
+                    {
+                        //m_DraggingSelectedObject = true;
+                        //dragOffset.X = this.SelectedObject.X - mousePT.X;
+                        //dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
+                    }
+                }
+                else
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        m_SelectionDragging = true;
+                        m_SelectionRectangle.X = e.X;
+                        m_SelectionRectangle.Y = e.Y;
+                        m_SelectionRectangle.Height = 0;
+                        m_SelectionRectangle.Width = 0;
+                    }
+                }
+            }
+            else if (this.Cursor == System.Windows.Forms.Cursors.SizeNWSE ||
+                this.Cursor == System.Windows.Forms.Cursors.SizeNESW ||
+                this.Cursor == System.Windows.Forms.Cursors.SizeWE ||
+                this.Cursor == System.Windows.Forms.Cursors.SizeNS)
+            {
+                dragOffset.X = this.SelectedObject.X - mousePT.X;
+                dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
+                resizing = true;
+            }
+        }
+
+        private void MoleculeViewer_MouseMove(object sender, MouseEventArgs e)
+        {
+            System.Drawing.Point dragPoint = gscTogoc(e.X, e.Y);
+            System.Drawing.Point MousePoint = gscTogoc(e.X, e.Y);
+            dragPoint.Offset(dragOffset.X, dragOffset.Y);
+            System.Drawing.Size minSize = new System.Drawing.Size(16, 16);
+            if (this.SelectedObject != null)
+            {
+                if (m_DraggingSelectedObject)
+                {
+                    Rectangle rect = new System.Drawing.Rectangle(this.SelectedObject.GetPosition().X, this.SelectedObject.GetPosition().Y, this.SelectedObject.Width, this.SelectedObject.Height);
+                    this.SelectedObject.SetPosition(dragPoint);
+                    if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectMoved,
+                        this.SelectedObject, String.Format("Object Moved to {0}, {1}", dragPoint.X, dragPoint.Y),
+                        dragPoint, 0));
+                    this.Invalidate();
+                }
+                else if (m_RotatingSelectedObject)
+                {
+                    float currentRotation;
+                    currentRotation = (float)AngleToPoint(this.SelectedObject.GetPosition(), dragPoint);
+                    currentRotation = (float)((int)(currentRotation - startingRotation + originalRotation) % 360);
+                    this.SelectedObject.Rotation = currentRotation;
+                    if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
+                        this.SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
+                        new System.Drawing.Point(0, 0), currentRotation));
+                    this.Invalidate();
+                }
+                else if (resizing)
+                { //combine code because you will need to move ports in both cases
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(this.SelectedObject.X, this.SelectedObject.Y, this.SelectedObject.Width, this.SelectedObject.Height);
+                    System.Drawing.Size sz = new System.Drawing.Size(0, 0);
+                    System.Drawing.Point fixedPT = new System.Drawing.Point(0, 0);
+                    System.Drawing.Point dragPT = new System.Drawing.Point(0, 0);
+                    this.SelectedObject.AutoSize = false;
+                    switch (sz_direct)
+                    {
+                        case SizeDirection.Northwest:  //changing all
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point LRHC = new System.Drawing.Point(0, 0);
+                                sz = this.SelectedObject.GetSize();
+                                LRHC.X = ULHC.X + sz.Width;
+                                LRHC.Y = ULHC.Y + sz.Height;
+                                sz.Width = LRHC.X - MousePoint.X;
+                                sz.Height = LRHC.Y - MousePoint.Y;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                ULHC.X = LRHC.X - sz.Width;
+                                ULHC.Y = LRHC.Y - sz.Height;
+                                this.SelectedObject.SetPosition(ULHC);
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.North://changing top, and height
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point LLHC = new System.Drawing.Point(0, 0);
+                                LLHC.X = ULHC.X;
+                                sz = this.SelectedObject.GetSize();
+                                LLHC.Y = ULHC.Y + sz.Height;
+                                sz.Height = LLHC.Y - MousePoint.Y;
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                ULHC.Y = LLHC.Y - sz.Height;
+                                this.SelectedObject.SetPosition(ULHC);
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.Northeast://changing top, width, and height
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point LLHC = new System.Drawing.Point(0, 0);
+                                sz = this.SelectedObject.GetSize();
+                                LLHC.X = ULHC.X;
+                                LLHC.Y = ULHC.Y + sz.Height;
+                                sz.Width = MousePoint.X - LLHC.X;
+                                sz.Height = LLHC.Y - MousePoint.Y;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                ULHC.X = LLHC.X;
+                                ULHC.Y = LLHC.Y - sz.Height;
+                                this.SelectedObject.SetPosition(ULHC);
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.East: //changing width
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                sz = this.SelectedObject.GetSize();
+                                sz.Width = MousePoint.X - ULHC.X;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.Southeast:  //changing height, width
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                sz = this.SelectedObject.GetSize();
+                                sz.Width = MousePoint.X - ULHC.X;
+                                sz.Height = MousePoint.Y - ULHC.Y;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.South://changing height
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                sz = this.SelectedObject.GetSize();
+                                sz.Height = MousePoint.Y - ULHC.Y;
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.Southwest:  //changing left,height, and width
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point URHC = new System.Drawing.Point(0, 0);
+                                sz = this.SelectedObject.GetSize();
+                                URHC.Y = ULHC.Y;
+                                URHC.X = ULHC.X + sz.Width;
+                                sz.Width = URHC.X - MousePoint.X;
+                                sz.Height = MousePoint.Y - URHC.Y;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                if (sz.Height < 16)
+                                {
+                                    sz.Height = 16;
+                                }
+                                ULHC.X = URHC.X - sz.Width;
+                                this.SelectedObject.SetPosition(ULHC);
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        case SizeDirection.West://changing left and width
+                            {
+                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point URHC = new System.Drawing.Point(0, 0);
+                                sz = this.SelectedObject.GetSize();
+                                URHC.Y = ULHC.Y;
+                                URHC.X = ULHC.X + sz.Width;
+                                sz.Width = URHC.X - MousePoint.X;
+                                if (sz.Width < 16)
+                                {
+                                    sz.Width = 16;
+                                }
+                                ULHC.X = URHC.X - sz.Width;
+                                this.SelectedObject.SetPosition(ULHC);
+                                this.SelectedObject.SetSize(sz);
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                }
+            }
+            //else if (this.GetDrawingLine())
+            //{
+            //    //this.Cursor = Cursors.Cross;
+            //    System.Drawing.Point points[] = this.GetDrawingLinePoints();
+            //    points[points.Length - 1] = gscTogoc(e.X, e.Y);
+            //    this.SetDrawingLinePoints(points);
+            //    this.Invalidate();
+            //}
+            else if (m_SelectionDragging)
+            {
+                m_SelectionRectangle.Width = e.X - m_SelectionRectangle.X;
+                m_SelectionRectangle.Height = e.Y - m_SelectionRectangle.Y;
+            }
+            this.Invalidate();
+        }
+
+        private void MoleculeViewer_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (m_DrawingLine) return;
+            m_DraggingSelectedObject = false;
+            m_RotatingSelectedObject = false;
+            Point mousePT = gscTogoc(e.X, e.Y);
+            if (m_SelectionDragging)
+            {
+                //'TODO: Rewrite to handle multiple selections
+                //'really just need to change from this.SelectedObject to a collection
+                //'add each found object in this loop, removing the Exit For
+                System.Drawing.Rectangle zoomedSelection = DeZoomRectangle(m_SelectionRectangle);
+                int numObj = m_DrawingObjects.Count;
+                foreach (GraphicObject graphicObj in m_DrawingObjects)
+                {
+                    if (graphicObj.HitTest(zoomedSelection))
+                    {
+                        graphicObj.Selected = true;
+                    }
+                }
+                m_SelectionDragging = false;
+                if (SelectionChanged != null)
+                {
+                    if (numObj == 1) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObject));
+                    else SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
+                }
+            }
+            else if (resizing)
+            {
+                resizing = false;
+                sz_direct = SizeDirection.NA;
+                System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Arrow;
+            }
+            this.Invalidate();
+        }
+
+        private void MoleculeViewer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == System.Windows.Forms.Keys.Delete)
+            {
+                if (this.SelectedObjects != null)
+                {
+                    for (int i = 0; i < this.SelectedObjects.Length; i++)
+                    {
+                        m_DrawingObjects.Remove(this.SelectedObjects[i]);
+                    }
+                    if (GraphicObjectsChanged!=null) GraphicObjectsChanged(this, new GraphicObjectsChangedEventsArgs(this.SelectedObjects, GraphicObjectsChangedType.Deleted));
+                }
+            }
+            this.Invalidate();
+        }
+
+        private void MoleculeViewer_MouseClick(object sender, MouseEventArgs e)
+        {
+            System.Drawing.Point clickPT = System.Windows.Forms.Control.MousePosition;
+            clickPT = PointToClient(clickPT);
+            System.Drawing.Point mousePT = gscTogoc(clickPT);
+            if (System.Windows.Forms.Cursor.Current == System.Windows.Forms.Cursors.Arrow)
+            {
+                this.SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
+            }
+        }
     }
 }
+

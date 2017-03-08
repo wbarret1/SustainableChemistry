@@ -49,6 +49,7 @@ namespace ChemInfo
                         retVal = retVal + this[i].ConnectedAtom.AtomicSymbol + ", ";
                     }
                 }
+                if (this.Count < 1) return retVal;
                 return retVal + this[this.Count - 1].ConnectedAtom.AtomicSymbol;
             }
         }

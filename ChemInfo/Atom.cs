@@ -80,7 +80,9 @@ namespace ChemInfo
     [System.ComponentModel.TypeConverter (typeof(AtomTypeConverter))]
     public class Atom
     {
-        BondCollection bondedAtoms;
+        BondCollection m_Bonds = new ChemInfo.BondCollection();
+        List<Atom> m_ConnectedAtoms = new List<Atom>();
+
         int degree;
         ELEMENTS e;
         int isotope;
@@ -95,7 +97,6 @@ namespace ChemInfo
         // Constructors
         public Atom(string element)
         {
-            bondedAtoms = new ChemInfo.BondCollection();
             e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             degree = 0;
             isotope = 0;
@@ -108,7 +109,6 @@ namespace ChemInfo
 
         public Atom(string element, AtomType type)
         {
-            bondedAtoms = new ChemInfo.BondCollection();
             e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             degree = 0;
             isotope = 0;
@@ -121,7 +121,6 @@ namespace ChemInfo
 
         public Atom(string element, AtomType type, Chirality chirality)
         {
-            bondedAtoms = new ChemInfo.BondCollection();
             degree = 0;
             isotope = 0;
             charge = 0;
@@ -134,7 +133,6 @@ namespace ChemInfo
         [System.ComponentModel.TypeConverter(typeof(Atom))]
         public Atom(string element, int isotope)
         {
-            bondedAtoms = new ChemInfo.BondCollection();
             degree = 0;
             isotope = (byte)isotope;
             charge = 0;
@@ -219,33 +217,38 @@ namespace ChemInfo
             {
                 return new System.Drawing.Point(_x, _y);
             }
-        }
-
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public int X_2D
-        {
-            get
-            {
-                return _x;
-            }
             set
             {
-                _x = value;
+                _x = value.X;
+                _y = value.Y;
             }
         }
 
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public int Y_2D
-        {
-            get
-            {
-                return _y;
-            }
-            set
-            {
-                _y = value;
-            }
-        }
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public int X_2D
+        //{
+        //    get
+        //    {
+        //        return _x;
+        //    }
+        //    set
+        //    {
+        //        _x = value;
+        //    }
+        //}
+
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public int Y_2D
+        //{
+        //    get
+        //    {
+        //        return _y;
+        //    }
+        //    set
+        //    {
+        //        _y = value;
+        //    }
+        //}
         [System.ComponentModel.BrowsableAttribute(false)]
         public int Angle_2D
         {
@@ -259,10 +262,109 @@ namespace ChemInfo
             }
         }
 
+        public void AddConnectedAtom(Atom a)
+        {
+            this.m_ConnectedAtoms.Add(a);
+        }
+
+        public Atom[] ConnectedAtom
+        {
+            get
+            {
+                return this.m_ConnectedAtoms.ToArray();
+            }
+        }
 
         public void AddBond(Atom atom, BondType type)
         {
+            this.m_ConnectedAtoms.Add(atom);
             Bond b = new Bond(this, atom, type);
+            b.StartPoint = this.Location;
+            if (_angle == 0)
+            {
+                if (numberOfBonds == 0)
+                {
+                    atom.Angle_2D = 45;
+                    b.Angle = 45;
+                }
+                if (numberOfBonds == 1)
+                {
+                    atom.Angle_2D = 315;
+                    b.Angle = 315;
+                }
+            }
+            else if (_angle < 90)
+            {
+                if (numberOfBonds == 0)
+                {
+                    atom.Angle_2D = 315;
+                    b.Angle = 315;
+                }
+                if (numberOfBonds == 1)
+                {
+                    atom.Angle_2D = 45;
+                    b.Angle = 45;
+                }
+                if (numberOfBonds == 2)
+                {
+                    atom.Angle_2D = 45;
+                    b.Angle = 45;
+                }
+            }
+            else if (_angle < 180)
+            {
+                if (numberOfBonds == 0)
+                {
+                    atom.Angle_2D = 45;
+                    b.Angle = 45;
+                }
+                if (numberOfBonds == 1)
+                {
+                    atom.Angle_2D = 135;
+                    b.Angle = 135;
+                }
+                if (numberOfBonds == 2)
+                {
+                    atom.Angle_2D = 225;
+                    b.Angle = 225;
+                }
+            }
+            else if (_angle < 270)
+            {
+                if (numberOfBonds == 0)
+                {
+                    atom.Angle_2D = 135;
+                    b.Angle = 135;
+                }
+                if (numberOfBonds == 1)
+                {
+                    atom.Angle_2D = 225;
+                    b.Angle = 225;
+                }
+                if (numberOfBonds == 2)
+                {
+                    atom.Angle_2D = 315;
+                    b.Angle = 315;
+                }
+            }
+            else if (_angle < 360)
+            {
+                if (numberOfBonds == 0)
+                {
+                    atom.Angle_2D = 45;
+                    b.Angle = 45;
+                }
+                if (numberOfBonds == 1)
+                {
+                    atom.Angle_2D = 225;
+                    b.Angle = 225;
+                }
+                if (numberOfBonds == 2)
+                {
+                    atom.Angle_2D = 315;
+                    b.Angle = 315;
+                }
+            }
             switch (type)
             {
                 case BondType.Single:
@@ -278,8 +380,8 @@ namespace ChemInfo
                     atomType = AtomType.ORGANIC;
                     break;
             }
-            this.bondedAtoms.Add(b);
-            degree = (byte)this.bondedAtoms.Count;
+            this.BondedAtoms.Add(b);
+            degree = (byte)this.BondedAtoms.Count;
         }
 
         [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]
@@ -287,7 +389,7 @@ namespace ChemInfo
         {
             get
             {
-                return this.bondedAtoms;
+                return m_Bonds;
             }
         }
 
@@ -295,7 +397,7 @@ namespace ChemInfo
         {
             get
             {
-                return this.bondedAtoms.Count;
+                return this.BondedAtoms.Count;
             }
         }
 
@@ -304,7 +406,7 @@ namespace ChemInfo
             get
             {
                 int retVal = 0;
-                foreach (Bond b in this.bondedAtoms)
+                foreach (Bond b in this.BondedAtoms)
                 {
                     if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
                     if (b.BondType == BondType.Double) retVal = retVal + 2;
@@ -355,7 +457,7 @@ namespace ChemInfo
                         case ELEMENTS.B:
                             return 2;
                         case ELEMENTS.C:
-                            return 3 - this.bondedAtoms.Count;
+                            return 3 - this.BondedAtoms.Count;
                         case ELEMENTS.N:
                             return 0;
                         case ELEMENTS.O:

@@ -71,8 +71,8 @@ namespace ChemInfo
         public Bond(Atom parent, Atom connectedAtom, BondType type)
         {
             m_ParentAtom = parent;
-            m_StaringPoint = new System.Drawing.Point(parent.X_2D, parent.Y_2D);
             m_connectedAtom = connectedAtom;
+            this.StartPoint = parent.Location;
             m_bondType = type;
         }
 
@@ -146,8 +146,7 @@ namespace ChemInfo
             }
             set
             {
-                this.m_ParentAtom.X_2D = value.X;
-                this.m_ParentAtom.Y_2D = value.Y;
+                this.m_ParentAtom.Location = new System.Drawing.Point(value.X, value.Y);
                 this.m_StaringPoint = value;
                 this.SetConnectedAtomLocation();
             }
@@ -155,10 +154,9 @@ namespace ChemInfo
 
         public void SetConnectedAtomLocation()
         {
-            int endX = this.m_ParentAtom.X_2D + (int)(this.m_length * Math.Sin(Math.PI*180/m_Angle));
-            int endY = this.m_ParentAtom.Y_2D + (int)(this.m_length * Math.Cos(Math.PI * 180 / m_Angle));
-            this.m_connectedAtom.X_2D = endX;
-            this.m_connectedAtom.Y_2D = endY;
+            int endX = this.m_ParentAtom.Location.X + (int)(this.m_length * Math.Sin(Math.PI*(float)m_Angle/180.0));
+            int endY = this.m_ParentAtom.Location.Y + (int)(this.m_length * Math.Cos(Math.PI * (float)m_Angle / 180.0));
+            this.m_connectedAtom.Location = new System.Drawing.Point(endX, endY);
             this.m_EndingPoint = new System.Drawing.Point(endX, endY);
         }
 
@@ -171,7 +169,7 @@ namespace ChemInfo
             //set
             //{                
             //    this.m_EndingPoint = value;
-            //    this.m_connectedAtom.X_2D 
+            //    this.m_connectedAtom.Location.X 
             //}
         }
     }

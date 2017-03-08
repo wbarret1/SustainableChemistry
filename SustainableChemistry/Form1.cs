@@ -34,6 +34,7 @@ namespace SustainableChemistry
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
+            //moleculeViewer1.s
         }
 
         private void importFormTESTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -56,6 +57,7 @@ namespace SustainableChemistry
             }
             molecule.FindRings();
             this.listBox1.Items.Clear();
+            this.moleculeViewer1.Molecule = molecule;
         }
 
         private void enterSMILEToolStripMenuItem_Click(object sender, EventArgs e)
@@ -68,14 +70,14 @@ namespace SustainableChemistry
             this.listBox1.Items.Clear();
             if (molecule == null) return;
             molecule.FindRings();
-            TreeNodeCollection nodes = treeView1.Nodes;
-            nodes.Clear();
-            foreach (ChemInfo.Atom a in molecule.GetAtoms())
-            {
-                TreeNode node = new TreeNode(a.AtomicSymbol);
-                node.Tag = a;
-                nodes.Add(node);
-            }
+            //TreeNodeCollection nodes = treeView1.Nodes;
+            //nodes.Clear();
+            //foreach (ChemInfo.Atom a in molecule.GetAtoms())
+            //{
+            //    TreeNode node = new TreeNode(a.AtomicSymbol);
+            //    node.Tag = a;
+            //    nodes.Add(node);
+            //}
             this.moleculeViewer1.Molecule = molecule;
         }
 
@@ -86,14 +88,9 @@ namespace SustainableChemistry
             listBox1.Items.AddRange(phos);
         }
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void moleculeViewer1_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            this.propertyGrid1.SelectedObject = treeView1.SelectedNode.Tag;
-        }
-
-        private void moleculeViewer1_Paint(object sender, PaintEventArgs e)
-        {
-
+            if (args.SelectedObject != null) this.propertyGrid1.SelectedObject = ((GraphicObject)(args.SelectedObject)).Tag;
         }
     }
 }

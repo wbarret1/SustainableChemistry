@@ -52,11 +52,11 @@ namespace ChemInfo
         }
 
         public void AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
-        {
+        {            
             if (atomTwo != null)
             {
-                atomOne.AddBond(atomTwo, type);
                 atomTwo.AddBond(atomOne, type);
+                atomOne.AddConnectedAtom(atomTwo);
                 ringsFound = false;
             }
         }
@@ -83,25 +83,25 @@ namespace ChemInfo
         void depthFirstSearch(Atom current, Atom parent, bool[] f, Stack<Atom> stack, List<List<Atom>> cycles)
         {
             stack.Push(current);
-            foreach (Bond next in current.BondedAtoms)
+            foreach (Atom next in current.ConnectedAtom)
             {
-                if (next.ConnectedAtom != parent)
+                if (next != parent)
                 {
-                    if (stack.Contains(next.ConnectedAtom))
+                    if (stack.Contains(next))
                     {
                         List<Atom> cycle = new List<Atom>();
                         foreach (Atom a in stack)
                         {
                             cycle.Add(a);
-                            if (a == next.ConnectedAtom) break;
+                            if (a == next) break;
                         }
                         cycles.Add(cycle);
                         stack.Pop();
                         return;
                     }
-                    else if (!f[atoms.IndexOf(next.ConnectedAtom)])
+                    else if (!f[atoms.IndexOf(next)])
                     {
-                        depthFirstSearch(next.ConnectedAtom, current, f, stack, cycles);
+                        depthFirstSearch(next, current, f, stack, cycles);
                     }
                 }
             }
@@ -262,32 +262,32 @@ namespace ChemInfo
 
         public void LocateAtoms2D(Atom a, int angle, bool[] visited)
         {
-            int degreeSep;
-            int bondAngle = angle;
-            if (a != null)
-            {
-                if (visited[this.atoms.IndexOf(a)]) return;
-                visited[this.atoms.IndexOf(a)] = true;
-                degreeSep = 360 / this.atoms[0].Degree;
-            }
-            else
-            {
-                visited = new bool[this.atoms.Count];
-                for (int i = 0; i < this.atoms.Count; i++) visited[i] = false;
-                this.atoms[0].X_2D = 0;
-                this.atoms[0].Y_2D = 0;
-                degreeSep = 360 / this.atoms[0].Degree;
-                this.atoms[0].Angle_2D = degreeSep / 2;
-                this.LocateAtoms2D(this.atoms[0], degreeSep / 2, visited);
-                return;
-            }
-            for (int i = 0; i < a.BondedAtoms.Count; i++)
-            {
-                bondAngle = (bondAngle + degreeSep)% 360;
-                a.BondedAtoms[i].Angle = bondAngle;
-                a.BondedAtoms[i].SetConnectedAtomLocation();
-                this.LocateAtoms2D(a.BondedAtoms[i].ConnectedAtom, bondAngle, visited);
-            }
+            //int degreeSep;
+            //int bondAngle = angle;
+            //if (a != null)
+            //{
+            //    if (visited[this.atoms.IndexOf(a)]) return;
+            //    visited[this.atoms.IndexOf(a)] = true;
+            //    degreeSep = 360 / this.atoms[0].Degree;
+            //}
+            //else
+            //{
+            //    visited = new bool[this.atoms.Count];
+            //    for (int i = 0; i < this.atoms.Count; i++) visited[i] = false;
+            //    this.atoms[0].X_2D = 0;
+            //    this.atoms[0].Y_2D = 0;
+            //    degreeSep = 360 / this.atoms[0].Degree;
+            //    this.atoms[0].Angle_2D = degreeSep / 2;
+            //    this.LocateAtoms2D(this.atoms[0], degreeSep / 2, visited);
+            //    return;
+            //}
+            //for (int i = 0; i < a.BondedAtoms.Count; i++)
+            //{
+            //    bondAngle = (bondAngle + degreeSep)% 360;
+            //    a.BondedAtoms[i].Angle = bondAngle;
+            //    a.BondedAtoms[i].SetConnectedAtomLocation();
+            //    this.LocateAtoms2D(a.BondedAtoms[i].ConnectedAtom, bondAngle, visited);
+            //}
         }
 
         public void GetLocationBounds()
@@ -298,10 +298,10 @@ namespace ChemInfo
             int right = 0;
             foreach(Atom a in this.atoms)
             {
-                if (top > a.X_2D) top = a.X_2D;
-                if (bottom < a.X_2D) bottom = a.X_2D;
-                if (left > a.Y_2D) left = a.Y_2D;
-                if (right < a.Y_2D) right = a.Y_2D;
+                if (top > a.Location.X) top = a.Location.X;
+                if (bottom < a.Location.X) bottom = a.Location.X;
+                if (left > a.Location.Y) left = a.Location.Y;
+                if (right < a.Location.Y) right = a.Location.Y;
             }
             m_Location = new System.Drawing.Point(top, left);
             m_Size = new System.Drawing.Size(right - left, bottom - top);                

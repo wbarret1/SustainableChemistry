@@ -163,33 +163,33 @@ namespace ChemInfo
                 //Atom[] bonded = a.BondedAtoms;
                 //for (int j = 0; j < bonded.Length; j++)
                 // If it connected to two other atoms...
-                foreach (Bond bond in a.BondedAtoms)
+                foreach (Atom atom in a.ConnectedAtom)
                 {
-                    switch (bond.ConnectedAtom.Element)
+                    switch (atom.Element)
                     {
                         case ELEMENTS.C:
-                            C.Add(bond.ConnectedAtom);
+                            C.Add(atom);
                             break;
                         case ELEMENTS.N:
-                            N.Add(bond.ConnectedAtom);
+                            N.Add(atom);
                             break;
                         case ELEMENTS.O:
-                            O.Add(bond.ConnectedAtom);
+                            O.Add(atom);
                             break;
                         case ELEMENTS.P:
-                            P.Add(bond.ConnectedAtom);
+                            P.Add(atom);
                             break;
                         case ELEMENTS.S:
-                            S.Add(bond.ConnectedAtom);
+                            S.Add(atom);
                             break;
                     }
                 }
 
-                if (a.BondedAtoms.Count == 2)
+                if (a.ConnectedAtom.Length == 2)
                 {
 
                 }
-                if (a.BondedAtoms.Count == 3)
+                if (a.ConnectedAtom.Length == 3)
                 {
                     if (C.Count == 3)
                     {
@@ -228,7 +228,7 @@ namespace ChemInfo
                         retVal.Add("phosphorodithioite");
                     }
                 }
-                if (a.BondedAtoms.Count == 4)
+                if (a.ConnectedAtom.Length == 4)
                 {
                     if (O.Count == 4)
                     {
