@@ -39,9 +39,11 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -49,6 +51,11 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -151,33 +158,15 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1145, 626);
-            this.splitContainer1.SplitterDistance = 855;
+            this.splitContainer1.SplitterDistance = 854;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(286, 626);
-            this.propertyGrid1.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.listBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1151, 632);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Functionalities";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // moleculeViewer1
             // 
             this.moleculeViewer1.AutoScroll = true;
+            this.moleculeViewer1.AutoScrollMinSize = new System.Drawing.Size(854, 626);
             this.moleculeViewer1.AutoSize = true;
             this.moleculeViewer1.BackColor = System.Drawing.SystemColors.Window;
             this.moleculeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -187,6 +176,7 @@
             this.moleculeViewer1.GridLineWidth = 1;
             this.moleculeViewer1.GridSize = 50D;
             this.moleculeViewer1.Location = new System.Drawing.Point(0, 0);
+            this.moleculeViewer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.moleculeViewer1.MarginColor = System.Drawing.Color.Green;
             this.moleculeViewer1.MarginLineDashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
             this.moleculeViewer1.MarginLineWidth = 1;
@@ -200,11 +190,62 @@
             this.moleculeViewer1.SelectedObjects = new SustainableChemistry.GraphicObject[0];
             this.moleculeViewer1.ShowGrid = false;
             this.moleculeViewer1.ShowMargins = false;
-            this.moleculeViewer1.Size = new System.Drawing.Size(855, 626);
+            this.moleculeViewer1.Size = new System.Drawing.Size(854, 626);
             this.moleculeViewer1.SurfaceMargins = new System.Drawing.Rectangle(100, 100, 900, 650);
             this.moleculeViewer1.TabIndex = 0;
             this.moleculeViewer1.Zoom = 0.5D;
             this.moleculeViewer1.SelectionChanged += new SustainableChemistry.MoleculeViewer.SelectionChangedHandler(this.moleculeViewer1_SelectionChanged);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.trackBar1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Size = new System.Drawing.Size(287, 626);
+            this.splitContainer2.SplitterDistance = 61;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBar1.LargeChange = 10;
+            this.trackBar1.Location = new System.Drawing.Point(0, 0);
+            this.trackBar1.Maximum = 250;
+            this.trackBar1.Minimum = 20;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(287, 61);
+            this.trackBar1.TabIndex = 1;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Value = 20;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(287, 561);
+            this.propertyGrid1.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.listBox1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1151, 632);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Functionalities";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -225,6 +266,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -247,6 +294,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private MoleculeViewer moleculeViewer1;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TrackBar trackBar1;
     }
 }
 

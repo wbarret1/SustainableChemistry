@@ -31,7 +31,7 @@ namespace SustainableChemistry
                 System.Drawing.Image image = System.Drawing.Image.FromFile(directories[i] + "\\structure.png");
                 imageList1.Images.Add(image);
                 System.IO.DirectoryInfo info = System.IO.Directory.GetParent(directories[i]);
-                ListViewItem item = new ListViewItem(info.Name) { ImageIndex = i++ };
+                ListViewItem item = new ListViewItem(info.Name) { ImageIndex = i };
                 this.listView1.Items.Add(item);
             }
         }

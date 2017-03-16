@@ -93,6 +93,7 @@ namespace ChemInfo
         int _x = 0;
         int _y = 0;
         int _angle = 0;
+        public bool Visited { get; set; } = false;
         
         // Constructors
         public Atom(string element)
@@ -211,7 +212,7 @@ namespace ChemInfo
             }
         }
 
-        public System.Drawing.Point Location
+        public System.Drawing.Point Location2D
         {
             get
             {
@@ -221,6 +222,10 @@ namespace ChemInfo
             {
                 _x = value.X;
                 _y = value.Y;
+                foreach (Bond b in this.BondedAtoms)
+                {
+                    b.Angle = b.Angle;
+                }
             }
         }
 
@@ -262,12 +267,20 @@ namespace ChemInfo
             }
         }
 
+        public void SetConnectedAtomLocations()
+        {
+            foreach (Bond b in this.BondedAtoms)
+            {
+                b.Angle = b.Angle;
+            }
+        }
+
         public void AddConnectedAtom(Atom a)
         {
             this.m_ConnectedAtoms.Add(a);
         }
 
-        public Atom[] ConnectedAtom
+        public Atom[] ConnectedAtoms
         {
             get
             {
@@ -277,9 +290,9 @@ namespace ChemInfo
 
         public void AddBond(Atom atom, BondType type)
         {
-            this.m_ConnectedAtoms.Add(atom);
+            //this.m_ConnectedAtoms.Add(atom);
             Bond b = new Bond(this, atom, type);
-            b.StartPoint = this.Location;
+            b.StartPoint = this.Location2D;
             if (_angle == 0)
             {
                 if (numberOfBonds == 0)

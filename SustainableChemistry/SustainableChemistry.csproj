@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GraphicRing.cs" />
+    <Compile Include="ShapeGraphic.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -57,7 +59,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GraphicAtom.cs" />
+    <Compile Include="GraphicBond.cs" />
+    <Compile Include="GraphicObjectCollection.cs" />
     <Compile Include="Graphics.cs" />
+    <Compile Include="LineGraphic.cs" />
     <Compile Include="MoleculeViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -78,6 +84,7 @@
     <Compile Include="TestResults.Designer.cs">
       <DependentUpon>TestResults.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextGraphics.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -127,10 +134,6 @@
     <ProjectReference Include="..\ChemInfo\ChemInfo.csproj">
       <Project>{5a55f637-7cab-4a85-9f04-567ba53313d8}</Project>
       <Name>ChemInfo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{22cf2288-c4e7-4c6a-921a-d139a21ceb13}</Project>
-      <Name>Graphics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

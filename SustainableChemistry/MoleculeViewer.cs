@@ -29,7 +29,7 @@ namespace SustainableChemistry
 
         //Grid Properties...
         [System.ComponentModel.Category("Appearance")]
-        public bool ShowGrid { get; set; } = false;
+        public bool ShowGrid { get; set; } = true;
         [System.ComponentModel.Category("Appearance")]
         public System.Drawing.Color GridLineColor { get; set; } = System.Drawing.Color.LightBlue;
         [System.ComponentModel.Category("Appearance")]
@@ -43,7 +43,7 @@ namespace SustainableChemistry
 
         //Margins Properties...
         [System.ComponentModel.Category("Appearance")]
-        public bool ShowMargins { get; set; } = false;
+        public bool ShowMargins { get; set; } = true;
         [System.ComponentModel.Category("Appearance")]
         public System.Drawing.Drawing2D.DashStyle MarginLineDashStyle { get; set; } = System.Drawing.Drawing2D.DashStyle.Solid;
         [System.ComponentModel.Category("Appearance")]
@@ -53,6 +53,7 @@ namespace SustainableChemistry
         [System.ComponentModel.Category("Layout")]
         public System.Drawing.Rectangle SurfaceMargins { get; set; } = new System.Drawing.Rectangle(100, 100, 900, 650);
 
+        System.Drawing.Rectangle m_MoleculeRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
         int m_HorizRes = 300;
         int m_VertRes = 300;
         double m_Zoom = 0.5;
@@ -100,30 +101,38 @@ namespace SustainableChemistry
             set
             {
                 m_DrawingObjects.Clear();
+                this.SelectedObject = null;                
                 ChemInfo.Molecule m = value;
+                m.LocateAtoms2D();
+                m_MoleculeRectangle = m.GetLocationBounds();
+
+                // Select Offset to senter the molecule rectangle in the bounds.
+                int deltaX = (this.Bounds.Width - m_MoleculeRectangle.Width) / 2;
+                int deltaY = (this.Bounds.Height - m_MoleculeRectangle.Height) / 2;
+
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
-                    CTextGraphics text = new CTextGraphics(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, a.AtomicSymbol, this.Font, a.Color);
+                    System.Drawing.Point atomLocation = a.Location2D;
+                    atomLocation.Offset(-1 * m.Location.X + deltaX, -1 * m.Location.Y + deltaY);
+                    TextGraphics text = new TextGraphics(atomLocation, a.AtomicSymbol, this.Font, a.Color);
                     text.Tag = a;
                     m_DrawingObjects.Add(text);
-                    foreach (ChemInfo.Bond bond in a.BondedAtoms)
+                    foreach (ChemInfo.Bond b in a.BondedAtoms)
                     {
-                        CLineGraphic line = new CLineGraphic(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, bond.ConnectedAtom.Location.X - m.Location.X, bond.ConnectedAtom.Location.Y - m.Location.Y, 1, Color.Black);
-                        line.Tag = bond;
-                        m_DrawingObjects.Add(line);
-    //                    GraphicBond bond = new GraphicBond(a.Location.X - m.Location.X, a.Location.Y - m.Location.Y, bond.ConnectedAtom.Location.X - m.Location.X,
-    //bond.ConnectedAtom.Location.Y - m.Location.Y, 1, Color.Black, bond);
-    //                    //line.Tag = bond;
-    //                    m_DrawingObjects.Add(bond);
-
+                        System.Drawing.Point bondedAtomLocation = b.ConnectedAtom.Location2D;
+                        bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
+                        //LineGraphic line = new LineGraphic(atomLocation, bondedAtomLocation, 1, Color.Black);
+                        //line.Tag = bond;
+                        //m_DrawingObjects.Add(line);
+                        GraphicBond bond = new GraphicBond(atomLocation, bondedAtomLocation, 1.5, Color.Black, b.BondType);
+                        bond.Tag = b;
+                        m_DrawingObjects.Add(bond);
                     }
                 }
-                this.Location = m.Location;
-                m_Zoom = this.Size.Height / m.Size.Height;
-                double test = this.Size.Width / m.Size.Width;
-                if (test > m_Zoom) m_Zoom = test;
-                m_Zoom = 0.75;
-
+                double zoom1 = this.GetFitWidthZoom();
+                double zoom2 = this.GetFitWidthZoom();
+                if (zoom1 > zoom2) m_Zoom = zoom2;
+                else m_Zoom = zoom1;
             }
         }
 
@@ -151,6 +160,7 @@ namespace SustainableChemistry
             set
             {
                 m_SelectedIndex = m_DrawingObjects.IndexOf(value);
+                if (value == null) m_SelectedIndex = -1;
                 if (SelectionChanged != null) SelectionChanged(this, new SelectionChangedEventArgs(value));
                 if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
                     "Selected Object Changed", value.GetPosition(), 0.0));
@@ -212,7 +222,7 @@ namespace SustainableChemistry
                     m_Zoom = value;
                 else m_Zoom = 0.05;
                 if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SurfaceZoomChanged, 
-                    this.SelectedObjects, String.Format("Zoom set to {0}", (this.m_Zoom * 100)), 
+                    this.SelectedObjects, String.Format("Zoom set to {0}%", (this.m_Zoom * 100)), 
                     new System.Drawing.Point (0,0), this.m_Zoom));
                 this.Invalidate();
             }
@@ -389,6 +399,7 @@ namespace SustainableChemistry
             m_DrawingObjects.HorizontalResolution = (int)(g.DpiX);
             m_DrawingObjects.VerticalResolution = (int)(g.DpiY);
             m_DrawingObjects.DrawObjects(g, m_Zoom);
+
             //doesn't really draw the selected object, but instead the
             //selection indicator, a dotted outline around the selected object
             m_DrawingObjects.DrawSelectedObject(g, this.SelectedObject, this.m_Zoom);

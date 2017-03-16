@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CShapeGraphic.cs" />
-    <Compile Include="Events.cs" />
     <Compile Include="GraphicObjectCollection.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="LineGraphic.cs" />

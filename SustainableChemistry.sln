@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SustainableChemistry", "Sus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChemInfo", "ChemInfo\ChemInfo.csproj", "{CF0BBD87-9D09-4548-B26A-354CD99272E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphics", "Graphics\Graphics.csproj", "{22CF2288-C4E7-4C6A-921A-D139A21CEB13}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{CF0BBD87-9D09-4548-B26A-354CD99272E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0BBD87-9D09-4548-B26A-354CD99272E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0BBD87-9D09-4548-B26A-354CD99272E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22CF2288-C4E7-4C6A-921A-D139A21CEB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22CF2288-C4E7-4C6A-921A-D139A21CEB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22CF2288-C4E7-4C6A-921A-D139A21CEB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22CF2288-C4E7-4C6A-921A-D139A21CEB13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

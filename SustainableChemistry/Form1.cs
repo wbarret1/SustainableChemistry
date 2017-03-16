@@ -34,6 +34,7 @@ namespace SustainableChemistry
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
+            this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             //moleculeViewer1.s
         }
 
@@ -50,11 +51,9 @@ namespace SustainableChemistry
             }
             test.ShowDialog();
             string filepath = test.FilePath;
-            if (!string.IsNullOrEmpty(filepath))
-            {
-                ChemInfo.MoleFileReader reader = new ChemInfo.MoleFileReader(test.FilePath);
-                molecule = reader.ReadMoleFile();
-            }
+            if (string.IsNullOrEmpty(filepath)) return;
+            ChemInfo.MoleFileReader reader = new ChemInfo.MoleFileReader(test.FilePath);
+            molecule = reader.ReadMoleFile();
             molecule.FindRings();
             this.listBox1.Items.Clear();
             this.moleculeViewer1.Molecule = molecule;
@@ -64,12 +63,14 @@ namespace SustainableChemistry
         {
             smilesInput smiles = new smilesInput();
             smiles.ShowDialog();
+            if (string.IsNullOrEmpty(smiles.SMILES)) return;
             ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
             parser.SMILE = smiles.SMILES;
             molecule = parser.Parse();
             this.listBox1.Items.Clear();
             if (molecule == null) return;
             molecule.FindRings();
+            molecule.FindAllPaths();
             //TreeNodeCollection nodes = treeView1.Nodes;
             //nodes.Clear();
             //foreach (ChemInfo.Atom a in molecule.GetAtoms())
@@ -90,7 +91,13 @@ namespace SustainableChemistry
 
         private void moleculeViewer1_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
+            this.propertyGrid1.SelectedObject = null;
             if (args.SelectedObject != null) this.propertyGrid1.SelectedObject = ((GraphicObject)(args.SelectedObject)).Tag;
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            this.moleculeViewer1.Zoom = this.trackBar1.Value / 100;
         }
     }
 }
