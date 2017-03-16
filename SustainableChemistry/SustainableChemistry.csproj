@@ -135,6 +135,10 @@
       <Project>{5a55f637-7cab-4a85-9f04-567ba53313d8}</Project>
       <Name>ChemInfo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{22cf2288-c4e7-4c6a-921a-d139a21ceb13}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
