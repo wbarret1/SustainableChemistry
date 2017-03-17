@@ -302,7 +302,7 @@ namespace SustainableChemistry
                 (int)(originalRect.Height / m_Zoom));
         }
 
-        void DrawGrid(Graphics g)
+        void DrawGrid(System.Drawing.Graphics g)
         {
             System.Drawing.Rectangle bounds = this.ClientRectangle;
             double horizGridSize = (ConvertToHPixels(this.GridSize / 100 * m_Zoom));
@@ -329,7 +329,7 @@ namespace SustainableChemistry
             }
         }
 
-        void DrawMargins(Graphics g)
+        void DrawMargins(System.Drawing.Graphics g)
         {
             System.Drawing.Rectangle margins = ZoomRectangle(ConvertToPixels(this.SurfaceMargins));
             System.Drawing.Pen marginPen = new System.Drawing.Pen(this.MarginColor);
@@ -338,7 +338,7 @@ namespace SustainableChemistry
             g.DrawRectangle(marginPen, margins);
         }
 
-        void DrawSelectionRectangle(Graphics g)
+        void DrawSelectionRectangle(System.Drawing.Graphics g)
         {
             SolidBrush selectionBrush = new SolidBrush(Color.FromArgb(75, Color.Gray));
             System.Drawing.Rectangle normalizedRectangle = new System.Drawing.Rectangle();
