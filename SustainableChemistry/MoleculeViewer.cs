@@ -16,7 +16,7 @@ namespace SustainableChemistry
         // Member variables...
         //Properties...
         [System.ComponentModel.Category("Layout")]
-        //public System.Drawing.Rectangle SurfaceBounds { get; set; } = new System.Drawing.Rectangle(0, 0, 1100, 850);
+        System.Drawing.Rectangle m_SurfaceBounds = new System.Drawing.Rectangle(0, 0, 1100, 850);
         GraphicObjectCollection m_DrawingObjects = new GraphicObjectCollection();
         bool Modified { get; set; } = false;// Modified is set to false indictaing no changes are made to a newly opened flowsheet
         bool m_DrawingLine = false;
@@ -53,10 +53,10 @@ namespace SustainableChemistry
         [System.ComponentModel.Category("Layout")]
         public System.Drawing.Rectangle SurfaceMargins { get; set; } = new System.Drawing.Rectangle(100, 100, 900, 650);
 
-        System.Drawing.Rectangle m_MoleculeRectangle = new System.Drawing.Rectangle(0, 0, 0, 0);
+        System.Drawing.Rectangle m_MoleculeRectangle = new System.Drawing.Rectangle(0, 0, 1100, 850);
         int m_HorizRes = 300;
         int m_VertRes = 300;
-        double m_Zoom = 0.5;
+        double m_Zoom = 1.0;
 
         //Printing Properties...
         [System.ComponentModel.Category("Appearance")]
@@ -83,6 +83,7 @@ namespace SustainableChemistry
         public MoleculeViewer()
         {
             InitializeComponent();
+          //  m_MoleculeRectangle = this.ClientRectangle;
         }
 
         [System.ComponentModel.Category("Property Changed")]
@@ -136,17 +137,17 @@ namespace SustainableChemistry
             }
         }
 
-        //public GraphicObjectCollection DrawingObjects
-        //{
-        //    get
-        //    {
-        //        return m_DrawingObjects;
-        //    }
-        //    set
-        //    {
-        //        m_DrawingObjects = value;
-        //    }
-        //}
+        public GraphicObjectCollection DrawingObjects
+        {
+            get
+            {
+                return m_DrawingObjects;
+            }
+            set
+            {
+                m_DrawingObjects = value;
+            }
+        }
 
         int m_SelectedIndex = -1;
         public GraphicObject SelectedObject
@@ -210,6 +211,10 @@ namespace SustainableChemistry
                     "Selected Object Changed", location, 0.0));
             }
         }
+
+        public System.Drawing.Rectangle SurfaceBounds { get; set; } = new System.Drawing.Rectangle(0, 0, 1100, 850);
+
+
         public double Zoom
         {
             get
@@ -304,17 +309,10 @@ namespace SustainableChemistry
 
         void DrawGrid(System.Drawing.Graphics g)
         {
-            System.Drawing.Rectangle bounds = this.ClientRectangle;
             double horizGridSize = (ConvertToHPixels(this.GridSize / 100 * m_Zoom));
             double vertGridSize = (ConvertToVPixels(this.GridSize / 100 * m_Zoom));
-            //bounds = ZoomRectangle(bounds);
-            if (AutoScrollMinSize.Height != bounds.Height &&
-                AutoScrollMinSize.Width != bounds.Width)
-            {
-                AutoScrollMinSize = new System.Drawing.Size(bounds.Width, bounds.Height);
-            }
-            g.Clear(this.NonPrintingAreaColor);
-            g.FillRectangle(new SolidBrush(this.BackColor), bounds);
+            System.Drawing.Rectangle bounds = this.ConvertToPixels(this.SurfaceBounds);
+            bounds = ZoomRectangle(bounds);
 
             System.Drawing.Pen gridPen = new System.Drawing.Pen(this.GridLineColor, (float)this.GridLineWidth);
             gridPen.DashStyle = this.GridLineDashStyle;
@@ -385,6 +383,16 @@ namespace SustainableChemistry
             //adjust my origin coordintates to compensate
             Point pt = this.AutoScrollPosition;
             g.TranslateTransform((float)(pt.X), (float)(pt.Y));
+
+            System.Drawing.Rectangle bounds = this.ConvertToPixels(this.SurfaceBounds);
+            bounds = ZoomRectangle(bounds);
+            if (AutoScrollMinSize.Height != bounds.Height &&
+                AutoScrollMinSize.Width != bounds.Width)
+            {
+                AutoScrollMinSize = new System.Drawing.Size(bounds.Width, bounds.Height);
+            }
+            g.Clear(this.NonPrintingAreaColor);
+            g.FillRectangle(new SolidBrush(this.BackColor), bounds);
 
 
             //Draw dashed line margin indicators, over top of objects

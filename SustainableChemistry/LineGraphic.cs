@@ -13,52 +13,45 @@ namespace SustainableChemistry
         public LineGraphic() : base() { }
         public LineGraphic(System.Drawing.Point startPosition) : base(startPosition)
         {
-            this.SetStartPosition(startPosition);
         }
 
-        public LineGraphic(int posX, int posY)
+        public LineGraphic(int posX, int posY): base(posX, posY)
         {
-            this.SetStartPosition(new System.Drawing.Point(posX, posY));
         }
 
-
-        public LineGraphic(System.Drawing.Point startPosition, System.Drawing.Point endPosition)
+        public LineGraphic(System.Drawing.Point startPosition, System.Drawing.Point endPosition):base(startPosition)
         {
-            this.SetStartPosition(startPosition);
-            SetEndPosition(endPosition);
+            this.m_Size = new System.Drawing.Size(endPosition.X - startPosition.X, endPosition.Y - startPosition.Y);
             this.m_AutoSize = false;
         }
 
 
-        public LineGraphic(int startX, int startY, System.Drawing.Point endPosition)
+        public LineGraphic(int startX, int startY, System.Drawing.Point endPosition):base(startX, startY)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(endPosition);
+            this.m_Size = new System.Drawing.Size(endPosition.X - startX, endPosition.Y - startY);
         }
 
 
-        public LineGraphic(int startX, int startY, int endX, int endY)
+        public LineGraphic(int startX, int startY, int endX, int endY) : base(startX, startY)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(new System.Drawing.Point(endX, endY));
+            this.m_Size = new System.Drawing.Size(endX - startX, endY - startY);
             this.m_AutoSize = false;
         }
 
 
-        public LineGraphic(System.Drawing.Point startPosition, System.Drawing.Point endPosition, double lineWidth, System.Drawing.Color lineColor)
+        public LineGraphic(System.Drawing.Point startPosition, System.Drawing.Point endPosition, double lineWidth, System.Drawing.Color lineColor):
+            base(startPosition)
         {
-            this.SetStartPosition(startPosition);
-            this.SetEndPosition(endPosition);
+            this.m_Size = new System.Drawing.Size(endPosition.X - startPosition.X, endPosition.Y - startPosition.Y);
             this.m_AutoSize = false;
             this.m_lineWidth = lineWidth;
             this.m_lineColor = lineColor;
         }
 
 
-        public LineGraphic(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor)
+        public LineGraphic(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor) : base(startX, startY)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(new System.Drawing.Point(endX, endY));
+            this.m_Size = new System.Drawing.Size(endX - startX, endY - startY);
             this.m_AutoSize = false;
             this.m_lineWidth = lineWidth;
             this.m_lineColor = lineColor;

@@ -97,7 +97,7 @@ namespace SustainableChemistry
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            this.moleculeViewer1.Zoom = this.trackBar1.Value / 100;
+            this.moleculeViewer1.Zoom = (double)(this.trackBar1.Value) / 100.0;
         }
     }
 }

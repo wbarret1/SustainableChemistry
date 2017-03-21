@@ -35,62 +35,62 @@ namespace SustainableChemistry
 
         public GraphicObject(System.Drawing.Point graphicPosition)
         {
-            this.SetPosition(graphicPosition);
+            this.m_Position = graphicPosition;
         }
 
         public GraphicObject(int posX, int posY)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
+            this.m_Position = new System.Drawing.Point(posX, posY);
         }
 
         public GraphicObject(System.Drawing.Point graphicPosition, System.Drawing.Size graphicSize)
         {
-            this.SetPosition(graphicPosition);
-            this.SetSize(graphicSize);
+            this.m_Position = graphicPosition;
+            this.m_Size = graphicSize;
         }
 
         public GraphicObject(int posX, int posY, System.Drawing.Size graphicSize)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
-            this.SetSize(graphicSize);
+            this.m_Position = new System.Drawing.Point(posX, posY);
+            this.m_Size = graphicSize;
         }
 
         public GraphicObject(int posX, int posY, int width, int height)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
-            this.SetSize(new System.Drawing.Size(width, height));
+            this.m_Position = new System.Drawing.Point(posX, posY);
+            this.m_Size = new System.Drawing.Size(width, height);
         }
 
         public GraphicObject(System.Drawing.Point graphicPosition, double Rotation)
         {
-            this.SetPosition(graphicPosition);
+            this.m_Position = graphicPosition;
             m_Rotation = Rotation;
         }
 
         public GraphicObject(int posX, int posY, double Rotation)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
+            this.m_Position = new System.Drawing.Point(posX, posY);
             m_Rotation = Rotation;
         }
 
         public GraphicObject(System.Drawing.Point graphicPosition, System.Drawing.Size graphicSize, double Rotation)
         {
-            this.SetPosition(graphicPosition);
-            this.SetSize(graphicSize);
+            this.m_Position = graphicPosition;
+            this.m_Size = graphicSize;
             m_Rotation = Rotation;
         }
 
         public GraphicObject(int posX, int posY, System.Drawing.Size graphicSize, double Rotation)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
-            this.SetSize(graphicSize);
+            this.m_Position = new System.Drawing.Point(posX, posY);
+            this.m_Size = graphicSize;
             m_Rotation = Rotation;
         }
 
         public GraphicObject(int posX, int posY, int width, int height, double Rotation)
         {
-            this.SetPosition(new System.Drawing.Point(posX, posY));
-            this.SetSize(new System.Drawing.Size(width, height));
+            this.m_Position = new System.Drawing.Point(posX, posY);
+            this.m_Size = new System.Drawing.Size(width, height);
             m_Rotation = Rotation;
         }
 

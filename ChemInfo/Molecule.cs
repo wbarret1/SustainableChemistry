@@ -18,7 +18,7 @@ namespace ChemInfo
 
     public class Molecule
     {
-        List<Atom> atoms;
+        List<Atom> m_Atoms;
         List<List<Atom>> cycles;
         List<Atom[]> paths;
         bool[,] touching;
@@ -28,20 +28,20 @@ namespace ChemInfo
 
         public Molecule()
         {
-            atoms = new List<Atom>();
+            m_Atoms = new List<Atom>();
             ringsFound = false;
             pathsFound = false;
         }
 
         public Atom[] GetAtoms()
         {
-            return this.atoms.ToArray<Atom>();
+            return this.m_Atoms.ToArray<Atom>();
         }
 
         public void AddAtom(Atom a)
         {
-            if (this.atoms.Contains(a)) return;
-            atoms.Add(a);
+            if (this.m_Atoms.Contains(a)) return;
+            m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
         }
@@ -49,8 +49,8 @@ namespace ChemInfo
         public void AddAtom(string element)
         {
             Atom a = new Atom(element);
-            if (this.atoms.Contains(a)) return;
-            atoms.Add(a);
+            if (this.m_Atoms.Contains(a)) return;
+            m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
             return;
@@ -65,6 +65,14 @@ namespace ChemInfo
                 atomTwo.AddConnectedAtom(atomOne);
                 ringsFound = false;
                 pathsFound = false;
+                int angle = 360 / atomOne.ConnectedAtoms.Length;
+                int bondAngle = 45;
+                if (this.m_Atoms.IndexOf(atomOne) % 2 == 1) bondAngle = 315;
+                foreach (Bond b in atomOne.BondedAtoms)
+                {
+                    b.Angle = bondAngle;
+                    bondAngle = (bondAngle + angle) % 360;
+                }
             }
         }
 
@@ -88,6 +96,7 @@ namespace ChemInfo
                 if (b.ConnectedAtom == atom2)
                 {
                     b.Angle = angle;
+                    b.SetBondededAtomLocation();
                     return angle;
                 }
             }
@@ -96,6 +105,7 @@ namespace ChemInfo
                 if (b.ConnectedAtom == atom1)
                 {
                     b.Angle = (angle + 180) % 360;
+                    b.SetParentAtomLocation();
                     return (angle + 180) % 360;
                 }
             }
@@ -119,9 +129,9 @@ namespace ChemInfo
         {
             if (ringsFound) return this.convertToArrayArray(cycles);
             Stack<Atom> myStack = new Stack<Atom>();
-            foreach (Atom a in this.atoms) a.Visited = false;
+            foreach (Atom a in this.m_Atoms) a.Visited = false;
             cycles = new List<List<Atom>>();
-            foreach (Atom a in atoms)
+            foreach (Atom a in m_Atoms)
             {
                 FindRings(a, a, myStack);
             }
@@ -142,7 +152,7 @@ namespace ChemInfo
                 for (int j = i + 1; j < ends.Length; j++)
                 {
                     stack.Clear();
-                    foreach (Atom a in this.atoms) a.Visited = false;
+                    foreach (Atom a in this.m_Atoms) a.Visited = false;
                     this.FindPath(ends[i], ends[j], null, stack);
                 }
             }
@@ -152,7 +162,7 @@ namespace ChemInfo
         public Atom[] EndAtoms()
         {
             List<Atom> atoms = new List<ChemInfo.Atom>();
-            foreach (Atom a in this.atoms) if (a.ConnectedAtoms.Length == 1) atoms.Add(a);
+            foreach (Atom a in this.m_Atoms) if (a.ConnectedAtoms.Length == 1) atoms.Add(a);
             return atoms.ToArray();
         }
 
@@ -186,7 +196,7 @@ namespace ChemInfo
             if (!pathsFound) this.FindAllPaths();
             // paths will be 0 if all atoms are in a ring...
             if (paths.Count == 0) return new Atom[0];
-            paths.Sort(this.CompareListsByLength);
+            paths.Sort(this.CompareArrayByCount);
             paths.Reverse();
             return paths[0];
         }
@@ -322,7 +332,7 @@ namespace ChemInfo
                                     List<int> ints = new List<int>();
                                     foreach (Atom a in m)
                                     {
-                                        ints.Add(atoms.IndexOf(a) + 1);
+                                        ints.Add(m_Atoms.IndexOf(a) + 1);
                                     }
                                     cycles[j].RemoveRange(cycles[j].IndexOf(m[1]), m.Count - 2);
                                 }
@@ -370,7 +380,7 @@ namespace ChemInfo
             }
         }
 
-        int CompareListsByLength<T>(T[] array1, T[] array2)
+        int CompareArrayByCount<T>(T[] array1, T[] array2)
         {
             return array1.Length - array2.Length;
         }
@@ -385,7 +395,7 @@ namespace ChemInfo
             // Step 1. Set Initial Invariants and go to Step 3.
             // The initial invariants are handled by the comparer.
             // Step 3. Sort the vector.
-            this.atoms.Sort(atomInvariantComparerWeinginger);
+            this.m_Atoms.Sort(atomInvariantComparerWeinginger);
 
             // Step 4. RankException Atomic Vector
 
@@ -422,13 +432,35 @@ namespace ChemInfo
             return 0;
         }
 
+        int CompareAtomsByDegree(Atom a1, Atom a2)
+        {
+            return a1.Degree - a2.Degree;
+        }
+
         public void LocateAtoms2D()
         {
+            List<Atom> atoms = new List<Atom>();
+            atoms.AddRange(this.m_Atoms.ToArray());
+            atoms.Sort(this.CompareAtomsByDegree);
+            if (atoms[atoms.Count - 1].Degree == 4)
+            {
+                int angle = 0;
+                foreach (Atom a in atoms[atoms.Count - 1].ConnectedAtoms)
+                {
+                    this.SetBondAngle(atoms[atoms.Count - 1], a, angle);
+                    angle = angle + 60;
+                }
+            }
+            //foreach (Atom a in this.m_Atoms) foreach (Bond b in a.BondedAtoms) b.SetBondededAtomLocation();
+        }
+
+        public void LocateAtoms2DOld()
+        {
             List<Atom> visited = new List<Atom>();
-            foreach (Atom a in this.atoms) a.Visited = false;
+            foreach (Atom a in this.m_Atoms) a.Visited = false;
             Atom[] backbone = this.FindLongestpath();
             if (backbone.Length > 0) backbone[0].Location2D = new System.Drawing.Point(0, 0);
-            else atoms[0].Location2D = new System.Drawing.Point(0, 0);
+            else m_Atoms[0].Location2D = new System.Drawing.Point(0, 0);
             for (int i = 0; i < backbone.Length - 1; i++)
             {
                 if (backbone[i].ConnectedAtoms.Length < 4)
@@ -457,7 +489,7 @@ namespace ChemInfo
                 }
             }
 
-            foreach (Atom a in this.atoms)
+            foreach (Atom a in this.m_Atoms)
             {
                 if (!a.Visited)
                 {
@@ -527,7 +559,7 @@ namespace ChemInfo
                     next.Visited = true;
                     last = current;
                     bondAngle = this.SetBondAngle(current, next, bondAngle);
-                    bondAngle = (bondAngle + angle) % 360;
+                    bondAngle = (bondAngle - angle) % 360;
                     if (bondAngle < 0) bondAngle = bondAngle + 360;
                     current = next;
                 }
@@ -576,15 +608,16 @@ namespace ChemInfo
                     foreach (Bond b1 in current.BondedAtoms) if (!ring.Contains(b1.ConnectedAtom)) notInRing.Add(b1.ConnectedAtom);
                     if (notInRing.Count == 1)
                     {
-                        int otherAngle = this.GetBondAngle(current, notInRing[0]);
+                        int otherAngle = this.GetBondAngle(notInRing[0], current);
                         if (otherAngle < bondAngle) angle = -1 * angle;
                     }
                     //Close the ring
+                    start.Visited = false;
                     while (next != start)
                     {
                         foreach (Atom a in current.ConnectedAtoms) if (ring.Contains(a) && !a.Visited) next = a;
                         next.Visited = true;
-                        bondAngle = (bondAngle + angle)%360;
+                        bondAngle = (bondAngle - angle) % 360;
                         if (bondAngle < 0) bondAngle = bondAngle + 360;
                         this.SetBondAngle(current, next, bondAngle);
                         current = next;
@@ -678,11 +711,11 @@ namespace ChemInfo
 
         public System.Drawing.Rectangle GetLocationBounds()
         {
-            int top = this.atoms[0].Location2D.Y;
-            int bottom = this.atoms[0].Location2D.Y;
-            int left = this.atoms[0].Location2D.X;
-            int right = this.atoms[0].Location2D.X;
-            foreach (Atom a in this.atoms)
+            int top = this.m_Atoms[0].Location2D.Y;
+            int bottom = this.m_Atoms[0].Location2D.Y;
+            int left = this.m_Atoms[0].Location2D.X;
+            int right = this.m_Atoms[0].Location2D.X;
+            foreach (Atom a in this.m_Atoms)
             {
                 if (top > a.Location2D.Y) top = a.Location2D.Y;
                 if (bottom < a.Location2D.Y) bottom = a.Location2D.Y;

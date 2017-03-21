@@ -15,7 +15,6 @@ namespace SustainableChemistry
         public TextGraphics() : base() { }
         public TextGraphics(System.Drawing.Point graphicPosition, String text, System.Drawing.Font textFont, System.Drawing.Color textColor) : base(graphicPosition)
         {
-            SetPosition(graphicPosition);
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
@@ -24,7 +23,6 @@ namespace SustainableChemistry
 
         public TextGraphics(int posX, int posY, String text, System.Drawing.Font textFont, System.Drawing.Color textColor) : base(posX, posY)
         {
-            SetPosition(new System.Drawing.Point(posX, posY));
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
@@ -33,7 +31,6 @@ namespace SustainableChemistry
 
         public TextGraphics(System.Drawing.Point graphicPosition, String text, System.Drawing.Font textFont, System.Drawing.Color textColor, double rotation) : base(graphicPosition, rotation)
         {
-            SetPosition(graphicPosition);
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;
@@ -42,7 +39,6 @@ namespace SustainableChemistry
 
         TextGraphics(int posX, int posY, String text, System.Drawing.Font textFont, System.Drawing.Color textColor, double rotation) : base(posX, posY, rotation)
         {
-            SetPosition(new System.Drawing.Point(posX, posY));
             this.m_Text = text;
             this.m_Font = textFont;
             this.m_Color = textColor;

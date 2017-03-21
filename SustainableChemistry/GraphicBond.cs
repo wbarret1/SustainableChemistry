@@ -12,61 +12,46 @@ namespace SustainableChemistry
         public GraphicBond() : base() { }
         public GraphicBond(System.Drawing.Point startPosition, ChemInfo.BondType type) : base(startPosition)
         {
-            this.SetStartPosition(startPosition);
             m_BondType = type;
         }
 
-        public GraphicBond(int posX, int posY, ChemInfo.BondType type)
+        public GraphicBond(int posX, int posY, ChemInfo.BondType type):base(posX, posY)
         {
-            this.SetStartPosition(new System.Drawing.Point(posX, posY));
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, ChemInfo.BondType type)
-        {
-            this.SetStartPosition(startPosition);
-            SetEndPosition(endPosition);
-            this.m_AutoSize = false;
             m_BondType = type;
         }
 
 
-        public GraphicBond(int startX, int startY, System.Drawing.Point endPosition, ChemInfo.BondType type)
+        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, ChemInfo.BondType type):
+            base(startPosition, endPosition)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(endPosition);
             m_BondType = type;
         }
 
 
-        public GraphicBond(int startX, int startY, int endX, int endY, ChemInfo.BondType type)
+        public GraphicBond(int startX, int startY, System.Drawing.Point endPosition, ChemInfo.BondType type):
+            base(startX, startY, endPosition)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(new System.Drawing.Point(endX, endY));
-            this.m_AutoSize = false;
             m_BondType = type;
         }
 
 
-        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, double lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type)
+        public GraphicBond(int startX, int startY, int endX, int endY, ChemInfo.BondType type):
+            base(startX, startY, endX, endY)
         {
-            this.SetStartPosition(startPosition);
-            this.SetEndPosition(endPosition);
-            this.m_AutoSize = false;
-            this.m_lineWidth = lineWidth;
-            this.m_lineColor = lineColor;
             m_BondType = type;
         }
 
 
-        public GraphicBond(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type)
+        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, double lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type):
+            base(startPosition, endPosition, lineWidth, lineColor)
         {
-            this.SetStartPosition(new System.Drawing.Point(startX, startY));
-            this.SetEndPosition(new System.Drawing.Point(endX, endY));
-            this.m_AutoSize = false;
-            this.m_lineWidth = lineWidth;
-            this.m_lineColor = lineColor;
+            m_BondType = type;
+        }
+
+
+        public GraphicBond(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type):
+            base(startX, startY, endX, endY, lineWidth, lineColor)
+        {
             m_BondType = type;
         }
 

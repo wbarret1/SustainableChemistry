@@ -410,7 +410,7 @@ namespace ChemInfo
         {
             get
             {
-                return this.BondedAtoms.Count;
+                return this.ConnectedAtoms.Length;
             }
         }
 

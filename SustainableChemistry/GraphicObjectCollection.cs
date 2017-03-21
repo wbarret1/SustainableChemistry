@@ -62,6 +62,7 @@ namespace SustainableChemistry
         {
             System.Drawing.Drawing2D.GraphicsContainer gCon = g.BeginContainer();
             System.Drawing.Drawing2D.Matrix myOriginalMatrix = g.Transform;
+            g.PageUnit = System.Drawing.GraphicsUnit.Pixel;
             g.ScaleTransform((float)Scale, (float)Scale);
             foreach (GraphicObject obj in this)
             {
