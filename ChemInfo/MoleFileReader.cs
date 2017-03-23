@@ -137,9 +137,9 @@ namespace ChemInfo
                 Atom a = new ChemInfo.Atom(lines[4 + i].Substring(31, 3).Trim());
                 molecule.AddAtom(a);
                 // xxxxx.xxxxyyyyy.yyyyzzzzz.zzzz aaaddcccssshhhbbbvvvHHHrrriiimmmnnneee
-                a.x = Convert.ToDouble(lines[4 + i].Substring(0, 10));
-                a.y = Convert.ToDouble(lines[4 + i].Substring(10, 10));
-                a.z = Convert.ToDouble(lines[4 + i].Substring(20, 10));
+                //a.x = Convert.ToDouble(lines[4 + i].Substring(0, 10));
+                //a.y = Convert.ToDouble(lines[4 + i].Substring(10, 10));
+                //a.z = Convert.ToDouble(lines[4 + i].Substring(20, 10));
                 string text = lines[4 + i].Substring(34, 2);
                 a.massDiff = Convert.ToInt32(lines[4 + i].Substring(34, 2));
                 a.Charge = Convert.ToInt32(lines[4 + i].Substring(36, 3));

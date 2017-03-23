@@ -72,15 +72,9 @@ namespace ChemInfo
         {
             m_ParentAtom = parent;
             m_connectedAtom = connectedAtom;
-            this.StartPoint = parent.Location2D;
             m_bondType = type;
         }
 
-        double m_length = 100;
-        int m_Angle = 100;
-        System.Drawing.Point m_StaringPoint;
-        System.Drawing.Point m_EndingPoint;
-        bool newStart = false;
         Atom m_ParentAtom;
         public Atom ParentAtom
         {
@@ -112,78 +106,83 @@ namespace ChemInfo
         public string xNotUsed;
         public BondTopology bondTopology;
         public BondReactingCenterStatus reactingCenter;
-        public double length
+        public double Length
         {
             get
             {
-                return m_length;
+                return Math.Sqrt(this.LengthSquared);
             }
-            set
-            {
-                m_length = value;
-                this.SetBondededAtomLocation();
-            }
+
         }
 
-        public int Angle
+        public double LengthSquared
         {
             get
             {
-                return m_Angle;
+                return Math.Pow((this.ParentAtom.Location2D.X - this.ConnectedAtom.Location2D.X), 2) + Math.Pow((this.ParentAtom.Location2D.Y - this.ConnectedAtom.Location2D.Y), 2);
             }
-            set
-            {
-                m_Angle = value;
-                this.ParentAtom.Angle_2D = value;
-            }
+
         }
+
+        //public int Angle
+        //{
+        //    get
+        //    {
+        //        return m_Angle;
+        //    }
+        //    set
+        //    {
+        //        m_Angle = value;
+        //        this.ParentAtom.Angle_2D = value;
+        //    }
+        //}
 
         public System.Drawing.Point StartPoint
         {
             get
             {
-                return m_StaringPoint;
+                return this.ParentAtom.Location2D;
             }
-            set
-            {
-                this.m_ParentAtom.Location2D = new System.Drawing.Point(value.X, value.Y);
-                this.m_StaringPoint = value;
-            }
+            //set
+            //{
+            //    this.m_ParentAtom.Location2D = new System.Drawing.Point(value.X, value.Y);
+            //    this.m_StaringPoint = value;
+            //}
         }
 
-        bool m_SettingLocation = false;
-        public void SetParentAtomLocation()
-        {
-            if (m_SettingLocation) return;
-            m_SettingLocation = true;
-            int startX = this.m_connectedAtom.Location2D.X + (int)(this.m_length * Math.Cos(2 * Math.PI * (float)m_Angle / 360.0));
-            int startY = this.m_connectedAtom.Location2D.Y + (int)(this.m_length * Math.Sin(2 * Math.PI * (float)m_Angle / 360.0));
-            this.m_StaringPoint = new System.Drawing.Point(startX, startX);
-            this.m_ParentAtom.Location2D = new System.Drawing.Point(startX, startY);
-            m_SettingLocation = false;
-        }
+        //bool m_SettingLocation = false;
+        //public void SetParentAtomLocation()
+        //{
+        //    if (m_SettingLocation) return;
+        //    m_SettingLocation = true;
+        //    int startX = this.m_connectedAtom.Location2D.X + (int)(this.m_length * Math.Cos(2 * Math.PI * (float)m_Angle / 360.0));
+        //    int startY = this.m_connectedAtom.Location2D.Y + (int)(this.m_length * Math.Sin(2 * Math.PI * (float)m_Angle / 360.0));
+        //    this.m_StaringPoint = new System.Drawing.Point(startX, startX);
+        //    this.m_ParentAtom.Location2D = new System.Drawing.Point(startX, startY);
+        //    m_SettingLocation = false;
+        //}
 
-        public void SetBondededAtomLocation()
-        {
-            if (m_SettingLocation) return;
-            m_SettingLocation = true;
-            int endX = this.m_ParentAtom.Location2D.X + (int)(this.m_length * Math.Cos(2 * Math.PI * (float)m_Angle / 360.0));
-            int endY = this.m_ParentAtom.Location2D.Y + (int)(this.m_length * Math.Sin(2 * Math.PI * (float)m_Angle / 360.0));
-            this.m_EndingPoint = new System.Drawing.Point(endX, endY);
-            this.m_connectedAtom.Location2D = new System.Drawing.Point(endX, endY);
-            m_SettingLocation = false;
-        }
+        //public void SetBondededAtomLocation()
+        //{
+        //    if (m_SettingLocation) return;
+        //    m_SettingLocation = true;
+        //    int endX = this.m_ParentAtom.Location2D.X + (int)(this.m_length * Math.Cos(2 * Math.PI * (float)m_Angle / 360.0));
+        //    int endY = this.m_ParentAtom.Location2D.Y + (int)(this.m_length * Math.Sin(2 * Math.PI * (float)m_Angle / 360.0));
+        //    this.m_EndingPoint = new System.Drawing.Point(endX, endY);
+        //    this.m_connectedAtom.Location2D = new System.Drawing.Point(endX, endY);
+        //    m_SettingLocation = false;
+        //}
 
         public System.Drawing.Point EndPoint
         {
             get
             {
-                return m_EndingPoint;
+                return m_connectedAtom.Location2D;
             }
             //set
-            //{                
+            //{
             //    this.m_EndingPoint = value;
-            //    this.m_connectedAtom.Location.X 
+            //    //this.m_connectedAtom.Location.X
             //}
         }
     }

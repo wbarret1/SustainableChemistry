@@ -104,7 +104,7 @@ namespace SustainableChemistry
                 m_DrawingObjects.Clear();
                 this.SelectedObject = null;                
                 ChemInfo.Molecule m = value;
-                m.LocateAtoms2D();
+                m.ForceDirectedGraph();
                 m_MoleculeRectangle = m.GetLocationBounds();
 
                 // Select Offset to senter the molecule rectangle in the bounds.
@@ -114,14 +114,13 @@ namespace SustainableChemistry
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
                     System.Drawing.Point atomLocation = a.Location2D;
-                    atomLocation.Offset(-1 * m.Location.X + deltaX, -1 * m.Location.Y + deltaY);
+                    //atomLocation.Offset(-1 * m.Location.X + deltaX, -1 * m.Location.Y + deltaY);
                     TextGraphics text = new TextGraphics(atomLocation, a.AtomicSymbol, this.Font, a.Color);
                     text.Tag = a;
-                    m_DrawingObjects.Add(text);
                     foreach (ChemInfo.Bond b in a.BondedAtoms)
                     {
                         System.Drawing.Point bondedAtomLocation = b.ConnectedAtom.Location2D;
-                        bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
+                        //bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
                         //LineGraphic line = new LineGraphic(atomLocation, bondedAtomLocation, 1, Color.Black);
                         //line.Tag = bond;
                         //m_DrawingObjects.Add(line);
@@ -129,11 +128,12 @@ namespace SustainableChemistry
                         bond.Tag = b;
                         m_DrawingObjects.Add(bond);
                     }
-                }
-                double zoom1 = this.GetFitWidthZoom();
-                double zoom2 = this.GetFitWidthZoom();
-                if (zoom1 > zoom2) m_Zoom = zoom2;
-                else m_Zoom = zoom1;
+                     m_DrawingObjects.Add(text);
+               }
+                //double zoom1 = this.GetFitWidthZoom();
+                //double zoom2 = this.GetFitWidthZoom();
+                //if (zoom1 > zoom2) m_Zoom = zoom2;
+                //else m_Zoom = zoom1;
             }
         }
 

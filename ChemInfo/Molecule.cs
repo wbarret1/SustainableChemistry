@@ -65,52 +65,44 @@ namespace ChemInfo
                 atomTwo.AddConnectedAtom(atomOne);
                 ringsFound = false;
                 pathsFound = false;
-                int angle = 360 / atomOne.ConnectedAtoms.Length;
-                int bondAngle = 45;
-                if (this.m_Atoms.IndexOf(atomOne) % 2 == 1) bondAngle = 315;
-                foreach (Bond b in atomOne.BondedAtoms)
-                {
-                    b.Angle = bondAngle;
-                    bondAngle = (bondAngle + angle) % 360;
-                }
             }
         }
 
-        public int GetBondAngle(Atom atom1, Atom atom2)
-        {
-            foreach (Bond b in atom1.BondedAtoms)
-            {
-                if (b.ConnectedAtom == atom2) return b.Angle;
-            }
-            foreach (Bond b in atom2.BondedAtoms)
-            {
-                if (b.ConnectedAtom == atom1) return (b.Angle + 180) % 360;
-            }
-            return -1;
-        }
+        //public int GetBondAngle(Atom atom1, Atom atom2)
+        //{
+        //    foreach (Bond b in atom1.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom2) return b.Angle;
+        //    }
+        //    foreach (Bond b in atom2.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom1) return (b.Angle + 180) % 360;
+        //    }
+        //    return -1;
+        //}
 
-        public int SetBondAngle(Atom atom1, Atom atom2, int angle)
-        {
-            foreach (Bond b in atom1.BondedAtoms)
-            {
-                if (b.ConnectedAtom == atom2)
-                {
-                    b.Angle = angle;
-                    b.SetBondededAtomLocation();
-                    return angle;
-                }
-            }
-            foreach (Bond b in atom2.BondedAtoms)
-            {
-                if (b.ConnectedAtom == atom1)
-                {
-                    b.Angle = (angle + 180) % 360;
-                    b.SetParentAtomLocation();
-                    return (angle + 180) % 360;
-                }
-            }
-            return 0;
-        }
+        //public int SetBondAngle(Atom atom1, Atom atom2, int angle)
+        //{
+        //    foreach (Bond b in atom1.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom2)
+        //        {
+        //            b.Angle = angle;
+        //            //b.SetBondededAtomLocation();
+        //            return angle;
+        //        }
+        //    }
+        //    foreach (Bond b in atom2.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom1)
+        //        {
+        //            b.Angle = (angle + 180) % 360;
+        //            //b.SetParentAtomLocation();
+        //            return (angle + 180) % 360;
+        //        }
+        //    }
+        //    return 0;
+        //}
 
         public Bond GetBond(Atom atom1, Atom atom2)
         {
@@ -437,277 +429,7 @@ namespace ChemInfo
             return a1.Degree - a2.Degree;
         }
 
-        public void LocateAtoms2D()
-        {
-            List<Atom> atoms = new List<Atom>();
-            atoms.AddRange(this.m_Atoms.ToArray());
-            atoms.Sort(this.CompareAtomsByDegree);
-            if (atoms[atoms.Count - 1].Degree == 4)
-            {
-                int angle = 0;
-                foreach (Atom a in atoms[atoms.Count - 1].ConnectedAtoms)
-                {
-                    this.SetBondAngle(atoms[atoms.Count - 1], a, angle);
-                    angle = angle + 60;
-                }
-            }
-            //foreach (Atom a in this.m_Atoms) foreach (Bond b in a.BondedAtoms) b.SetBondededAtomLocation();
-        }
-
-        public void LocateAtoms2DOld()
-        {
-            List<Atom> visited = new List<Atom>();
-            foreach (Atom a in this.m_Atoms) a.Visited = false;
-            Atom[] backbone = this.FindLongestpath();
-            if (backbone.Length > 0) backbone[0].Location2D = new System.Drawing.Point(0, 0);
-            else m_Atoms[0].Location2D = new System.Drawing.Point(0, 0);
-            for (int i = 0; i < backbone.Length - 1; i++)
-            {
-                if (backbone[i].ConnectedAtoms.Length < 4)
-                {
-                    int angle = 45;
-                    if (i % 2 == 1) angle = 135;
-                    this.SetBondAngle(backbone[i], backbone[i + 1], angle);
-                    foreach (Atom a in backbone[i].ConnectedAtoms) if (!backbone.Contains(a)) this.AddBranch(a, backbone[i], i % 2 == 1 ? 180 : 0);
-                }
-                if (backbone[i].ConnectedAtoms.Length == 4)
-                {
-                    int angle = 45;
-                    if (i % 2 == 1) angle = 135;
-                    this.SetBondAngle(backbone[i], backbone[i + 1], angle);
-                    int j = 0;
-                    int[] angles = { 45, 315 };
-                    if (i % 2 == 1) angles = new int[] { 225, 135 };
-                    foreach (Atom a in backbone[i].ConnectedAtoms) if (!backbone.Contains(a)) this.AddBranch(a, backbone[i], angles[j++]);
-                }
-            }
-            if (cycles.Count > 0)
-            {
-                foreach (List<Atom> ring in cycles)
-                {
-                    this.LocateRing2D(ring);
-                }
-            }
-
-            foreach (Atom a in this.m_Atoms)
-            {
-                if (!a.Visited)
-                {
-
-                }
-            }
-        }
-
-        void AddBranch(Atom atom1, Atom atom2, int angle)
-        {
-            atom1.Visited = true;
-            int newAngle = this.SetBondAngle(atom1, atom2, angle);
-            foreach (List<Atom> ring in cycles)
-            {
-                if (ring.Contains(atom1))
-                {
-                    this.LocateRing2D(ring, atom1, atom2, newAngle);
-                    return;
-                }
-            }
-            if (atom1.ConnectedAtoms.Length == 2)
-            {
-                foreach (Atom a in atom1.ConnectedAtoms)
-                {
-                    if (a != atom2) AddBranch(a, atom1, (angle - 60) % 360);
-                    a.Visited = true;
-                }
-            }
-            if (atom1.ConnectedAtoms.Length == 3)
-            {
-                bool first = true;
-                foreach (Atom a in atom1.ConnectedAtoms)
-                {
-                    if (a != atom2)
-                    {
-                        if (first) AddBranch(a, atom1, (angle - 60) % 360);
-                        else AddBranch(a, atom1, (angle + 60) % 360);
-                        first = false;
-                    }
-                    a.Visited = true;
-                }
-            }
-        }
-
-        void LocateRing2D(List<Atom> ring)
-        {
-            int ringNumber = cycles.IndexOf(ring);
-            int angle = 360 / ring.Count;
-            int bondAngle = angle;
-            Atom start = ring[0];
-            Atom current = ring[0];
-            Atom next = null;
-            Atom last = null;
-            List<Atom> visited = new List<Atom>();
-            foreach (Atom a in ring) if (a.Visited) visited.Add(a);
-            if (visited.Count == 0)
-            {
-                while (next != start)
-                {
-                    foreach (Atom a in current.ConnectedAtoms)
-                    {
-                        if (ring.Contains(a) && !a.Visited && a != last)
-                        {
-                            next = a;
-                        }
-                    }
-                    next.Visited = true;
-                    last = current;
-                    bondAngle = this.SetBondAngle(current, next, bondAngle);
-                    bondAngle = (bondAngle - angle) % 360;
-                    if (bondAngle < 0) bondAngle = bondAngle + 360;
-                    current = next;
-                }
-            }
-            if (visited.Count == 1)
-            {
-                start = ring[ring.IndexOf(visited[0])];
-                current = start;
-                while (next != start)
-                {
-                    foreach (Atom a in current.ConnectedAtoms)
-                    {
-                        if (ring.Contains(a) && !a.Visited && a != last)
-                        {
-                            next = a;
-                        }
-                    }
-                    next.Visited = true;
-                    last = current;
-                    bondAngle = this.SetBondAngle(current, next, bondAngle);
-                    bondAngle = (bondAngle + angle) % 360;
-                    if (bondAngle < 0) bondAngle = bondAngle + 360;
-                    current = next;
-                }
-                return;
-            }
-            if (visited.Count > 1)
-            {
-                start = visited[0];
-                current = visited[1];
-                Bond b = this.GetBond(start, current);
-                if (b == null)
-                {
-                    return;
-                }
-                else
-                {
-                    if (b.ConnectedAtom == current)
-                    {
-                        start = visited[1];
-                        current = visited[0];
-                    }
-                    foreach (Atom a in ring) a.Visited = false;
-                    bondAngle = this.GetBondAngle(start, current);
-                    List<Atom> notInRing = new List<Atom>();
-                    foreach (Bond b1 in current.BondedAtoms) if (!ring.Contains(b1.ConnectedAtom)) notInRing.Add(b1.ConnectedAtom);
-                    if (notInRing.Count == 1)
-                    {
-                        int otherAngle = this.GetBondAngle(notInRing[0], current);
-                        if (otherAngle < bondAngle) angle = -1 * angle;
-                    }
-                    //Close the ring
-                    start.Visited = false;
-                    while (next != start)
-                    {
-                        foreach (Atom a in current.ConnectedAtoms) if (ring.Contains(a) && !a.Visited) next = a;
-                        next.Visited = true;
-                        bondAngle = (bondAngle - angle) % 360;
-                        if (bondAngle < 0) bondAngle = bondAngle + 360;
-                        this.SetBondAngle(current, next, bondAngle);
-                        current = next;
-                    }
-                    return;
-                }
-            }
-        }
-
-        void LocateRing2D(List<Atom> ring, Atom startAtom, Atom previousAtom, int angle)
-        {
-            if (angle < 90) angle = 300;
-            int ringNumber = cycles.IndexOf(ring);
-            int factor = 1;
-            for (int i = 0; i < ringNumber; i++) factor = factor * -1;
-            int bondAngle = 360 / ring.Count;
-            Atom start = ring[0];
-            Atom current = ring[0];
-            Atom next = null;
-            Atom last = null;
-            List<Atom> visited = new List<Atom>();
-            foreach (Atom a in ring) if (a.Visited) visited.Add(a);
-            if (visited.Count == 0)
-            {
-                int newAngle = this.SetBondAngle(start, previousAtom, angle);
-                while (next != start)
-                {
-                    foreach (Atom a in current.ConnectedAtoms) if (ring.Contains(a) && !a.Visited) next = a;
-                    next.Visited = true;
-                    this.SetBondAngle(current, next, angle);
-                    angle = (angle + bondAngle) % 360;
-                    current = next;
-                }
-                return;
-            }
-            if (visited.Count == 1)
-            {
-                start = ring[ring.IndexOf(visited[0])];
-                current = start;
-                start.Visited = false;
-                while (next != start)
-                {
-                    foreach (Atom a in current.ConnectedAtoms)
-                    {
-                        if (ring.Contains(a) && !a.Visited && a != last)
-                        {
-                            next = a;
-                        }
-                    }
-                    next.Visited = true;
-                    last = current;
-                    bondAngle = this.SetBondAngle(current, next, bondAngle);
-                    bondAngle = (bondAngle + angle) % 360;
-                    if (bondAngle < 0) bondAngle = bondAngle + 360;
-                    current = next;
-                }
-            }
-            //if (visited.Count == 2)
-            //{
-            //    start = visited[0];
-            //    current = visited[1];
-            //    Bond b = this.GetBond(start, current);
-            //    if (b.ConnectedAtom == current)
-            //    {
-            //        start = visited[1];
-            //        current = visited[0];
-            //    }
-            //    joiningAngle = (360 - this.GetBondAngle(start, current) + (factor * bondAngle)) % 360;
-            //    if (joiningAngle >= 0)
-            //    {
-            //        //Close the ring
-            //        while (next != start)
-            //        {
-            //            next = start;
-            //            foreach (Atom a in current.ConnectedAtoms) if (ring.Contains(a) && !a.Visited) next = a;
-            //            current.Visited = true;
-            //            this.SetBondAngle(current, next, joiningAngle);
-            //            joiningAngle = (joiningAngle - bondAngle);
-            //            current = next;
-            //        }
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        // Bridge to one
-
-            //        // then to the other
-            //    }
-            //}
-        }
+        // Molecule Boundaries for drawing algorithm
 
         public System.Drawing.Rectangle GetLocationBounds()
         {
@@ -728,7 +450,7 @@ namespace ChemInfo
         }
 
         System.Drawing.Point m_Location;
-        System.Drawing.Size m_Size;
+        System.Drawing.Size m_Size = new System.Drawing.Size(1100, 850);
         public System.Drawing.Point Location
         {
             get
@@ -742,6 +464,143 @@ namespace ChemInfo
             get
             {
                 return m_Size;
+            }
+        }
+
+
+        // Force Directed Graph Atom Locations
+
+        int GetArea()
+        {
+            return this.Size.Height * this.Size.Width;
+        }
+
+        double ForceConstant
+        {
+            get
+            {
+                //double retVal = 0.2*Math.Sqrt((double)this.GetArea() / (double)this.m_Atoms.Count);
+                return 25.0;
+            }
+        }
+
+        double Temperature
+        {
+            get;
+            set;
+        }
+
+        public double InitialTemperature
+        {
+            get
+            {
+               return Math.Min(this.Size.Height, this.Size.Width) / 10;
+            }
+        }
+
+        double RepulsiveMiutiplier { get; set; } = 1.0;
+        double AttractiveMultiplier { get; set; } = 1.0;
+        double ConstantOfRepulsion = 0;
+        private void CalculateConstantOfRepulsion()
+        {
+            ConstantOfRepulsion = Math.Pow(this.ForceConstant * this.RepulsiveMiutiplier, 2);
+            //NotifyPropertyChanged("ConstantOfRepulsion");
+        }
+        double ConstantOfAttraction = 0;
+        private void CalculateConstantOfAttraction()
+        {
+            ConstantOfAttraction = this.ForceConstant * this.AttractiveMultiplier;
+            //NotifyPropertyChanged("ConstantOfAttraction");
+        }
+
+        double DistanceBetweenAtomsSquared(Atom a1, Atom a2)
+        {
+            int delX = a1.Location2D.X - a2.Location2D.X;
+            int delY = a1.Location2D.Y - a2.Location2D.Y;
+            return Math.Pow(delX, 2) + Math.Pow(delY, 2);
+        }
+        double DistanceBetweenAtoms(Atom a1, Atom a2)
+        {
+            return Math.Sqrt(this.DistanceBetweenAtomsSquared(a1, a2));
+        }
+
+        public void ForceDirectedGraph()
+        {
+            this.RandomLocateAtoms();
+            this.Temperature = this.InitialTemperature;
+            int maxIter = 200;
+            for (int i = 0; i < maxIter; i++)
+            {
+                this.IterateFGD();
+                this.Temperature *= (1.0 - (double)i / (double)maxIter);
+            }
+        }
+
+        void RandomLocateAtoms()
+        {
+            System.Random random = new Random();
+            foreach(Atom a in this.m_Atoms)
+            {
+                a.Location2D = new System.Drawing.Point(random.Next(this.Size.Width), random.Next(this.Size.Height));
+            }
+        }
+
+        protected void IterateFGD()
+        {
+            this.CalculateConstantOfAttraction();
+            this.CalculateConstantOfRepulsion();
+            foreach (Atom v in this.m_Atoms)
+            {
+                v.deltaX = 0.0;
+                v.deltaY = 0.0;
+            }
+            foreach (Atom v in this.m_Atoms)
+            {
+                foreach (Atom u in this.m_Atoms)
+                {
+                    if (u != v)
+                    {
+                        double distance = this.DistanceBetweenAtoms(u, v);
+                        if (distance < 1) distance = 1;
+                        int delX = v.Location2D.X - u.Location2D.X;
+                        int delY = v.Location2D.Y - u.Location2D.Y;
+                        v.deltaX = v.deltaX + ((delX / distance) * this.ConstantOfRepulsion/distance);
+                        v.deltaY = v.deltaY + ((delY / distance) * this.ConstantOfRepulsion/distance);
+                    }
+                }
+            }
+
+            foreach (Atom v in this.m_Atoms)
+            {
+                foreach (Atom u in this.m_Atoms)
+                {
+                    Bond b = this.GetBond(u, v);
+                    if (b != null)
+                    {
+                        double distance = this.DistanceBetweenAtoms(u, v);
+                        if (distance < 10) distance = 10;
+                        int delX = v.Location2D.X - u.Location2D.X;
+                        int delY = v.Location2D.Y - u.Location2D.Y;
+                        //double force = AttractiveForce(this.ForceConstant, distance);
+                        double deltaX = ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                        double deltaY = ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                        v.deltaX = v.deltaX - deltaX;
+                        v.deltaY = v.deltaY - deltaY;
+                        u.deltaX = u.deltaX + deltaX;
+                        u.deltaY = u.deltaY + deltaY;
+                    }
+                }
+            }
+            foreach (Atom v in this.m_Atoms)
+            {
+                int displacement = (int)Math.Sqrt((v.deltaX * v.deltaX) + (v.deltaY * v.deltaY));
+                int x = v.Location2D.X;
+                x = x + (int)((v.deltaX / displacement) * Math.Min(displacement, this.Temperature));
+                x = Math.Min(this.Size.Width, Math.Max(0, x));
+                int y = v.Location2D.Y;
+                y = y + (int)((v.deltaY / displacement) * Math.Min(displacement, this.Temperature));
+                y = Math.Min(this.Size.Height, Math.Max(0, y));
+                v.Location2D = new System.Drawing.Point(x, y);
             }
         }
     }

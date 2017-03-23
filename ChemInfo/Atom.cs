@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ChemInfo
 {
 
-    public enum AtomType 
+    public enum AtomType
     {
         NONE = 0x00,
         ORGANIC = 0x01,
@@ -15,7 +15,7 @@ namespace ChemInfo
     }
 
     [Flags]
-    public enum Chirality 
+    public enum Chirality
     {
         UNSPECIFIED = 0x00,
         TETRAHEDRAL_CLOCKWISE = 0x01,
@@ -47,8 +47,8 @@ namespace ChemInfo
                     {
                         retVal = retVal + v[i].ToString() + " , ";
                     }
+                    retVal = retVal + v[v.Length - 1];
                 }
-                retVal = retVal + v[v.Length - 1];
                 return retVal;
             }
 
@@ -77,7 +77,7 @@ namespace ChemInfo
         }
     };
 
-    [System.ComponentModel.TypeConverter (typeof(AtomTypeConverter))]
+    [System.ComponentModel.TypeConverter(typeof(AtomTypeConverter))]
     public class Atom
     {
         BondCollection m_Bonds = new ChemInfo.BondCollection();
@@ -94,7 +94,8 @@ namespace ChemInfo
         int _y = 0;
         int _angle = 0;
         public bool Visited { get; set; } = false;
-        
+        System.Random random = new Random();
+
         // Constructors
         public Atom(string element)
         {
@@ -106,6 +107,8 @@ namespace ChemInfo
             atomType = AtomType.NONE;
             chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
+            _x = (int)(random.NextDouble() * 100);
+            _y = (int)(random.NextDouble() * 100);
         }
 
         public Atom(string element, AtomType type)
@@ -118,6 +121,8 @@ namespace ChemInfo
             atomType = type;
             chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
+            _x = (int)(random.NextDouble() * 100);
+            _y = (int)(random.NextDouble() * 100);
         }
 
         public Atom(string element, AtomType type, Chirality chirality)
@@ -129,9 +134,10 @@ namespace ChemInfo
             atomType = AtomType.NONE;
             chiral = chirality;
             this.SetColor(ChemInfo.Element.ElementColor(e));
+            _x = (int)(random.NextDouble() * 100);
+            _y = (int)(random.NextDouble() * 100);
         }
 
-        [System.ComponentModel.TypeConverter(typeof(Atom))]
         public Atom(string element, int isotope)
         {
             degree = 0;
@@ -141,6 +147,8 @@ namespace ChemInfo
             atomType = AtomType.NONE;
             chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
+            _x = (int)(random.NextDouble() * 100);
+            _y = (int)(random.NextDouble() * 100);
         }
 
         public ELEMENTS Element { get { return e; } }
@@ -222,12 +230,15 @@ namespace ChemInfo
             {
                 _x = value.X;
                 _y = value.Y;
-                foreach (Bond b in this.BondedAtoms)
-                {
-                    b.Angle = b.Angle;
-                }
+                //foreach (Bond b in this.BondedAtoms)
+                //{
+                //    b.Angle = b.Angle;
+                //}
             }
         }
+
+        public double deltaX { get; set; } = 0;
+        public double deltaY { get; set; } = 0;
 
         //[System.ComponentModel.BrowsableAttribute(false)]
         //public int X_2D
@@ -267,14 +278,6 @@ namespace ChemInfo
             }
         }
 
-        public void SetConnectedAtomLocations()
-        {
-            foreach (Bond b in this.BondedAtoms)
-            {
-                b.Angle = b.Angle;
-            }
-        }
-
         public void AddConnectedAtom(Atom a)
         {
             this.m_ConnectedAtoms.Add(a);
@@ -292,107 +295,8 @@ namespace ChemInfo
         {
             //this.m_ConnectedAtoms.Add(atom);
             Bond b = new Bond(this, atom, type);
-            b.StartPoint = this.Location2D;
-            if (_angle == 0)
-            {
-                if (numberOfBonds == 0)
-                {
-                    atom.Angle_2D = 45;
-                    b.Angle = 45;
-                }
-                if (numberOfBonds == 1)
-                {
-                    atom.Angle_2D = 315;
-                    b.Angle = 315;
-                }
-            }
-            else if (_angle < 90)
-            {
-                if (numberOfBonds == 0)
-                {
-                    atom.Angle_2D = 315;
-                    b.Angle = 315;
-                }
-                if (numberOfBonds == 1)
-                {
-                    atom.Angle_2D = 45;
-                    b.Angle = 45;
-                }
-                if (numberOfBonds == 2)
-                {
-                    atom.Angle_2D = 45;
-                    b.Angle = 45;
-                }
-            }
-            else if (_angle < 180)
-            {
-                if (numberOfBonds == 0)
-                {
-                    atom.Angle_2D = 45;
-                    b.Angle = 45;
-                }
-                if (numberOfBonds == 1)
-                {
-                    atom.Angle_2D = 135;
-                    b.Angle = 135;
-                }
-                if (numberOfBonds == 2)
-                {
-                    atom.Angle_2D = 225;
-                    b.Angle = 225;
-                }
-            }
-            else if (_angle < 270)
-            {
-                if (numberOfBonds == 0)
-                {
-                    atom.Angle_2D = 135;
-                    b.Angle = 135;
-                }
-                if (numberOfBonds == 1)
-                {
-                    atom.Angle_2D = 225;
-                    b.Angle = 225;
-                }
-                if (numberOfBonds == 2)
-                {
-                    atom.Angle_2D = 315;
-                    b.Angle = 315;
-                }
-            }
-            else if (_angle < 360)
-            {
-                if (numberOfBonds == 0)
-                {
-                    atom.Angle_2D = 45;
-                    b.Angle = 45;
-                }
-                if (numberOfBonds == 1)
-                {
-                    atom.Angle_2D = 225;
-                    b.Angle = 225;
-                }
-                if (numberOfBonds == 2)
-                {
-                    atom.Angle_2D = 315;
-                    b.Angle = 315;
-                }
-            }
-            switch (type)
-            {
-                case BondType.Single:
-                    atomType = AtomType.ORGANIC;
-                    break;
-                case BondType.Aromatic:
-                    atomType = AtomType.AROMATIC;
-                    break;
-                case BondType.Double:
-                    atomType = AtomType.ORGANIC;
-                    break;
-                case BondType.Triple:
-                    atomType = AtomType.ORGANIC;
-                    break;
-            }
+            //b.StartPoint = this.Location2D;
+            //b.EndPoint = atom.Location2D;
             this.BondedAtoms.Add(b);
             degree = (byte)this.BondedAtoms.Count;
         }
@@ -441,13 +345,13 @@ namespace ChemInfo
                     case ELEMENTS.C:
                         return new int[] { 4 };
                     case ELEMENTS.N:
-                        return new int[] { 3,5 };
+                        return new int[] { 3, 5 };
                     case ELEMENTS.O:
                         return new int[] { 2 };
                     case ELEMENTS.S:
-                        return new int[] { 2,4,6 };
+                        return new int[] { 2, 4, 6 };
                     case ELEMENTS.P:
-                        return new int[] { 3,5 };
+                        return new int[] { 3, 5 };
                     default:
                         return new int[0];
                 }
@@ -499,7 +403,8 @@ namespace ChemInfo
             }
         }
 
-        public int Valence {
+        public int Valence
+        {
             get
             {
                 int[] possible = this.possibleValences;
@@ -525,12 +430,12 @@ namespace ChemInfo
         }
 
         // Values from the Atom Table of a Mole File.
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public double x { get; set; } = 0.0;
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public double y { get; set; } = 0.0;
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public double z { get; set; } = 0.0;
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public double x { get; set; } = 0.0;
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public double y { get; set; } = 0.0;
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public double z { get; set; } = 0.0;
         [System.ComponentModel.BrowsableAttribute(false)]
         public int massDiff { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
