@@ -83,7 +83,7 @@ namespace ChemInfo
         BondCollection m_Bonds = new ChemInfo.BondCollection();
         List<Atom> m_ConnectedAtoms = new List<Atom>();
 
-        int degree;
+        //int degree;
         ELEMENTS e;
         int isotope;
         int charge;
@@ -100,7 +100,7 @@ namespace ChemInfo
         public Atom(string element)
         {
             e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
-            degree = 0;
+            //degree = 0;
             isotope = 0;
             charge = 0;
             chiral = Chirality.UNSPECIFIED;
@@ -114,7 +114,7 @@ namespace ChemInfo
         public Atom(string element, AtomType type)
         {
             e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
-            degree = 0;
+            //degree = 0;
             isotope = 0;
             charge = 0;
             chiral = Chirality.UNSPECIFIED;
@@ -127,7 +127,7 @@ namespace ChemInfo
 
         public Atom(string element, AtomType type, Chirality chirality)
         {
-            degree = 0;
+            //degree = 0;
             isotope = 0;
             charge = 0;
             chiral = Chirality.UNSPECIFIED;
@@ -140,7 +140,7 @@ namespace ChemInfo
 
         public Atom(string element, int isotope)
         {
-            degree = 0;
+            //degree = 0;
             isotope = (byte)isotope;
             charge = 0;
             chiral = Chirality.UNSPECIFIED;
@@ -265,18 +265,18 @@ namespace ChemInfo
         //        _y = value;
         //    }
         //}
-        [System.ComponentModel.BrowsableAttribute(false)]
-        public int Angle_2D
-        {
-            get
-            {
-                return _angle;
-            }
-            set
-            {
-                _angle = value;
-            }
-        }
+        //[System.ComponentModel.BrowsableAttribute(false)]
+        //public int Angle_2D
+        //{
+        //    get
+        //    {
+        //        return _angle;
+        //    }
+        //    set
+        //    {
+        //        _angle = value;
+        //    }
+        //}
 
         public void AddConnectedAtom(Atom a)
         {
@@ -291,14 +291,14 @@ namespace ChemInfo
             }
         }
 
-        public void AddBond(Atom atom, BondType type)
+        public void AddBond(Atom atom, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
             //this.m_ConnectedAtoms.Add(atom);
-            Bond b = new Bond(this, atom, type);
+            Bond b = new Bond(this, atom, type, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.notACenter);
             //b.StartPoint = this.Location2D;
             //b.EndPoint = atom.Location2D;
             this.BondedAtoms.Add(b);
-            degree = (byte)this.BondedAtoms.Count;
+            //degree = (byte)this.BondedAtoms.Count;
         }
 
         [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]
@@ -323,8 +323,20 @@ namespace ChemInfo
             get
             {
                 int retVal = 0;
-                foreach (Bond b in this.BondedAtoms)
+                foreach (Atom a in this.ConnectedAtoms)
                 {
+                    Bond b = null;
+                    foreach (Bond testBond in this.BondedAtoms)
+                    {
+                        if (testBond.ConnectedAtom == a) b = testBond;
+                    }
+                    if (b == null)
+                    {
+                        foreach(Bond testBond in a.BondedAtoms)
+                        {
+                            if (testBond.ConnectedAtom == this) b = testBond;
+                        }
+                    }
                     if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
                     if (b.BondType == BondType.Double) retVal = retVal + 2;
                     if (b.BondType == BondType.Triple) retVal = retVal + 3;
@@ -374,7 +386,7 @@ namespace ChemInfo
                         case ELEMENTS.B:
                             return 2;
                         case ELEMENTS.C:
-                            return 3 - this.BondedAtoms.Count;
+                            return 3 - this.ConnectedAtoms.Length;
                         case ELEMENTS.N:
                             return 0;
                         case ELEMENTS.O:

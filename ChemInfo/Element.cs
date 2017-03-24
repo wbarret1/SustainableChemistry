@@ -312,6 +312,21 @@ namespace ChemInfo
             return Element.ElementColor(Element.GetElementForSymbol(symbol));
         }
 
+        static public double CovalentRadius(ELEMENTS e)
+        {
+            return Convert.ToDouble(LookupValue(e, "bo:radiusCovalent"));
+        }
+
+        static public double CovalentRadius(int AtomicNumber)
+        {
+            return Element.CovalentRadius((ELEMENTS)AtomicNumber);
+        }
+
+        static public double CovalentRadius(string symbol)
+        {
+            return Element.CovalentRadius(Element.GetElementForSymbol(symbol));
+        }
+
 
 
         // <atom id = "H" >

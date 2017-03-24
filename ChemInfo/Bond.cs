@@ -68,11 +68,14 @@ namespace ChemInfo
     [System.ComponentModel.TypeConverter(typeof(BondTypeConverter))]
     public class Bond
     {
-        public Bond(Atom parent, Atom connectedAtom, BondType type)
+        public Bond(Atom parent, Atom connectedAtom, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
             m_ParentAtom = parent;
             m_connectedAtom = connectedAtom;
             m_bondType = type;
+            m_bondStereo = stereo;
+            m_BondTopology = topology;
+            m_bondReactingCenter = rcStatus;
         }
 
         Atom m_ParentAtom;
@@ -102,10 +105,34 @@ namespace ChemInfo
             }
         }
 
-        public BondStereo bondStereo;
+        BondStereo m_bondStereo;
+        public BondStereo Stereo
+        {
+            get
+            {
+                return m_bondStereo;
+            }
+        }
+
         public string xNotUsed;
-        public BondTopology bondTopology;
-        public BondReactingCenterStatus reactingCenter;
+        BondTopology m_BondTopology;
+        public BondTopology Topology
+        {
+            get
+            {
+                return m_BondTopology;
+            }
+        }
+
+        BondReactingCenterStatus m_bondReactingCenter;
+        public BondReactingCenterStatus ReactingCenter
+        {
+            get
+            {
+                return m_bondReactingCenter;
+            }
+        }
+
         public double Length
         {
             get

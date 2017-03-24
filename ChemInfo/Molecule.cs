@@ -53,14 +53,13 @@ namespace ChemInfo
             m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
-            return;
         }
 
         public void AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
             if (atomOne != null)
             {
-                atomOne.AddBond(atomTwo, type);
+                atomOne.AddBond(atomTwo, type, stereo, topology, rcStatus);
                 atomOne.AddConnectedAtom(atomTwo);
                 atomTwo.AddConnectedAtom(atomOne);
                 ringsFound = false;
@@ -562,8 +561,8 @@ namespace ChemInfo
                     {
                         double distance = this.DistanceBetweenAtoms(u, v);
                         if (distance < 1) distance = 1;
-                        int delX = v.Location2D.X - u.Location2D.X;
-                        int delY = v.Location2D.Y - u.Location2D.Y;
+                        double delX = v.Location2D.X - u.Location2D.X;
+                        double delY = v.Location2D.Y - u.Location2D.Y;
                         v.deltaX = v.deltaX + ((delX / distance) * this.ConstantOfRepulsion/distance);
                         v.deltaY = v.deltaY + ((delY / distance) * this.ConstantOfRepulsion/distance);
                     }
@@ -579,8 +578,8 @@ namespace ChemInfo
                     {
                         double distance = this.DistanceBetweenAtoms(u, v);
                         if (distance < 10) distance = 10;
-                        int delX = v.Location2D.X - u.Location2D.X;
-                        int delY = v.Location2D.Y - u.Location2D.Y;
+                        double delX = v.Location2D.X - u.Location2D.X;
+                        double delY = v.Location2D.Y - u.Location2D.Y;
                         //double force = AttractiveForce(this.ForceConstant, distance);
                         double deltaX = ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
                         double deltaY = ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
@@ -593,14 +592,14 @@ namespace ChemInfo
             }
             foreach (Atom v in this.m_Atoms)
             {
-                int displacement = (int)Math.Sqrt((v.deltaX * v.deltaX) + (v.deltaY * v.deltaY));
-                int x = v.Location2D.X;
-                x = x + (int)((v.deltaX / displacement) * Math.Min(displacement, this.Temperature));
+                double displacement = Math.Sqrt((v.deltaX * v.deltaX) + (v.deltaY * v.deltaY));
+                double x = v.Location2D.X;
+                x = x + ((v.deltaX / displacement) * Math.Min(displacement, this.Temperature));
                 x = Math.Min(this.Size.Width, Math.Max(0, x));
-                int y = v.Location2D.Y;
-                y = y + (int)((v.deltaY / displacement) * Math.Min(displacement, this.Temperature));
+                double y = v.Location2D.Y;
+                y = y + ((v.deltaY / displacement) * Math.Min(displacement, this.Temperature));
                 y = Math.Min(this.Size.Height, Math.Max(0, y));
-                v.Location2D = new System.Drawing.Point(x, y);
+                v.Location2D = new System.Drawing.Point((int)x, (int)y);
             }
         }
     }
