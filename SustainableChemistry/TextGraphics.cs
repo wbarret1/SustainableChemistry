@@ -107,6 +107,20 @@ namespace SustainableChemistry
             }
         }
 
+        public override bool HitTest(System.Drawing.Point pt)
+        {
+            System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+            System.Drawing.Drawing2D.Matrix myMatrix = new System.Drawing.Drawing2D.Matrix();
+            gp.AddRectangle(new System.Drawing.Rectangle(this.m_Position.X - (int)(0.25 * this.m_Size.Width), this.m_Position.Y - (int)(0.25 * this.m_Size.Height), (int)(1.25 * this.m_Size.Width), (int)(1.25 * this.m_Size.Height)));
+            if (this.m_Rotation != 0)
+            {
+                myMatrix.RotateAt((float)(this.m_Rotation), new System.Drawing.PointF((float)this.X, (float)this.Y),
+                    System.Drawing.Drawing2D.MatrixOrder.Append);
+            }
+            gp.Transform(myMatrix);
+            return gp.IsVisible(pt);
+        }
+
         public override void Draw(System.Drawing.Graphics g)
         {
             System.Drawing.StringFormat format = new System.Drawing.StringFormat();

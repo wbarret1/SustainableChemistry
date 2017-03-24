@@ -62,7 +62,7 @@
     <Compile Include="GraphicAtom.cs" />
     <Compile Include="GraphicBond.cs" />
     <Compile Include="GraphicObjectCollection.cs" />
-    <Compile Include="Graphics.cs" />
+    <Compile Include="GraphicObject.cs" />
     <Compile Include="LineGraphic.cs" />
     <Compile Include="MoleculeViewer.cs">
       <SubType>UserControl</SubType>

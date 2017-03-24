@@ -479,7 +479,7 @@ namespace ChemInfo
             get
             {
                 //double retVal = 0.2*Math.Sqrt((double)this.GetArea() / (double)this.m_Atoms.Count);
-                return 25.0;
+                return 50.0;
             }
         }
 
@@ -588,6 +588,52 @@ namespace ChemInfo
                         u.deltaX = u.deltaX + deltaX;
                         u.deltaY = u.deltaY + deltaY;
                     }
+                }
+            }
+
+            // This add the Angle force to fix bond angles from Fraczek 2016
+            foreach (Atom v in this.m_Atoms)
+            {
+                foreach (Atom u in this.m_Atoms)
+                {
+                    if (u.ConnectedAtoms.Length < 5)
+                    {
+                        foreach(Atom a in u.ConnectedAtoms)
+                        {
+                            if (a != u)
+                            {
+                                double distance = this.DistanceBetweenAtoms(u, v);
+                                if (distance < 10) distance = 10;
+                                double delX = v.Location2D.X - u.Location2D.X;
+                                double delY = v.Location2D.Y - u.Location2D.Y;
+                                //double force = AttractiveForce(this.ForceConstant, distance);
+                                double deltaX = 0.1*((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaY = 0.1*((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                v.deltaX = v.deltaX - deltaX;
+                                v.deltaY = v.deltaY - deltaY;
+                                u.deltaX = u.deltaX + deltaX;
+                                u.deltaY = u.deltaY + deltaY;
+                            }
+                        }
+                    }
+
+
+
+                    //Bond b = this.GetBond(u, v);
+                    //if (b != null)
+                    //{
+                    //    double distance = this.DistanceBetweenAtoms(u, v);
+                    //    if (distance < 10) distance = 10;
+                    //    double delX = v.Location2D.X - u.Location2D.X;
+                    //    double delY = v.Location2D.Y - u.Location2D.Y;
+                    //    //double force = AttractiveForce(this.ForceConstant, distance);
+                    //    double deltaX = ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                    //    double deltaY = ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                    //    v.deltaX = v.deltaX - deltaX;
+                    //    v.deltaY = v.deltaY - deltaY;
+                    //    u.deltaX = u.deltaX + deltaX;
+                    //    u.deltaY = u.deltaY + deltaY;
+                    //}
                 }
             }
             foreach (Atom v in this.m_Atoms)
