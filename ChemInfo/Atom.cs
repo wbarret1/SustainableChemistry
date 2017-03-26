@@ -107,6 +107,8 @@ namespace ChemInfo
             atomType = AtomType.NONE;
             chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.m_AtomicMass = ChemInfo.Element.ExactMass(e);
+            this.m_CovalentRadius = ChemInfo.Element.CovalentRadius(e);
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
         }
@@ -201,6 +203,23 @@ namespace ChemInfo
             }
         }
 
+        public Atom[] SetHydrogens()
+        {
+            List<Atom> hydrogens = new List<Atom>();
+            int numHydrogens = 0;
+            foreach (Bond b in this.BondedAtoms)
+            {
+                if (b.ConnectedAtom.Element == ELEMENTS.H) numHydrogens++;
+            }
+            for (int i = 0; i < this.NumHydrogens-numHydrogens; i++)
+            {
+                Atom h = new Atom("H");
+                this.AddBond(h, BondType.Single, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.notACenter);
+                hydrogens.Add(h);
+            }
+            return hydrogens.ToArray();
+        }
+
         void SetColor(int[] argb)
         {
             if (argb.Length == 3) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]).ToArgb();
@@ -239,6 +258,24 @@ namespace ChemInfo
 
         public double deltaX { get; set; } = 0;
         public double deltaY { get; set; } = 0;
+
+        double m_AtomicMass;
+        public double AtomicMass
+        {
+            get
+            {
+                return m_AtomicMass;
+            }
+        }
+
+        double m_CovalentRadius;
+        public double CovalentRadius
+        {
+            get
+            {
+                return m_CovalentRadius;
+            }
+        }
 
         //[System.ComponentModel.BrowsableAttribute(false)]
         //public int X_2D
@@ -375,7 +412,7 @@ namespace ChemInfo
         {
             get
             {
-                if (this.atomType == AtomType.ORGANIC)
+                if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
                 {
                     return this.Valence - this.numberOfBonds;
                 }

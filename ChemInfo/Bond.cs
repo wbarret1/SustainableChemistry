@@ -76,6 +76,7 @@ namespace ChemInfo
             m_bondStereo = stereo;
             m_BondTopology = topology;
             m_bondReactingCenter = rcStatus;
+            m_BondLength = parent.CovalentRadius + connectedAtom.CovalentRadius;
         }
 
         Atom m_ParentAtom;
@@ -133,16 +134,26 @@ namespace ChemInfo
             }
         }
 
-        public double Length
+        public double DistanceBetweenAtoms
         {
             get
             {
-                return Math.Sqrt(this.LengthSquared);
+                return Math.Sqrt(this.DistanceBetweenAtomsSquared);
             }
 
         }
 
-        public double LengthSquared
+        double m_BondLength;
+        public double BondLength
+        {
+            get
+            {
+                return m_BondLength;
+            }
+
+        }
+
+        public double DistanceBetweenAtomsSquared
         {
             get
             {

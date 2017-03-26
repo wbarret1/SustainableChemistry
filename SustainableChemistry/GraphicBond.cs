@@ -8,51 +8,15 @@ namespace SustainableChemistry
 {
     public class GraphicBond :LineGraphic
     {
+        GraphicAtom m_parentAtom = null;
+        GraphicAtom m_connectedAtom = null;
 
-        public GraphicBond() : base() { }
-        public GraphicBond(System.Drawing.Point startPosition, ChemInfo.BondType type) : base(startPosition)
+        public GraphicBond(GraphicAtom parent, GraphicAtom connected, ChemInfo.Bond bond): base(parent.GetPosition(), connected.GetPosition())
         {
-            m_BondType = type;
-        }
-
-        public GraphicBond(int posX, int posY, ChemInfo.BondType type):base(posX, posY)
-        {
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, ChemInfo.BondType type):
-            base(startPosition, endPosition)
-        {
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(int startX, int startY, System.Drawing.Point endPosition, ChemInfo.BondType type):
-            base(startX, startY, endPosition)
-        {
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(int startX, int startY, int endX, int endY, ChemInfo.BondType type):
-            base(startX, startY, endX, endY)
-        {
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(System.Drawing.Point startPosition, System.Drawing.Point endPosition, double lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type):
-            base(startPosition, endPosition, lineWidth, lineColor)
-        {
-            m_BondType = type;
-        }
-
-
-        public GraphicBond(int startX, int startY, int endX, int endY, float lineWidth, System.Drawing.Color lineColor, ChemInfo.BondType type):
-            base(startX, startY, endX, endY, lineWidth, lineColor)
-        {
-            m_BondType = type;
+            m_parentAtom = parent;
+            m_connectedAtom = connected;
+            m_BondType = bond.BondType;
+            this.Tag = bond;
         }
 
         ChemInfo.BondType m_BondType = ChemInfo.BondType.Single;
@@ -94,26 +58,28 @@ namespace SustainableChemistry
 
         System.Drawing.Point GetStartPosition()
         {
-            return ((GraphicObject)this).GetPosition();
+            return this.GetPosition();
         }
 
         void SetStartPosition(System.Drawing.Point Value)
         {
-            this.SetPosition(Value);
+            m_Position = Value;
+            m_parentAtom.SetPosition(Value);
         }
 
         System.Drawing.Point GetEndPosition()
         {
-            System.Drawing.Point endPosition = new System.Drawing.Point(this.m_Position.X, this.m_Position.Y);
-            endPosition.X += this.m_Size.Width;
-            endPosition.Y += this.m_Size.Height;
+            System.Drawing.Point endPosition = m_connectedAtom.GetPosition();
+            //endPosition.X += this.m_Size.Width;
+            //endPosition.Y += this.m_Size.Height;
             return endPosition;
         }
 
         void SetEndPosition(System.Drawing.Point Value)
         {
-            this.Width = Value.X - m_Position.X;
-            this.Height = Value.Y - m_Position.Y;
+            m_Size.Width = Value.X - m_Position.X;
+            m_Size.Height = Value.Y - m_Position.Y;
+            m_connectedAtom.SetPosition(Value);
         }
 
         float AngleToPoint(System.Drawing.Point Origin, System.Drawing.Point Target)
@@ -147,58 +113,25 @@ namespace SustainableChemistry
             System.Drawing.Drawing2D.GraphicsContainer gContainer = g.BeginContainer();
             System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
             this.DetermineOffset();
-            float X = (float)this.X;
-            float Y = (float)this.Y;
+            float X = (float)this.m_parentAtom.X;
+            float Y = (float)this.m_parentAtom.Y;
             if (m_Rotation != 0)
             {
                 myMatrix.RotateAt((float)(m_Rotation), new System.Drawing.PointF(X, Y), System.Drawing.Drawing2D.MatrixOrder.Append);
                 g.Transform = myMatrix;
             }
             System.Drawing.Pen myPen = new System.Drawing.Pen(m_lineColor, (float)m_lineWidth);
-            if (this.m_BondType == ChemInfo.BondType.Single || this.m_BondType == ChemInfo.BondType.Aromatic) g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
+            if (this.m_BondType == ChemInfo.BondType.Single || this.m_BondType == ChemInfo.BondType.Aromatic) g.DrawLine(myPen, X, Y, m_connectedAtom.X, m_connectedAtom.Y);
             if (this.m_BondType == ChemInfo.BondType.Double)
             {
-                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, X + m_Size.Width + m_OffsetX, Y + m_Size.Height + m_OffsetY);
-                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, X + m_Size.Width - m_OffsetX, Y + m_Size.Height - m_OffsetY);
+                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, m_connectedAtom.X + m_OffsetX, m_connectedAtom.Y + m_OffsetY);
+                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, m_connectedAtom.X - m_OffsetX, m_connectedAtom.Y - m_OffsetY);
             }
             if (this.m_BondType == ChemInfo.BondType.Triple)
             {
-                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, X + m_Size.Width + m_OffsetX, Y + m_Size.Height + m_OffsetY);
-                g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
-                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, X + m_Size.Width - m_OffsetX, Y + m_Size.Height - m_OffsetY);
-            }
-            g.EndContainer(gContainer);
-        }
-
-        void Draw(System.Drawing.Graphics g, System.Drawing.Drawing2D.AdjustableArrowCap customStartCap, System.Drawing.Drawing2D.AdjustableArrowCap customEndCap)
-        {
-            System.Drawing.Drawing2D.GraphicsContainer gContainer = g.BeginContainer();
-            System.Drawing.Drawing2D.Matrix myMatrix = g.Transform;
-
-            float X = (float)this.X;
-            float Y = (float)this.Y;
-            if (m_Rotation != 0)
-            {
-                myMatrix.RotateAt((float)m_Rotation, new System.Drawing.PointF(X, Y), System.Drawing.Drawing2D.MatrixOrder.Append);
-                g.Transform = myMatrix;
-            }
-            System.Drawing.Pen myPen = new System.Drawing.Pen(m_lineColor, (float)m_lineWidth);
-
-            // put startcaps and endcaps on lines
-            if (customStartCap != null) myPen.CustomStartCap = customStartCap;
-            if (customEndCap != null) myPen.CustomEndCap = customEndCap;
-
-            if (this.m_BondType == ChemInfo.BondType.Single) g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
-            if (this.m_BondType == ChemInfo.BondType.Double)
-            {
-                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, X + m_Size.Width + m_OffsetX, Y + m_Size.Height + m_OffsetY);
-                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, X + m_Size.Width - m_OffsetX, Y + m_Size.Height - m_OffsetY);
-            }
-            if (this.m_BondType == ChemInfo.BondType.Triple)
-            {
-                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, X + m_Size.Width + m_OffsetX, Y + m_Size.Height + m_OffsetY);
-                g.DrawLine(myPen, X, Y, X + m_Size.Width, Y + m_Size.Height);
-                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, X + m_Size.Width - m_OffsetX, Y + m_Size.Height - m_OffsetY);
+                g.DrawLine(myPen, X + m_OffsetX, Y + m_OffsetY, m_connectedAtom.X + m_OffsetX, m_connectedAtom.Y + m_OffsetY);
+                g.DrawLine(myPen, X, Y, m_connectedAtom.X, m_connectedAtom.Y);
+                g.DrawLine(myPen, X - m_OffsetX, Y - m_OffsetY, m_connectedAtom.X - m_OffsetX, m_connectedAtom.Y - m_OffsetY);
             }
             g.EndContainer(gContainer);
         }

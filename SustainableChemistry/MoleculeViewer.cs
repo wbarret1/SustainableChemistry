@@ -83,7 +83,7 @@ namespace SustainableChemistry
         public MoleculeViewer()
         {
             InitializeComponent();
-          //  m_MoleculeRectangle = this.ClientRectangle;
+            //  m_MoleculeRectangle = this.ClientRectangle;
         }
 
         [System.ComponentModel.Category("Property Changed")]
@@ -102,7 +102,7 @@ namespace SustainableChemistry
             set
             {
                 m_DrawingObjects.Clear();
-                this.SelectedObject = null;                
+                this.SelectedObject = null;
                 ChemInfo.Molecule m = value;
                 m.ForceDirectedGraph();
                 m_MoleculeRectangle = m.GetLocationBounds();
@@ -111,31 +111,46 @@ namespace SustainableChemistry
                 int deltaX = (this.Bounds.Width - m_MoleculeRectangle.Width) / 2;
                 int deltaY = (this.Bounds.Height - m_MoleculeRectangle.Height) / 2;
 
+                List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
-                    System.Drawing.Point atomLocation = a.Location2D;
-                    //atomLocation.Offset(-1 * m.Location.X + deltaX, -1 * m.Location.Y + deltaY);
-                    TextGraphics text = new TextGraphics(atomLocation, a.AtomicSymbol, this.Font, a.Color);
-                    text.Tag = a;
-                    foreach (ChemInfo.Bond b in a.BondedAtoms)
+                    graphicAtoms.Add(new GraphicAtom(a, this.Font));
+                }
+                foreach (GraphicAtom gAtom in graphicAtoms)
+                {
+                    foreach (ChemInfo.Bond b in ((ChemInfo.Atom)gAtom.Tag).BondedAtoms)
                     {
-                        System.Drawing.Point bondedAtomLocation = b.ConnectedAtom.Location2D;
-                        //bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
-                        //LineGraphic line = new LineGraphic(atomLocation, bondedAtomLocation, 1, Color.Black);
-                        //line.Tag = bond;
-                        //m_DrawingObjects.Add(line);
-                        GraphicBond bond = new GraphicBond(atomLocation, bondedAtomLocation, 1.5, Color.Black, b.BondType);
-                        bond.Tag = b;
-                        m_DrawingObjects.Add(bond);
+                        foreach (GraphicAtom gA1 in graphicAtoms)
+                        {
+                            if (b.ConnectedAtom == (ChemInfo.Atom)gA1.Tag)
+                            {
+                                this.m_DrawingObjects.Add(new GraphicBond(gAtom, gA1, b));
+                            }
+                        }
+
                     }
-                     m_DrawingObjects.Add(text);
-               }
-                //double zoom1 = this.GetFitWidthZoom();
-                //double zoom2 = this.GetFitWidthZoom();
-                //if (zoom1 > zoom2) m_Zoom = zoom2;
-                //else m_Zoom = zoom1;
+                }
+                this.m_DrawingObjects.AddRange(graphicAtoms.ToArray());
+
+                //foreach (ChemInfo.Bond b in a.BondedAtoms)
+                //{
+                //    System.Drawing.Point bondedAtomLocation = b.ConnectedAtom.Location2D;
+                //    //bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
+                //    //LineGraphic line = new LineGraphic(atomLocation, bondedAtomLocation, 1, Color.Black);
+                //    //line.Tag = bond;
+                //    //m_DrawingObjects.Add(line);
+                //    GraphicBond bond = new GraphicBond(atomLocation, bondedAtomLocation, 1.5, Color.Black, b.BondType);
+                //    bond.Tag = b;
+                //    m_DrawingObjects.Add(bond);
+                //}
+                //m_DrawingObjects.Add(text);
             }
+            //double zoom1 = this.GetFitWidthZoom();
+            //double zoom2 = this.GetFitWidthZoom();
+            //if (zoom1 > zoom2) m_Zoom = zoom2;
+            //else m_Zoom = zoom1;
         }
+
 
         public GraphicObjectCollection DrawingObjects
         {
@@ -201,14 +216,14 @@ namespace SustainableChemistry
                             ((GraphicObject)m_DrawingObjects[i]).Selected = true;
                     }
                 }
-                if (SelectionChanged!=null) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
+                if (SelectionChanged != null) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
                 Point location = new System.Drawing.Point(0, 0);
                 if (this.SelectedObjects.Length > 0)
                 {
                     location = value[0].GetPosition();
                 }
-                if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
-                    "Selected Object Changed", location, 0.0));
+                if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SelectionChanged, value,
+                      "Selected Object Changed", location, 0.0));
             }
         }
 
@@ -226,9 +241,9 @@ namespace SustainableChemistry
                 if (value > 0.05)
                     m_Zoom = value;
                 else m_Zoom = 0.05;
-                if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SurfaceZoomChanged, 
-                    this.SelectedObjects, String.Format("Zoom set to {0}%", (this.m_Zoom * 100)), 
-                    new System.Drawing.Point (0,0), this.m_Zoom));
+                if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SurfaceZoomChanged,
+                      this.SelectedObjects, String.Format("Zoom set to {0}%", (this.m_Zoom * 100)),
+                      new System.Drawing.Point(0, 0), this.m_Zoom));
                 this.Invalidate();
             }
         }
@@ -473,9 +488,9 @@ namespace SustainableChemistry
                     }
                     else
                     {
-                        //m_DraggingSelectedObject = true;
-                        //dragOffset.X = this.SelectedObject.X - mousePT.X;
-                        //dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
+                        m_DraggingSelectedObject = true;
+                        dragOffset.X = this.SelectedObject.X - mousePT.X;
+                        dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
                     }
                 }
                 else
@@ -513,9 +528,9 @@ namespace SustainableChemistry
                 {
                     Rectangle rect = new System.Drawing.Rectangle(this.SelectedObject.GetPosition().X, this.SelectedObject.GetPosition().Y, this.SelectedObject.Width, this.SelectedObject.Height);
                     this.SelectedObject.SetPosition(dragPoint);
-                    if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectMoved,
-                        this.SelectedObject, String.Format("Object Moved to {0}, {1}", dragPoint.X, dragPoint.Y),
-                        dragPoint, 0));
+                    if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectMoved,
+                          this.SelectedObject, String.Format("Object Moved to {0}, {1}", dragPoint.X, dragPoint.Y),
+                          dragPoint, 0));
                     this.Invalidate();
                 }
                 else if (m_RotatingSelectedObject)
@@ -524,9 +539,9 @@ namespace SustainableChemistry
                     currentRotation = (float)AngleToPoint(this.SelectedObject.GetPosition(), dragPoint);
                     currentRotation = (float)((int)(currentRotation - startingRotation + originalRotation) % 360);
                     this.SelectedObject.Rotation = currentRotation;
-                    if (StatusUpdate!=null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
-                        this.SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
-                        new System.Drawing.Point(0, 0), currentRotation));
+                    if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
+                          this.SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
+                          new System.Drawing.Point(0, 0), currentRotation));
                     this.Invalidate();
                 }
                 else if (resizing)
@@ -748,7 +763,7 @@ namespace SustainableChemistry
                     {
                         m_DrawingObjects.Remove(this.SelectedObjects[i]);
                     }
-                    if (GraphicObjectsChanged!=null) GraphicObjectsChanged(this, new GraphicObjectsChangedEventsArgs(this.SelectedObjects, GraphicObjectsChangedType.Deleted));
+                    if (GraphicObjectsChanged != null) GraphicObjectsChanged(this, new GraphicObjectsChangedEventsArgs(this.SelectedObjects, GraphicObjectsChangedType.Deleted));
                 }
             }
             this.Invalidate();

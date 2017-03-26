@@ -35,12 +35,12 @@ namespace ChemInfo
 
         public Atom[] GetAtoms()
         {
-            return this.m_Atoms.ToArray<Atom>();
+            return m_Atoms.ToArray<Atom>();
         }
 
         public void AddAtom(Atom a)
         {
-            if (this.m_Atoms.Contains(a)) return;
+            if (m_Atoms.Contains(a)) return;
             m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
@@ -49,7 +49,7 @@ namespace ChemInfo
         public void AddAtom(string element)
         {
             Atom a = new Atom(element);
-            if (this.m_Atoms.Contains(a)) return;
+            if (m_Atoms.Contains(a)) return;
             m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
@@ -118,18 +118,18 @@ namespace ChemInfo
 
         public Atom[][] FindRings()
         {
-            if (ringsFound) return this.convertToArrayArray(cycles);
+            if (ringsFound) return convertToArrayArray(cycles);
             Stack<Atom> myStack = new Stack<Atom>();
-            foreach (Atom a in this.m_Atoms) a.Visited = false;
+            foreach (Atom a in m_Atoms) a.Visited = false;
             cycles = new List<List<Atom>>();
             foreach (Atom a in m_Atoms)
             {
                 FindRings(a, a, myStack);
             }
-            this.ExtractRings();
-            this.FusedRings();
+            ExtractRings();
+            FusedRings();
             ringsFound = true;
-            return this.convertToArrayArray(cycles);
+            return convertToArrayArray(cycles);
         }
 
         public void FindAllPaths()
@@ -137,14 +137,14 @@ namespace ChemInfo
             if (pathsFound) return;
             paths = new List<Atom[]>();
             Stack<Atom> stack = new Stack<Atom>();
-            Atom[] ends = this.EndAtoms();
+            Atom[] ends = EndAtoms();
             for (int i = 0; i < ends.Length - 1; i++)
             {
                 for (int j = i + 1; j < ends.Length; j++)
                 {
                     stack.Clear();
-                    foreach (Atom a in this.m_Atoms) a.Visited = false;
-                    this.FindPath(ends[i], ends[j], null, stack);
+                    foreach (Atom a in m_Atoms) a.Visited = false;
+                    FindPath(ends[i], ends[j], null, stack);
                 }
             }
             pathsFound = true;
@@ -153,7 +153,7 @@ namespace ChemInfo
         public Atom[] EndAtoms()
         {
             List<Atom> atoms = new List<ChemInfo.Atom>();
-            foreach (Atom a in this.m_Atoms) if (a.ConnectedAtoms.Length == 1) atoms.Add(a);
+            foreach (Atom a in m_Atoms) if (a.ConnectedAtoms.Length == 1) atoms.Add(a);
             return atoms.ToArray();
         }
 
@@ -184,10 +184,10 @@ namespace ChemInfo
 
         public Atom[] FindLongestpath()
         {
-            if (!pathsFound) this.FindAllPaths();
+            if (!pathsFound) FindAllPaths();
             // paths will be 0 if all atoms are in a ring...
             if (paths.Count == 0) return new Atom[0];
-            paths.Sort(this.CompareArrayByCount);
+            paths.Sort(CompareArrayByCount);
             paths.Reverse();
             return paths[0];
         }
@@ -386,7 +386,7 @@ namespace ChemInfo
             // Step 1. Set Initial Invariants and go to Step 3.
             // The initial invariants are handled by the comparer.
             // Step 3. Sort the vector.
-            this.m_Atoms.Sort(atomInvariantComparerWeinginger);
+            m_Atoms.Sort(atomInvariantComparerWeinginger);
 
             // Step 4. RankException Atomic Vector
 
@@ -432,11 +432,11 @@ namespace ChemInfo
 
         public System.Drawing.Rectangle GetLocationBounds()
         {
-            int top = this.m_Atoms[0].Location2D.Y;
-            int bottom = this.m_Atoms[0].Location2D.Y;
-            int left = this.m_Atoms[0].Location2D.X;
-            int right = this.m_Atoms[0].Location2D.X;
-            foreach (Atom a in this.m_Atoms)
+            int top = m_Atoms[0].Location2D.Y;
+            int bottom = m_Atoms[0].Location2D.Y;
+            int left = m_Atoms[0].Location2D.X;
+            int right = m_Atoms[0].Location2D.X;
+            foreach (Atom a in m_Atoms)
             {
                 if (top > a.Location2D.Y) top = a.Location2D.Y;
                 if (bottom < a.Location2D.Y) bottom = a.Location2D.Y;
@@ -471,7 +471,7 @@ namespace ChemInfo
 
         int GetArea()
         {
-            return this.Size.Height * this.Size.Width;
+            return Size.Height * Size.Width;
         }
 
         double ForceConstant
@@ -479,7 +479,7 @@ namespace ChemInfo
             get
             {
                 //double retVal = 0.2*Math.Sqrt((double)this.GetArea() / (double)this.m_Atoms.Count);
-                return 50.0;
+                return 25.0;
             }
         }
 
@@ -493,22 +493,22 @@ namespace ChemInfo
         {
             get
             {
-               return Math.Min(this.Size.Height, this.Size.Width) / 10;
+                return Math.Min(Size.Height, Size.Width) / 10;
             }
         }
 
-        double RepulsiveMiutiplier { get; set; } = 1.0;
+        double RepulsiveMiutiplier { get; set; } = 3;
         double AttractiveMultiplier { get; set; } = 1.0;
         double ConstantOfRepulsion = 0;
         private void CalculateConstantOfRepulsion()
         {
-            ConstantOfRepulsion = Math.Pow(this.ForceConstant * this.RepulsiveMiutiplier, 2);
+            ConstantOfRepulsion = Math.Pow(ForceConstant * RepulsiveMiutiplier, 2);
             //NotifyPropertyChanged("ConstantOfRepulsion");
         }
         double ConstantOfAttraction = 0;
         private void CalculateConstantOfAttraction()
         {
-            ConstantOfAttraction = this.ForceConstant * this.AttractiveMultiplier;
+            ConstantOfAttraction = ForceConstant * AttractiveMultiplier;
             //NotifyPropertyChanged("ConstantOfAttraction");
         }
 
@@ -520,69 +520,143 @@ namespace ChemInfo
         }
         double DistanceBetweenAtoms(Atom a1, Atom a2)
         {
-            return Math.Sqrt(this.DistanceBetweenAtomsSquared(a1, a2));
+            return Math.Sqrt(DistanceBetweenAtomsSquared(a1, a2));
         }
 
         public void ForceDirectedGraph()
         {
-            this.RandomLocateAtoms();
-            this.Temperature = this.InitialTemperature;
-            int maxIter = 200;
+            RandomLocateAtoms();
+            //SetHydrogens();
+            Temperature = InitialTemperature;
+            int maxIter = 500;
             for (int i = 0; i < maxIter; i++)
             {
-                this.IterateFGD();
-                this.Temperature *= (1.0 - (double)i / (double)maxIter);
+                IterateFGD();
+                Temperature *= (1.0 - (double)i / (double)maxIter);
             }
         }
 
         void RandomLocateAtoms()
         {
             System.Random random = new Random();
-            foreach(Atom a in this.m_Atoms)
+            foreach (Atom a in m_Atoms)
             {
-                a.Location2D = new System.Drawing.Point(random.Next(this.Size.Width), random.Next(this.Size.Height));
+                a.Location2D = new System.Drawing.Point(random.Next(Size.Width), random.Next(Size.Height));
             }
+        }
+
+        double m_cRep = 5625;
+        public double cRep
+        {
+            get
+            {
+                return m_cRep;
+            }
+            set
+            {
+                m_cRep = value;
+            }
+        }
+
+        double RepulsiveForce(Atom a1, Atom a2)
+        {
+            return m_cRep / DistanceBetweenAtoms(a1, a2);
+        }
+
+        double RepulsiveForce(double distance)
+        {
+            return m_cRep / distance;
+        }
+
+        double m_cBond = 10;
+        public double cBond
+        {
+            get
+            {
+                return m_cBond;
+            }
+            set
+            {
+                m_cBond = value;
+            }
+        }
+
+        double BondSpringForce(Bond b)
+        {
+            return Math.Pow(b.DistanceBetweenAtoms,2) / this.ConstantOfAttraction;
+            //return m_cBond * (b.BondLength*100 - b.DistanceBetweenAtoms);
+        }
+
+        double BondAngleForce(Bond b1, Bond b2)
+        {
+            double distance = Math.Sqrt(Math.Pow(b1.BondLength, 2) + Math.Pow(b1.BondLength, 2));
+            double bondLength = double.MaxValue;
+            if (b1.ParentAtom == b2.ParentAtom) bondLength = DistanceBetweenAtoms(b1.ConnectedAtom, b2.ConnectedAtom);
+            else if (b1.ParentAtom == b2.ConnectedAtom) bondLength = DistanceBetweenAtoms(b1.ConnectedAtom, b2.ParentAtom);
+            else if (b1.ConnectedAtom == b2.ParentAtom) bondLength = DistanceBetweenAtoms(b1.ParentAtom, b2.ConnectedAtom);
+            else bondLength = DistanceBetweenAtoms(b1.ParentAtom, b2.ParentAtom);
+            return 0.3 / (bondLength - distance);
+        }
+
+        double GetNextBondLength(Atom a1, Atom a2, Atom a3)
+        {
+            Bond b1 = GetBond(a1, a2);
+            Bond b2 = GetBond(a1, a3);
+            return Math.Sqrt(Math.Pow(100*b1.BondLength, 2) + Math.Pow(100*b1.BondLength, 2));
+        }
+
+        protected void SetHydrogens()
+        {
+            for(int i = this.m_Atoms.Count-1; i >= 0; i--)
+            {
+                m_Atoms.AddRange(this.m_Atoms[i].SetHydrogens());
+            }
+        }
+
+        protected void SetUnboundedPairs()
+        {
+
         }
 
         protected void IterateFGD()
         {
-            this.CalculateConstantOfAttraction();
-            this.CalculateConstantOfRepulsion();
-            foreach (Atom v in this.m_Atoms)
+            CalculateConstantOfAttraction();
+            CalculateConstantOfRepulsion();
+            foreach (Atom v in m_Atoms)
             {
                 v.deltaX = 0.0;
                 v.deltaY = 0.0;
             }
-            foreach (Atom v in this.m_Atoms)
+            foreach (Atom v in m_Atoms)
             {
-                foreach (Atom u in this.m_Atoms)
+                foreach (Atom u in m_Atoms)
                 {
                     if (u != v)
                     {
-                        double distance = this.DistanceBetweenAtoms(u, v);
+                        double distance = DistanceBetweenAtoms(u, v);
                         if (distance < 1) distance = 1;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
-                        v.deltaX = v.deltaX + ((delX / distance) * this.ConstantOfRepulsion/distance);
-                        v.deltaY = v.deltaY + ((delY / distance) * this.ConstantOfRepulsion/distance);
+                        v.deltaX = v.deltaX + ((delX / distance) * this.RepulsiveForce(distance));
+                        v.deltaY = v.deltaY + ((delY / distance) * this.RepulsiveForce(distance));
                     }
                 }
             }
 
-            foreach (Atom v in this.m_Atoms)
+            foreach (Atom v in m_Atoms)
             {
-                foreach (Atom u in this.m_Atoms)
+                foreach (Atom u in m_Atoms)
                 {
-                    Bond b = this.GetBond(u, v);
+                    Bond b = GetBond(u, v);
                     if (b != null)
                     {
-                        double distance = this.DistanceBetweenAtoms(u, v);
+                        double distance = DistanceBetweenAtoms(u, v);
                         if (distance < 10) distance = 10;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
                         //double force = AttractiveForce(this.ForceConstant, distance);
-                        double deltaX = ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                        double deltaY = ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                        double deltaX = ((double)delX / (double)distance) * this.BondSpringForce(b);
+                        double deltaY = ((double)delY / (double)distance) * this.BondSpringForce(b);
                         v.deltaX = v.deltaX - deltaX;
                         v.deltaY = v.deltaY - deltaY;
                         u.deltaX = u.deltaX + deltaX;
@@ -594,21 +668,42 @@ namespace ChemInfo
             // This add the Angle force to fix bond angles from Fraczek 2016
             foreach (Atom v in this.m_Atoms)
             {
-                foreach (Atom u in this.m_Atoms)
+                foreach (Atom u in v.ConnectedAtoms)
                 {
-                    if (u.ConnectedAtoms.Length < 5)
+                    if (u.ConnectedAtoms.Length < 4)
                     {
-                        foreach(Atom a in u.ConnectedAtoms)
+                        foreach (Atom a in u.ConnectedAtoms)
                         {
-                            if (a != u)
+                            if (a != v)
                             {
-                                double distance = this.DistanceBetweenAtoms(u, v);
+                                double distance = this.GetNextBondLength(v, u, a);
+                                if (distance < 10) distance = 10;
+                                double delX = v.Location2D.X - a.Location2D.X;
+                                double delY = v.Location2D.Y - a.Location2D.Y;
+                                //double force = AttractiveForce(this.ForceConstant, distance);
+                                double deltaX = 0.3 * (delX / distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaY = 0.3 * (delY / distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                v.deltaX = v.deltaX - deltaX;
+                                v.deltaY = v.deltaY - deltaY;
+                                a.deltaX = a.deltaX + deltaX;
+                                a.deltaY = a.deltaY + deltaY;
+                            }
+                        }
+                    }
+
+                    else if (u.ConnectedAtoms.Length == 4)
+                    {
+                        foreach (Atom a in u.ConnectedAtoms)
+                        {
+                            if (a != v)
+                            {
+                                double distance = this.GetNextBondLength(v, u, a);
                                 if (distance < 10) distance = 10;
                                 double delX = v.Location2D.X - u.Location2D.X;
                                 double delY = v.Location2D.Y - u.Location2D.Y;
                                 //double force = AttractiveForce(this.ForceConstant, distance);
-                                double deltaX = 0.1*((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                                double deltaY = 0.1*((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaX = 0.6 * ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaY = 0.6 * ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
                                 v.deltaX = v.deltaX - deltaX;
                                 v.deltaY = v.deltaY - deltaY;
                                 u.deltaX = u.deltaX + deltaX;
@@ -616,35 +711,17 @@ namespace ChemInfo
                             }
                         }
                     }
-
-
-
-                    //Bond b = this.GetBond(u, v);
-                    //if (b != null)
-                    //{
-                    //    double distance = this.DistanceBetweenAtoms(u, v);
-                    //    if (distance < 10) distance = 10;
-                    //    double delX = v.Location2D.X - u.Location2D.X;
-                    //    double delY = v.Location2D.Y - u.Location2D.Y;
-                    //    //double force = AttractiveForce(this.ForceConstant, distance);
-                    //    double deltaX = ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                    //    double deltaY = ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                    //    v.deltaX = v.deltaX - deltaX;
-                    //    v.deltaY = v.deltaY - deltaY;
-                    //    u.deltaX = u.deltaX + deltaX;
-                    //    u.deltaY = u.deltaY + deltaY;
-                    //}
                 }
             }
-            foreach (Atom v in this.m_Atoms)
+            foreach (Atom v in m_Atoms)
             {
                 double displacement = Math.Sqrt((v.deltaX * v.deltaX) + (v.deltaY * v.deltaY));
                 double x = v.Location2D.X;
-                x = x + ((v.deltaX / displacement) * Math.Min(displacement, this.Temperature));
-                x = Math.Min(this.Size.Width, Math.Max(0, x));
+                x = x + ((v.deltaX / displacement) * Math.Min(displacement, Temperature));
+                x = Math.Min(Size.Width, Math.Max(0, x));
                 double y = v.Location2D.Y;
-                y = y + ((v.deltaY / displacement) * Math.Min(displacement, this.Temperature));
-                y = Math.Min(this.Size.Height, Math.Max(0, y));
+                y = y + ((v.deltaY / displacement) * Math.Min(displacement, Temperature));
+                y = Math.Min(Size.Height, Math.Max(0, y));
                 v.Location2D = new System.Drawing.Point((int)x, (int)y);
             }
         }
