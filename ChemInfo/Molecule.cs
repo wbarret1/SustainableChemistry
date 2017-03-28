@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace ChemInfo
 {
 
-    //functional group based upon Kidus' fragments from TEST.
     public struct group
     {
         public string name;
@@ -153,7 +152,7 @@ namespace ChemInfo
         public Atom[] EndAtoms()
         {
             List<Atom> atoms = new List<ChemInfo.Atom>();
-            foreach (Atom a in m_Atoms) if (a.ConnectedAtoms.Length == 1) atoms.Add(a);
+            foreach (Atom a in m_Atoms) if (a.Degree == 1) atoms.Add(a);
             return atoms.ToArray();
         }
 
@@ -466,50 +465,58 @@ namespace ChemInfo
             }
         }
 
+        public System.Drawing.Point[] AtomLocations
+        {
+            get
+            {
+                List<System.Drawing.Point> locations = new List<System.Drawing.Point>();
+                foreach (Atom a in this.m_Atoms)
+                {
+                    locations.Add(a.Location2D);
+                }
+                return locations.ToArray();
+            }
+        }
 
-        // Force Directed Graph Atom Locations
+        public void CenterMolecule()
+        {
+            int sumX = 0;
+            int sumY = 0;
+            foreach (Atom a in this.m_Atoms)
+            {
+                sumX = sumX + a.Location2D.X;
+                sumY = sumY + a.Location2D.Y;
+            }
+            int offsetX = sumX / this.m_Atoms.Count;
+            int offsetY = sumY / this.m_Atoms.Count;
+            foreach (Atom a in this.m_Atoms)
+            {
+                System.Drawing.Point p = new System.Drawing.Point(a.Location2D.X - offsetX, a.Location2D.Y - offsetY);
+                a.Location2D = p;
+            }
+        }
+
+        public void CenterMolecule(System.Drawing.Rectangle rect)
+        {
+            this.CenterMolecule();
+            foreach (Atom a in this.m_Atoms)
+            {
+                System.Drawing.Point p = new System.Drawing.Point(a.Location2D.X + rect.X + rect.Width / 2, a.Location2D.Y + rect.Y + rect.Height / 2);
+                a.Location2D = p;
+            }
+
+        }
+
+        // General Force Directed Graph Atom Location methods
 
         int GetArea()
         {
             return Size.Height * Size.Width;
         }
 
-        double ForceConstant
+        double DistanceBetweenAtoms(Atom a1, Atom a2)
         {
-            get
-            {
-                //double retVal = 0.2*Math.Sqrt((double)this.GetArea() / (double)this.m_Atoms.Count);
-                return 25.0;
-            }
-        }
-
-        double Temperature
-        {
-            get;
-            set;
-        }
-
-        public double InitialTemperature
-        {
-            get
-            {
-                return Math.Min(Size.Height, Size.Width) / 10;
-            }
-        }
-
-        double RepulsiveMiutiplier { get; set; } = 3;
-        double AttractiveMultiplier { get; set; } = 1.0;
-        double ConstantOfRepulsion = 0;
-        private void CalculateConstantOfRepulsion()
-        {
-            ConstantOfRepulsion = Math.Pow(ForceConstant * RepulsiveMiutiplier, 2);
-            //NotifyPropertyChanged("ConstantOfRepulsion");
-        }
-        double ConstantOfAttraction = 0;
-        private void CalculateConstantOfAttraction()
-        {
-            ConstantOfAttraction = ForceConstant * AttractiveMultiplier;
-            //NotifyPropertyChanged("ConstantOfAttraction");
+            return Math.Sqrt(DistanceBetweenAtomsSquared(a1, a2));
         }
 
         double DistanceBetweenAtomsSquared(Atom a1, Atom a2)
@@ -517,23 +524,6 @@ namespace ChemInfo
             int delX = a1.Location2D.X - a2.Location2D.X;
             int delY = a1.Location2D.Y - a2.Location2D.Y;
             return Math.Pow(delX, 2) + Math.Pow(delY, 2);
-        }
-        double DistanceBetweenAtoms(Atom a1, Atom a2)
-        {
-            return Math.Sqrt(DistanceBetweenAtomsSquared(a1, a2));
-        }
-
-        public void ForceDirectedGraph()
-        {
-            RandomLocateAtoms();
-            //SetHydrogens();
-            Temperature = InitialTemperature;
-            int maxIter = 500;
-            for (int i = 0; i < maxIter; i++)
-            {
-                IterateFGD();
-                Temperature *= (1.0 - (double)i / (double)maxIter);
-            }
         }
 
         void RandomLocateAtoms()
@@ -545,6 +535,74 @@ namespace ChemInfo
             }
         }
 
+        double GetNextBondLength(Atom a1, Atom a2, Atom a3)
+        {
+            Bond b1 = GetBond(a1, a2);
+            Bond b2 = GetBond(a1, a3);
+            return Math.Sqrt(Math.Pow(100 * b1.BondLength, 2) + Math.Pow(100 * b1.BondLength, 2));
+        }
+
+        protected void SetHydrogens()
+        {
+            for (int i = this.m_Atoms.Count - 1; i >= 0; i--)
+            {
+                m_Atoms.AddRange(this.m_Atoms[i].SetHydrogens());
+            }
+        }
+
+        protected void SetUnboundedPairs()
+        {
+
+        }
+
+        // Fruchterman and Reingold (1991) parameters
+
+        double m_OptimalDistance = 0;
+        public double OptimalDistanceBetweenVertices
+        {
+            get
+            {
+                return m_OptimalDistance;
+            }
+        }
+
+        public double CalculateOptimalDistanceBetweenVertices()
+        {
+            m_OptimalDistance = Math.Sqrt(this.GetArea() / this.m_Atoms.Count);
+            return m_OptimalDistance;
+        }
+
+        double RepulsiveMiutiplier { get; set; } = 0.2;
+        double AttractiveMultiplier { get; set; } = 15;
+
+        // Fruchterman and Reingold (1991) Force Calculations
+        double frAttractiveForce(double distance)
+        {
+            return this.AttractiveMultiplier * Math.Pow(distance, 2) / m_OptimalDistance;
+        }
+
+        double frRepulsiveForce(double distance)
+        {
+            return this.RepulsiveMiutiplier * Math.Pow(m_OptimalDistance, 2) / distance;
+        }
+
+        // Fruchterman and Reingold (1991) annealing temperature
+        public double InitialTemperature
+        {
+            get
+            {
+                return Math.Min(Size.Height, Size.Width) / 10;
+            }
+        }
+
+        double Temperature
+        {
+            get;
+            set;
+        }
+
+
+        // Fraczek (2016) force parameters
         double m_cRep = 5625;
         public double cRep
         {
@@ -556,16 +614,6 @@ namespace ChemInfo
             {
                 m_cRep = value;
             }
-        }
-
-        double RepulsiveForce(Atom a1, Atom a2)
-        {
-            return m_cRep / DistanceBetweenAtoms(a1, a2);
-        }
-
-        double RepulsiveForce(double distance)
-        {
-            return m_cRep / distance;
         }
 
         double m_cBond = 10;
@@ -581,11 +629,17 @@ namespace ChemInfo
             }
         }
 
-        double BondSpringForce(Bond b)
+        // Fraczek (2016) force calculcations
+        double FraczekRepulsiveForce(Atom a1, Atom a2)
         {
-            return Math.Pow(b.DistanceBetweenAtoms,2) / this.ConstantOfAttraction;
-            //return m_cBond * (b.BondLength*100 - b.DistanceBetweenAtoms);
+            return m_cRep / DistanceBetweenAtoms(a1, a2);
         }
+
+        double FraczekRepulsiveForce(double distance)
+        {
+            return m_cRep / distance;
+        }
+
 
         double BondAngleForce(Bond b1, Bond b2)
         {
@@ -598,30 +652,23 @@ namespace ChemInfo
             return 0.3 / (bondLength - distance);
         }
 
-        double GetNextBondLength(Atom a1, Atom a2, Atom a3)
-        {
-            Bond b1 = GetBond(a1, a2);
-            Bond b2 = GetBond(a1, a3);
-            return Math.Sqrt(Math.Pow(100*b1.BondLength, 2) + Math.Pow(100*b1.BondLength, 2));
-        }
 
-        protected void SetHydrogens()
+        public void ForceDirectedGraph()
         {
-            for(int i = this.m_Atoms.Count-1; i >= 0; i--)
+            RandomLocateAtoms();
+            // SetHydrogens();
+            Temperature = InitialTemperature;
+            int maxIter = 500;
+            for (int i = 0; i < maxIter; i++)
             {
-                m_Atoms.AddRange(this.m_Atoms[i].SetHydrogens());
+                IterateFGD();
+                Temperature *= (1.0 - (double)i / (double)maxIter);
             }
-        }
-
-        protected void SetUnboundedPairs()
-        {
-
         }
 
         protected void IterateFGD()
         {
-            CalculateConstantOfAttraction();
-            CalculateConstantOfRepulsion();
+            CalculateOptimalDistanceBetweenVertices();
             foreach (Atom v in m_Atoms)
             {
                 v.deltaX = 0.0;
@@ -637,8 +684,8 @@ namespace ChemInfo
                         if (distance < 1) distance = 1;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
-                        v.deltaX = v.deltaX + ((delX / distance) * this.RepulsiveForce(distance));
-                        v.deltaY = v.deltaY + ((delY / distance) * this.RepulsiveForce(distance));
+                        v.deltaX = v.deltaX + ((delX / distance) * this.frRepulsiveForce(distance));
+                        v.deltaY = v.deltaY + ((delY / distance) * this.frRepulsiveForce(distance));
                     }
                 }
             }
@@ -654,9 +701,8 @@ namespace ChemInfo
                         if (distance < 10) distance = 10;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
-                        //double force = AttractiveForce(this.ForceConstant, distance);
-                        double deltaX = ((double)delX / (double)distance) * this.BondSpringForce(b);
-                        double deltaY = ((double)delY / (double)distance) * this.BondSpringForce(b);
+                        double deltaX = ((double)delX / (double)distance) * this.frAttractiveForce(distance);
+                        double deltaY = ((double)delY / (double)distance) * this.frAttractiveForce(distance);
                         v.deltaX = v.deltaX - deltaX;
                         v.deltaY = v.deltaY - deltaY;
                         u.deltaX = u.deltaX + deltaX;
@@ -665,7 +711,7 @@ namespace ChemInfo
                 }
             }
 
-            // This add the Angle force to fix bond angles from Fraczek 2016
+            // This adds the Angle force to fix bond angles from Fraczek 2016
             foreach (Atom v in this.m_Atoms)
             {
                 foreach (Atom u in v.ConnectedAtoms)
@@ -680,9 +726,8 @@ namespace ChemInfo
                                 if (distance < 10) distance = 10;
                                 double delX = v.Location2D.X - a.Location2D.X;
                                 double delY = v.Location2D.Y - a.Location2D.Y;
-                                //double force = AttractiveForce(this.ForceConstant, distance);
-                                double deltaX = 0.3 * (delX / distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                                double deltaY = 0.3 * (delY / distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaX = 0.5 * (delX / distance) * frAttractiveForce(distance);
+                                double deltaY = 0.5 * (delY / distance) * frAttractiveForce(distance);
                                 v.deltaX = v.deltaX - deltaX;
                                 v.deltaY = v.deltaY - deltaY;
                                 a.deltaX = a.deltaX + deltaX;
@@ -701,9 +746,8 @@ namespace ChemInfo
                                 if (distance < 10) distance = 10;
                                 double delX = v.Location2D.X - u.Location2D.X;
                                 double delY = v.Location2D.Y - u.Location2D.Y;
-                                //double force = AttractiveForce(this.ForceConstant, distance);
-                                double deltaX = 0.6 * ((double)delX / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
-                                double deltaY = 0.6 * ((double)delY / (double)distance) * Math.Pow(distance, 2) / this.ConstantOfAttraction;
+                                double deltaX = 0.75 * ((double)delX / (double)distance) * frAttractiveForce(distance);
+                                double deltaY = 0.75 * ((double)delY / (double)distance) * frAttractiveForce(distance);
                                 v.deltaX = v.deltaX - deltaX;
                                 v.deltaY = v.deltaY - deltaY;
                                 u.deltaX = u.deltaX + deltaX;

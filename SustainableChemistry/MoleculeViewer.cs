@@ -71,8 +71,10 @@ namespace SustainableChemistry
 
         bool m_DraggingSelectedObject = false;
         bool m_RotatingSelectedObject = false;
+        bool m_RotatingSurface = false;
         double startingRotation = 0;
         double originalRotation = 0;
+        float currentRotation = 0;
         List<Point> m_Points;
         int sel_corner;
         bool resizing = false;
@@ -83,7 +85,11 @@ namespace SustainableChemistry
         public MoleculeViewer()
         {
             InitializeComponent();
-            //  m_MoleculeRectangle = this.ClientRectangle;
+            //this.AutoScroll
+            //this.HorizontalScroll.Maximum = m_SurfaceBounds.Width;
+            //this.HorizontalScroll.Value = m_SurfaceBounds.Width / 2;
+            //this.VerticalScroll.Maximum = m_SurfaceBounds.Height;
+            //this.VerticalScroll.Value = m_SurfaceBounds.Height / 2;
         }
 
         [System.ComponentModel.Category("Property Changed")]
@@ -102,19 +108,16 @@ namespace SustainableChemistry
             set
             {
                 m_DrawingObjects.Clear();
-                this.SelectedObject = null;
+                SelectedObject = null;
                 ChemInfo.Molecule m = value;
                 m.ForceDirectedGraph();
                 m_MoleculeRectangle = m.GetLocationBounds();
-
-                // Select Offset to senter the molecule rectangle in the bounds.
-                int deltaX = (this.Bounds.Width - m_MoleculeRectangle.Width) / 2;
-                int deltaY = (this.Bounds.Height - m_MoleculeRectangle.Height) / 2;
+                m.CenterMolecule(m_SurfaceBounds);
 
                 List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
-                    graphicAtoms.Add(new GraphicAtom(a, this.Font));
+                    graphicAtoms.Add(new GraphicAtom(a, Font));
                 }
                 foreach (GraphicAtom gAtom in graphicAtoms)
                 {
@@ -124,33 +127,18 @@ namespace SustainableChemistry
                         {
                             if (b.ConnectedAtom == (ChemInfo.Atom)gA1.Tag)
                             {
-                                this.m_DrawingObjects.Add(new GraphicBond(gAtom, gA1, b));
+                                m_DrawingObjects.Add(new GraphicBond(gAtom, gA1, b));
                             }
                         }
 
                     }
                 }
-                this.m_DrawingObjects.AddRange(graphicAtoms.ToArray());
-
-                //foreach (ChemInfo.Bond b in a.BondedAtoms)
-                //{
-                //    System.Drawing.Point bondedAtomLocation = b.ConnectedAtom.Location2D;
-                //    //bondedAtomLocation.Offset(-1*m.Location.X + deltaX, -1*m.Location.Y+ deltaY);
-                //    //LineGraphic line = new LineGraphic(atomLocation, bondedAtomLocation, 1, Color.Black);
-                //    //line.Tag = bond;
-                //    //m_DrawingObjects.Add(line);
-                //    GraphicBond bond = new GraphicBond(atomLocation, bondedAtomLocation, 1.5, Color.Black, b.BondType);
-                //    bond.Tag = b;
-                //    m_DrawingObjects.Add(bond);
-                //}
-                //m_DrawingObjects.Add(text);
+                m_DrawingObjects.AddRange(graphicAtoms.ToArray());
+                this.HorizontalScroll.Value = this.Size.Width / 2;
+                this.VerticalScroll.Value = this.Size.Width / 2;
             }
-            //double zoom1 = this.GetFitWidthZoom();
-            //double zoom2 = this.GetFitWidthZoom();
-            //if (zoom1 > zoom2) m_Zoom = zoom2;
-            //else m_Zoom = zoom1;
+           
         }
-
 
         public GraphicObjectCollection DrawingObjects
         {
@@ -216,9 +204,9 @@ namespace SustainableChemistry
                             ((GraphicObject)m_DrawingObjects[i]).Selected = true;
                     }
                 }
-                if (SelectionChanged != null) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
+                if (SelectionChanged != null) SelectionChanged(this, new SelectionChangedEventArgs(SelectedObjects));
                 Point location = new System.Drawing.Point(0, 0);
-                if (this.SelectedObjects.Length > 0)
+                if (SelectedObjects.Length > 0)
                 {
                     location = value[0].GetPosition();
                 }
@@ -238,26 +226,27 @@ namespace SustainableChemistry
             }
             set
             {
-                if (value > 0.05)
+                double minZoom = Math.Max((double)DisplayRectangle.Width / (double)m_SurfaceBounds.Width, (double)DisplayRectangle.Height / (double)m_SurfaceBounds.Height);
+                if (value > minZoom)
                     m_Zoom = value;
-                else m_Zoom = 0.05;
+                else m_Zoom = minZoom;
                 if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.SurfaceZoomChanged,
-                      this.SelectedObjects, String.Format("Zoom set to {0}%", (this.m_Zoom * 100)),
-                      new System.Drawing.Point(0, 0), this.m_Zoom));
-                this.Invalidate();
+                      SelectedObjects, String.Format("Zoom set to {0}%", (m_Zoom * 100)),
+                      new System.Drawing.Point(0, 0), m_Zoom));
+                Invalidate();
             }
         }
 
         // Public Methods
         double GetFitWidthZoom()
         {
-            System.Drawing.Rectangle bounds = ConvertToPixels(this.Bounds);
-            System.Drawing.Size display = this.Size;
+            System.Drawing.Rectangle bounds = ConvertToPixels(Bounds);
+            System.Drawing.Size display = Size;
             double fitWidth = (double)display.Width / (double)bounds.Width;
             int newHeight = (int)(fitWidth * bounds.Height);
             if (display.Height < newHeight)
             {
-                this.AutoScrollMargin = new System.Drawing.Size(this.AutoScrollMargin.Height, 18);
+                AutoScrollMargin = new System.Drawing.Size(AutoScrollMargin.Height, 18);
                 fitWidth = (double)(display.Width - 17) / (double)bounds.Width;
             }
             return fitWidth;
@@ -265,13 +254,13 @@ namespace SustainableChemistry
 
         double GetFitHeightZoom()
         {
-            System.Drawing.Rectangle bounds = ConvertToPixels(this.Bounds);
-            System.Drawing.Size display = this.Size;
+            System.Drawing.Rectangle bounds = ConvertToPixels(Bounds);
+            System.Drawing.Size display = Size;
             double fitHeight = (double)display.Height / (double)bounds.Height;
             int newWidth = (int)(fitHeight * bounds.Width);
             if (display.Width < newWidth)
             {
-                this.AutoScrollMargin = new System.Drawing.Size(18, this.AutoScrollMargin.Width);
+                AutoScrollMargin = new System.Drawing.Size(18, AutoScrollMargin.Width);
                 fitHeight = (double)(display.Height - 17) / (double)bounds.Height;
             }
             return fitHeight;
@@ -322,15 +311,49 @@ namespace SustainableChemistry
                 (int)(originalRect.Height / m_Zoom));
         }
 
+        System.Drawing.RectangleF ConvertDSToInches(System.Drawing.RectangleF rect)
+        {
+            return new System.Drawing.RectangleF((float)((double)rect.X / (double)m_HorizRes * 100),
+                (float)(((double)rect.Y) / ((double)m_VertRes) * 100),
+                (float)((double)(rect.Width) / ((double)(m_HorizRes) * 100)),
+                (float)((double)(rect.Height) / ((double)(m_VertRes) * 100)));
+        }
+
+        System.Drawing.RectangleF ConvertToPixels(System.Drawing.RectangleF rect)
+        {
+            //'convert from 100ths of an inch to pixels
+            return new System.Drawing.RectangleF((float)(ConvertToHPixels(rect.X)) / 100,
+                (float)(ConvertToVPixels(rect.Y)) / 100,
+                (float)(ConvertToHPixels(rect.Width)) / 100,
+                (float)(ConvertToVPixels(rect.Height)) / 100);
+        }
+
+        System.Drawing.RectangleF ZoomRectangle(System.Drawing.RectangleF originalRect)
+        {
+            return new System.Drawing.RectangleF((float)(originalRect.X * m_Zoom),
+                (float)(originalRect.Y * m_Zoom),
+                (float)(originalRect.Width * m_Zoom),
+                (float)(originalRect.Height * m_Zoom));
+
+        }
+
+        System.Drawing.RectangleF DeZoomRectangle(System.Drawing.RectangleF originalRect)
+        {
+            return new System.Drawing.RectangleF((float)(originalRect.X / m_Zoom),
+                (float)(originalRect.Y / m_Zoom),
+                (float)(originalRect.Width / m_Zoom),
+                (float)(originalRect.Height / m_Zoom));
+        }
+
         void DrawGrid(System.Drawing.Graphics g)
         {
-            double horizGridSize = (ConvertToHPixels(this.GridSize / 100 * m_Zoom));
-            double vertGridSize = (ConvertToVPixels(this.GridSize / 100 * m_Zoom));
-            System.Drawing.Rectangle bounds = this.ConvertToPixels(this.SurfaceBounds);
+            double horizGridSize = (ConvertToHPixels(GridSize / 100 * m_Zoom));
+            double vertGridSize = (ConvertToVPixels(GridSize / 100 * m_Zoom));
+            System.Drawing.RectangleF bounds = ConvertToPixels(SurfaceBounds);
             bounds = ZoomRectangle(bounds);
 
-            System.Drawing.Pen gridPen = new System.Drawing.Pen(this.GridLineColor, (float)this.GridLineWidth);
-            gridPen.DashStyle = this.GridLineDashStyle;
+            System.Drawing.Pen gridPen = new System.Drawing.Pen(GridLineColor, (float)GridLineWidth);
+            gridPen.DashStyle = GridLineDashStyle;
 
             for (int i = (int)vertGridSize; i < bounds.Height - 1; i = i + (int)vertGridSize)
             {
@@ -344,11 +367,11 @@ namespace SustainableChemistry
 
         void DrawMargins(System.Drawing.Graphics g)
         {
-            System.Drawing.Rectangle margins = ZoomRectangle(ConvertToPixels(this.SurfaceMargins));
-            System.Drawing.Pen marginPen = new System.Drawing.Pen(this.MarginColor);
-            marginPen.DashStyle = this.MarginLineDashStyle;
-            marginPen.Width = (float)this.MarginLineWidth;
-            g.DrawRectangle(marginPen, margins);
+            System.Drawing.RectangleF[] margins = new System.Drawing.RectangleF[] { ZoomRectangle(ConvertToPixels(SurfaceMargins)) };
+            System.Drawing.Pen marginPen = new System.Drawing.Pen(MarginColor);
+            marginPen.DashStyle = MarginLineDashStyle;
+            marginPen.Width = (float)MarginLineWidth;
+            g.DrawRectangles(marginPen, margins);
         }
 
         void DrawSelectionRectangle(System.Drawing.Graphics g)
@@ -396,24 +419,22 @@ namespace SustainableChemistry
 
             //handle the possibility that the viewport is scrolled,
             //adjust my origin coordintates to compensate
-            Point pt = this.AutoScrollPosition;
-            g.TranslateTransform((float)(pt.X), (float)(pt.Y));
-
-            System.Drawing.Rectangle bounds = this.ConvertToPixels(this.SurfaceBounds);
+            Point pt = AutoScrollPosition;
+            if (HorizontalScroll.Visible || VerticalScroll.Visible) g.TranslateTransform((float)(pt.X), (float)(pt.Y));
+            System.Drawing.RectangleF bounds = ConvertToPixels(SurfaceBounds);
             bounds = ZoomRectangle(bounds);
             if (AutoScrollMinSize.Height != bounds.Height &&
                 AutoScrollMinSize.Width != bounds.Width)
             {
-                AutoScrollMinSize = new System.Drawing.Size(bounds.Width, bounds.Height);
+                AutoScrollMinSize = new System.Drawing.Size((int)bounds.Width, (int)bounds.Height);
             }
-            g.Clear(this.NonPrintingAreaColor);
-            g.FillRectangle(new SolidBrush(this.BackColor), bounds);
-
+            g.Clear(NonPrintingAreaColor);
+            g.FillRectangle(new SolidBrush(BackColor), bounds);
 
             //Draw dashed line margin indicators, over top of objects
-            if (this.ShowGrid)
+            if (ShowGrid)
                 DrawGrid(g);
-            if (this.ShowMargins)
+            if (ShowMargins)
                 DrawMargins(g);
             //draw the actual objects onto the page, on top of the grid
             //pass the graphics resolution onto the objects
@@ -425,7 +446,7 @@ namespace SustainableChemistry
 
             //doesn't really draw the selected object, but instead the
             //selection indicator, a dotted outline around the selected object
-            m_DrawingObjects.DrawSelectedObject(g, this.SelectedObject, this.m_Zoom);
+            m_DrawingObjects.DrawSelectedObject(g, SelectedObject, m_Zoom);
 
             //draw selection rectangle (click and drag to select interface)
             //on top of everything else, but transparent
@@ -437,17 +458,17 @@ namespace SustainableChemistry
 
         System.Drawing.Point gscTogoc(System.Drawing.Point gsPT)
         {
-            return new System.Drawing.Point((int)((gsPT.X - this.AutoScrollPosition.X) / this.Zoom), (int)((gsPT.Y - this.AutoScrollPosition.Y) / this.Zoom));
+            return new System.Drawing.Point((int)((gsPT.X - AutoScrollPosition.X) / Zoom), (int)((gsPT.Y - AutoScrollPosition.Y) / Zoom));
         }
 
         System.Drawing.Point gscTogoc(int X, int Y)
         {
-            return new System.Drawing.Point((int)((X - this.AutoScrollPosition.X) / this.Zoom), (int)((Y - this.AutoScrollPosition.Y) / this.Zoom));
+            return new System.Drawing.Point((int)((X - AutoScrollPosition.X) / Zoom), (int)((Y - AutoScrollPosition.Y) / Zoom));
         }
 
         System.Drawing.Point gocTogsc(System.Drawing.Point goPT)
         {
-            return new System.Drawing.Point((int)((goPT.X) * this.m_Zoom), (int)((goPT.Y) * this.m_Zoom));
+            return new System.Drawing.Point((int)((goPT.X) * m_Zoom), (int)((goPT.Y) * m_Zoom));
         }
 
         System.Drawing.Point gocTogsc(int X, int Y)
@@ -471,26 +492,26 @@ namespace SustainableChemistry
 
         private void MoleculeViewer_MouseDown(object sender, MouseEventArgs e)
         {
-            if (this.Cursor == System.Windows.Forms.Cursors.Cross) return;
+            if (Cursor == System.Windows.Forms.Cursors.Cross) return;
             System.Drawing.Point mousePT = gscTogoc(e.X, e.Y);
-            this.Invalidate();
+            Invalidate();
 
-            if (this.Cursor == System.Windows.Forms.Cursors.Arrow)
+            if (Cursor == System.Windows.Forms.Cursors.Arrow)
             {
-                this.SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
-                if (this.SelectedObject != null)
+                SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
+                if (SelectedObject != null)
                 {
                     if (e.Button == System.Windows.Forms.MouseButtons.Right)
                     {
                         m_RotatingSelectedObject = true;
-                        startingRotation = AngleToPoint(this.SelectedObject.GetPosition(), mousePT);
-                        originalRotation = this.SelectedObject.Rotation;
+                        startingRotation = AngleToPoint(SelectedObject.GetPosition(), mousePT);
+                        originalRotation = SelectedObject.Rotation;
                     }
                     else
                     {
                         m_DraggingSelectedObject = true;
-                        dragOffset.X = this.SelectedObject.X - mousePT.X;
-                        dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
+                        dragOffset.X = SelectedObject.X - mousePT.X;
+                        dragOffset.Y = SelectedObject.Y - mousePT.Y;
                     }
                 }
                 else
@@ -503,15 +524,21 @@ namespace SustainableChemistry
                         m_SelectionRectangle.Height = 0;
                         m_SelectionRectangle.Width = 0;
                     }
+                    if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                    {
+                        m_RotatingSurface = true;
+                        dragOffset.X = mousePT.X;
+                        dragOffset.Y = mousePT.Y;
+                    }
                 }
             }
-            else if (this.Cursor == System.Windows.Forms.Cursors.SizeNWSE ||
-                this.Cursor == System.Windows.Forms.Cursors.SizeNESW ||
-                this.Cursor == System.Windows.Forms.Cursors.SizeWE ||
-                this.Cursor == System.Windows.Forms.Cursors.SizeNS)
+            else if (Cursor == System.Windows.Forms.Cursors.SizeNWSE ||
+                Cursor == System.Windows.Forms.Cursors.SizeNESW ||
+                Cursor == System.Windows.Forms.Cursors.SizeWE ||
+                Cursor == System.Windows.Forms.Cursors.SizeNS)
             {
-                dragOffset.X = this.SelectedObject.X - mousePT.X;
-                dragOffset.Y = this.SelectedObject.Y - mousePT.Y;
+                dragOffset.X = SelectedObject.X - mousePT.X;
+                dragOffset.Y = SelectedObject.Y - mousePT.Y;
                 resizing = true;
             }
         }
@@ -522,42 +549,42 @@ namespace SustainableChemistry
             System.Drawing.Point MousePoint = gscTogoc(e.X, e.Y);
             dragPoint.Offset(dragOffset.X, dragOffset.Y);
             System.Drawing.Size minSize = new System.Drawing.Size(16, 16);
-            if (this.SelectedObject != null)
+            if (SelectedObject != null)
             {
                 if (m_DraggingSelectedObject)
                 {
-                    Rectangle rect = new System.Drawing.Rectangle(this.SelectedObject.GetPosition().X, this.SelectedObject.GetPosition().Y, this.SelectedObject.Width, this.SelectedObject.Height);
-                    this.SelectedObject.SetPosition(dragPoint);
+                    Rectangle rect = new System.Drawing.Rectangle(SelectedObject.GetPosition().X, SelectedObject.GetPosition().Y, SelectedObject.Width, SelectedObject.Height);
+                    SelectedObject.SetPosition(dragPoint);
                     if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectMoved,
-                          this.SelectedObject, String.Format("Object Moved to {0}, {1}", dragPoint.X, dragPoint.Y),
+                          SelectedObject, String.Format("Object Moved to {0}, {1}", dragPoint.X, dragPoint.Y),
                           dragPoint, 0));
-                    this.Invalidate();
+                    Invalidate();
                 }
                 else if (m_RotatingSelectedObject)
                 {
                     float currentRotation;
-                    currentRotation = (float)AngleToPoint(this.SelectedObject.GetPosition(), dragPoint);
+                    currentRotation = (float)AngleToPoint(SelectedObject.GetPosition(), dragPoint);
                     currentRotation = (float)((int)(currentRotation - startingRotation + originalRotation) % 360);
-                    this.SelectedObject.Rotation = currentRotation;
+                    SelectedObject.Rotation = currentRotation;
                     if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
-                          this.SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
+                          SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
                           new System.Drawing.Point(0, 0), currentRotation));
-                    this.Invalidate();
+                    Invalidate();
                 }
                 else if (resizing)
                 { //combine code because you will need to move ports in both cases
-                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(this.SelectedObject.X, this.SelectedObject.Y, this.SelectedObject.Width, this.SelectedObject.Height);
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(SelectedObject.X, SelectedObject.Y, SelectedObject.Width, SelectedObject.Height);
                     System.Drawing.Size sz = new System.Drawing.Size(0, 0);
                     System.Drawing.Point fixedPT = new System.Drawing.Point(0, 0);
                     System.Drawing.Point dragPT = new System.Drawing.Point(0, 0);
-                    this.SelectedObject.AutoSize = false;
+                    SelectedObject.AutoSize = false;
                     switch (sz_direct)
                     {
                         case SizeDirection.Northwest:  //changing all
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
                                 System.Drawing.Point LRHC = new System.Drawing.Point(0, 0);
-                                sz = this.SelectedObject.GetSize();
+                                sz = SelectedObject.GetSize();
                                 LRHC.X = ULHC.X + sz.Width;
                                 LRHC.Y = ULHC.Y + sz.Height;
                                 sz.Width = LRHC.X - MousePoint.X;
@@ -572,16 +599,16 @@ namespace SustainableChemistry
                                 }
                                 ULHC.X = LRHC.X - sz.Width;
                                 ULHC.Y = LRHC.Y - sz.Height;
-                                this.SelectedObject.SetPosition(ULHC);
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetPosition(ULHC);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.North://changing top, and height
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
                                 System.Drawing.Point LLHC = new System.Drawing.Point(0, 0);
                                 LLHC.X = ULHC.X;
-                                sz = this.SelectedObject.GetSize();
+                                sz = SelectedObject.GetSize();
                                 LLHC.Y = ULHC.Y + sz.Height;
                                 sz.Height = LLHC.Y - MousePoint.Y;
                                 if (sz.Height < 16)
@@ -589,15 +616,15 @@ namespace SustainableChemistry
                                     sz.Height = 16;
                                 }
                                 ULHC.Y = LLHC.Y - sz.Height;
-                                this.SelectedObject.SetPosition(ULHC);
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetPosition(ULHC);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.Northeast://changing top, width, and height
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
                                 System.Drawing.Point LLHC = new System.Drawing.Point(0, 0);
-                                sz = this.SelectedObject.GetSize();
+                                sz = SelectedObject.GetSize();
                                 LLHC.X = ULHC.X;
                                 LLHC.Y = ULHC.Y + sz.Height;
                                 sz.Width = MousePoint.X - LLHC.X;
@@ -612,26 +639,26 @@ namespace SustainableChemistry
                                 }
                                 ULHC.X = LLHC.X;
                                 ULHC.Y = LLHC.Y - sz.Height;
-                                this.SelectedObject.SetPosition(ULHC);
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetPosition(ULHC);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.East: //changing width
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
-                                sz = this.SelectedObject.GetSize();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
+                                sz = SelectedObject.GetSize();
                                 sz.Width = MousePoint.X - ULHC.X;
                                 if (sz.Width < 16)
                                 {
                                     sz.Width = 16;
                                 }
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.Southeast:  //changing height, width
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
-                                sz = this.SelectedObject.GetSize();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
+                                sz = SelectedObject.GetSize();
                                 sz.Width = MousePoint.X - ULHC.X;
                                 sz.Height = MousePoint.Y - ULHC.Y;
                                 if (sz.Width < 16)
@@ -642,26 +669,26 @@ namespace SustainableChemistry
                                 {
                                     sz.Height = 16;
                                 }
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.South://changing height
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
-                                sz = this.SelectedObject.GetSize();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
+                                sz = SelectedObject.GetSize();
                                 sz.Height = MousePoint.Y - ULHC.Y;
                                 if (sz.Height < 16)
                                 {
                                     sz.Height = 16;
                                 }
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.Southwest:  //changing left,height, and width
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
                                 System.Drawing.Point URHC = new System.Drawing.Point(0, 0);
-                                sz = this.SelectedObject.GetSize();
+                                sz = SelectedObject.GetSize();
                                 URHC.Y = ULHC.Y;
                                 URHC.X = ULHC.X + sz.Width;
                                 sz.Width = URHC.X - MousePoint.X;
@@ -675,15 +702,15 @@ namespace SustainableChemistry
                                     sz.Height = 16;
                                 }
                                 ULHC.X = URHC.X - sz.Width;
-                                this.SelectedObject.SetPosition(ULHC);
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetPosition(ULHC);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         case SizeDirection.West://changing left and width
                             {
-                                System.Drawing.Point ULHC = this.SelectedObject.GetPosition();
+                                System.Drawing.Point ULHC = SelectedObject.GetPosition();
                                 System.Drawing.Point URHC = new System.Drawing.Point(0, 0);
-                                sz = this.SelectedObject.GetSize();
+                                sz = SelectedObject.GetSize();
                                 URHC.Y = ULHC.Y;
                                 URHC.X = ULHC.X + sz.Width;
                                 sz.Width = URHC.X - MousePoint.X;
@@ -692,8 +719,8 @@ namespace SustainableChemistry
                                     sz.Width = 16;
                                 }
                                 ULHC.X = URHC.X - sz.Width;
-                                this.SelectedObject.SetPosition(ULHC);
-                                this.SelectedObject.SetSize(sz);
+                                SelectedObject.SetPosition(ULHC);
+                                SelectedObject.SetSize(sz);
                                 break;
                             }
                         default:
@@ -714,7 +741,16 @@ namespace SustainableChemistry
                 m_SelectionRectangle.Width = e.X - m_SelectionRectangle.X;
                 m_SelectionRectangle.Height = e.Y - m_SelectionRectangle.Y;
             }
-            this.Invalidate();
+            else if (m_RotatingSurface)
+            {
+                currentRotation = (float)AngleToPoint(dragOffset, dragPoint);
+                currentRotation = ((int)(currentRotation - startingRotation + originalRotation) % 360);
+                if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
+                      SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
+                      new System.Drawing.Point(0, 0), currentRotation));
+                Invalidate();
+            }
+            Invalidate();
         }
 
         private void MoleculeViewer_MouseUp(object sender, MouseEventArgs e)
@@ -722,6 +758,7 @@ namespace SustainableChemistry
             if (m_DrawingLine) return;
             m_DraggingSelectedObject = false;
             m_RotatingSelectedObject = false;
+            m_RotatingSurface = false;
             Point mousePT = gscTogoc(e.X, e.Y);
             if (m_SelectionDragging)
             {
@@ -740,8 +777,8 @@ namespace SustainableChemistry
                 m_SelectionDragging = false;
                 if (SelectionChanged != null)
                 {
-                    if (numObj == 1) SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObject));
-                    else SelectionChanged(this, new SelectionChangedEventArgs(this.SelectedObjects));
+                    if (numObj == 1) SelectionChanged(this, new SelectionChangedEventArgs(SelectedObject));
+                    else SelectionChanged(this, new SelectionChangedEventArgs(SelectedObjects));
                 }
             }
             else if (resizing)
@@ -750,23 +787,23 @@ namespace SustainableChemistry
                 sz_direct = SizeDirection.NA;
                 System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Arrow;
             }
-            this.Invalidate();
+            Invalidate();
         }
 
         private void MoleculeViewer_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == System.Windows.Forms.Keys.Delete)
             {
-                if (this.SelectedObjects != null)
+                if (SelectedObjects != null)
                 {
-                    for (int i = 0; i < this.SelectedObjects.Length; i++)
+                    for (int i = 0; i < SelectedObjects.Length; i++)
                     {
-                        m_DrawingObjects.Remove(this.SelectedObjects[i]);
+                        m_DrawingObjects.Remove(SelectedObjects[i]);
                     }
-                    if (GraphicObjectsChanged != null) GraphicObjectsChanged(this, new GraphicObjectsChangedEventsArgs(this.SelectedObjects, GraphicObjectsChangedType.Deleted));
+                    if (GraphicObjectsChanged != null) GraphicObjectsChanged(this, new GraphicObjectsChangedEventsArgs(SelectedObjects, GraphicObjectsChangedType.Deleted));
                 }
             }
-            this.Invalidate();
+            Invalidate();
         }
 
         private void MoleculeViewer_MouseClick(object sender, MouseEventArgs e)
@@ -776,7 +813,7 @@ namespace SustainableChemistry
             System.Drawing.Point mousePT = gscTogoc(clickPT);
             if (System.Windows.Forms.Cursor.Current == System.Windows.Forms.Cursors.Arrow)
             {
-                this.SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
+                SelectedObject = m_DrawingObjects.FindObjectAtPoint(mousePT);
             }
         }
     }

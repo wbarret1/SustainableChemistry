@@ -38,7 +38,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.DoubleBuffered = true;
-            this.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.MaximumSize = new System.Drawing.Size(1100, 850);
             this.Name = "MoleculeViewer";
             this.Size = new System.Drawing.Size(300, 300);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MoleculeViewer_Paint);

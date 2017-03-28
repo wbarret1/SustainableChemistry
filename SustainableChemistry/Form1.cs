@@ -99,5 +99,12 @@ namespace SustainableChemistry
         {
             this.moleculeViewer1.Zoom = (double)(this.trackBar1.Value) / 100.0;
         }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+            string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            listBox1.Items.AddRange(phos);
+        }
     }
 }
