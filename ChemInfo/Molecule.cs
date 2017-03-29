@@ -547,6 +547,7 @@ namespace ChemInfo
             for (int i = this.m_Atoms.Count - 1; i >= 0; i--)
             {
                 m_Atoms.AddRange(this.m_Atoms[i].SetHydrogens());
+                m_Atoms.Remove(m_Atoms[i].RemoveOneHydrogen());
             }
         }
 
@@ -656,7 +657,7 @@ namespace ChemInfo
         public void ForceDirectedGraph()
         {
             RandomLocateAtoms();
-            // SetHydrogens();
+            SetHydrogens();            
             Temperature = InitialTemperature;
             int maxIter = 500;
             for (int i = 0; i < maxIter; i++)
@@ -726,8 +727,8 @@ namespace ChemInfo
                                 if (distance < 10) distance = 10;
                                 double delX = v.Location2D.X - a.Location2D.X;
                                 double delY = v.Location2D.Y - a.Location2D.Y;
-                                double deltaX = 0.5 * (delX / distance) * frAttractiveForce(distance);
-                                double deltaY = 0.5 * (delY / distance) * frAttractiveForce(distance);
+                                double deltaX = 0.3 * (delX / distance) * frAttractiveForce(distance);
+                                double deltaY = 0.3 * (delY / distance) * frAttractiveForce(distance);
                                 v.deltaX = v.deltaX - deltaX;
                                 v.deltaY = v.deltaY - deltaY;
                                 a.deltaX = a.deltaX + deltaX;
