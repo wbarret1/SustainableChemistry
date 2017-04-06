@@ -117,6 +117,7 @@ namespace SustainableChemistry
                 List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
                 foreach (ChemInfo.Atom a in m.GetAtoms())
                 {
+                    long l = a.WeiningerInitialInvariant;
                     graphicAtoms.Add(new GraphicAtom(a, Font));
                 }
                 foreach (GraphicAtom gAtom in graphicAtoms)

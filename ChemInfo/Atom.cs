@@ -25,6 +25,23 @@ namespace ChemInfo
         CIP_R = 0x20
     }
 
+    static class WeiningerInitialInvariant
+    {
+        public static long ToInt64(Atom a)
+        {
+            byte[] retval = new byte[8];
+            retval[0] = 0;
+            retval[1] = 0;
+            retval[2] = 0;
+            retval[3] = BitConverter.GetBytes(a.Degree)[3];
+            retval[4] = BitConverter.GetBytes(a.numberOfBonds)[3];
+            retval[5] = BitConverter.GetBytes(a.AtomicNumber)[3];
+            retval[6] = BitConverter.GetBytes(a.Charge)[3];
+            retval[7] = BitConverter.GetBytes(a.NumHydrogens)[3];
+            return BitConverter.ToInt64(retval, 0);
+        }
+    }
+
     class IntArrayTypeConverter : System.ComponentModel.TypeConverter
     {
         public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
@@ -203,6 +220,27 @@ namespace ChemInfo
             }
         }
 
+        public int WeiningerRank { get; set; } = 0;
+
+        public long WeiningerInitialInvariant
+        {
+            get
+            {
+                byte[] retval = new byte[8];
+                retval[0] = 0;
+                retval[1] = 0;
+                retval[2] = BitConverter.GetBytes(this.Degree)[0];
+                retval[3] = BitConverter.GetBytes(this.numberOfBonds)[0];
+                retval[4] = BitConverter.GetBytes(this.AtomicNumber)[0];
+                retval[5] = this.charge > 0 ? (byte)1 : (byte)0;
+                retval[6] = BitConverter.GetBytes(this.Charge)[0];
+                retval[7] = BitConverter.GetBytes(this.NumHydrogens)[0];
+                if (BitConverter.IsLittleEndian) Array.Reverse(retval);
+                return BitConverter.ToInt64(retval, 0);
+            }
+        }
+
+
         public Atom[] SetHydrogens()
         {
             List<Atom> hydrogens = new List<Atom>();
@@ -276,6 +314,8 @@ namespace ChemInfo
                 return m_CovalentRadius;
             }
         }
+
+
 
         //[System.ComponentModel.BrowsableAttribute(false)]
         //public int X_2D
@@ -401,7 +441,12 @@ namespace ChemInfo
                         return new int[] { 2, 4, 6 };
                     case ELEMENTS.P:
                         return new int[] { 3, 5 };
-                    default:
+                    case ELEMENTS.F:
+                    case ELEMENTS.Cl:
+                    case ELEMENTS.I:
+                    case ELEMENTS.Br:
+                        return new int[] { 1 };
+                    default: // handles Chlorine
                         return new int[0];
                 }
             }
