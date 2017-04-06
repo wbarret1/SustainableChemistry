@@ -244,18 +244,37 @@ namespace ChemInfo
         public Atom[] SetHydrogens()
         {
             List<Atom> hydrogens = new List<Atom>();
-            int numHydrogens = 0;
-            foreach (Bond b in this.BondedAtoms)
-            {
-                if (b.ConnectedAtom.Element == ELEMENTS.H) numHydrogens++;
-            }
-            for (int i = 0; i < this.NumHydrogens-numHydrogens; i++)
+            for (int i = this.numberOfBonds; i < this.Valence; i++)
             {
                 Atom h = new Atom("H");
                 this.AddBond(h, BondType.Single, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.notACenter);
+                this.m_ConnectedAtoms.Add(h);
+                h.Color = System.Drawing.Color.Fuchsia;
                 hydrogens.Add(h);
             }
             return hydrogens.ToArray();
+        }
+
+        public Atom RemoveOneHydrogen()
+        {
+            foreach(Atom a in this.ConnectedAtoms)
+            {
+                if(a.Element == ELEMENTS.H)
+                {
+                    Bond bondToRemove = null;
+                    foreach(Bond b in this.m_Bonds)
+                    {
+                        if(b.ConnectedAtom == a) bondToRemove = b;
+                    }
+                    if (bondToRemove != null)
+                    {
+                        this.m_Bonds.Remove(bondToRemove);
+                        this.m_ConnectedAtoms.Remove(a);
+                        return a;
+                    }
+               }
+            }
+            return null;
         }
 
         void SetColor(int[] argb)

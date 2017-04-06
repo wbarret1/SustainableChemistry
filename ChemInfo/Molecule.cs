@@ -547,6 +547,7 @@ namespace ChemInfo
             for (int i = this.m_Atoms.Count - 1; i >= 0; i--)
             {
                 m_Atoms.AddRange(this.m_Atoms[i].SetHydrogens());
+                m_Atoms.Remove(m_Atoms[i].RemoveOneHydrogen());
             }
         }
 
@@ -656,17 +657,17 @@ namespace ChemInfo
         public void ForceDirectedGraph()
         {
             RandomLocateAtoms();
-            // SetHydrogens();
+            SetHydrogens();            
             Temperature = InitialTemperature;
             int maxIter = 500;
             for (int i = 0; i < maxIter; i++)
             {
-                IterateFGD();
+                IterateFGD(i >  25);
                 Temperature *= (1.0 - (double)i / (double)maxIter);
             }
         }
 
-        protected void IterateFGD()
+        protected void IterateFGD(bool addBonds)
         {
             CalculateOptimalDistanceBetweenVertices();
             foreach (Atom v in m_Atoms)
@@ -712,46 +713,48 @@ namespace ChemInfo
             }
 
             // This adds the Angle force to fix bond angles from Fraczek 2016
-            foreach (Atom v in this.m_Atoms)
-            {
-                foreach (Atom u in v.ConnectedAtoms)
+            if (addBonds) {
+                foreach (Atom v in this.m_Atoms)
                 {
-                    if (u.ConnectedAtoms.Length < 4)
+                    foreach (Atom u in v.ConnectedAtoms)
                     {
-                        foreach (Atom a in u.ConnectedAtoms)
+                        if (u.ConnectedAtoms.Length < 4)
                         {
-                            if (a != v)
+                            foreach (Atom a in u.ConnectedAtoms)
                             {
-                                double distance = this.GetNextBondLength(v, u, a);
-                                if (distance < 10) distance = 10;
-                                double delX = v.Location2D.X - a.Location2D.X;
-                                double delY = v.Location2D.Y - a.Location2D.Y;
-                                double deltaX = 0.5 * (delX / distance) * frAttractiveForce(distance);
-                                double deltaY = 0.5 * (delY / distance) * frAttractiveForce(distance);
-                                v.deltaX = v.deltaX - deltaX;
-                                v.deltaY = v.deltaY - deltaY;
-                                a.deltaX = a.deltaX + deltaX;
-                                a.deltaY = a.deltaY + deltaY;
+                                if (a != v)
+                                {
+                                    double distance = this.GetNextBondLength(v, u, a);
+                                    if (distance < 10) distance = 10;
+                                    double delX = v.Location2D.X - a.Location2D.X;
+                                    double delY = v.Location2D.Y - a.Location2D.Y;
+                                    double deltaX = 0.3 * (delX / distance) * frAttractiveForce(distance);
+                                    double deltaY = 0.3 * (delY / distance) * frAttractiveForce(distance);
+                                    v.deltaX = v.deltaX - deltaX;
+                                    v.deltaY = v.deltaY - deltaY;
+                                    a.deltaX = a.deltaX + deltaX;
+                                    a.deltaY = a.deltaY + deltaY;
+                                }
                             }
                         }
-                    }
 
-                    else if (u.ConnectedAtoms.Length == 4)
-                    {
-                        foreach (Atom a in u.ConnectedAtoms)
+                        else if (u.ConnectedAtoms.Length == 4)
                         {
-                            if (a != v)
+                            foreach (Atom a in u.ConnectedAtoms)
                             {
-                                double distance = this.GetNextBondLength(v, u, a);
-                                if (distance < 10) distance = 10;
-                                double delX = v.Location2D.X - u.Location2D.X;
-                                double delY = v.Location2D.Y - u.Location2D.Y;
-                                double deltaX = 0.75 * ((double)delX / (double)distance) * frAttractiveForce(distance);
-                                double deltaY = 0.75 * ((double)delY / (double)distance) * frAttractiveForce(distance);
-                                v.deltaX = v.deltaX - deltaX;
-                                v.deltaY = v.deltaY - deltaY;
-                                u.deltaX = u.deltaX + deltaX;
-                                u.deltaY = u.deltaY + deltaY;
+                                if (a != v)
+                                {
+                                    double distance = this.GetNextBondLength(v, u, a);
+                                    if (distance < 10) distance = 10;
+                                    double delX = v.Location2D.X - u.Location2D.X;
+                                    double delY = v.Location2D.Y - u.Location2D.Y;
+                                    double deltaX = 0.75 * ((double)delX / (double)distance) * frAttractiveForce(distance);
+                                    double deltaY = 0.75 * ((double)delY / (double)distance) * frAttractiveForce(distance);
+                                    v.deltaX = v.deltaX - deltaX;
+                                    v.deltaY = v.deltaY - deltaY;
+                                    u.deltaX = u.deltaX + deltaX;
+                                    u.deltaY = u.deltaY + deltaY;
+                                }
                             }
                         }
                     }

@@ -75,6 +75,7 @@ namespace SustainableChemistry
         double startingRotation = 0;
         double originalRotation = 0;
         float currentRotation = 0;
+        float surfaceRotation = 0;
         List<Point> m_Points;
         int sel_corner;
         bool resizing = false;
@@ -112,7 +113,7 @@ namespace SustainableChemistry
                 ChemInfo.Molecule m = value;
                 m.ForceDirectedGraph();
                 m_MoleculeRectangle = m.GetLocationBounds();
-                m.CenterMolecule(m_SurfaceBounds);
+                m.CenterMolecule();
 
                 List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
                 foreach (ChemInfo.Atom a in m.GetAtoms())
@@ -418,6 +419,7 @@ namespace SustainableChemistry
             m_HorizRes = (int)(g.DpiX);
             m_VertRes = (int)(g.DpiY);
 
+
             //handle the possibility that the viewport is scrolled,
             //adjust my origin coordintates to compensate
             Point pt = AutoScrollPosition;
@@ -443,6 +445,8 @@ namespace SustainableChemistry
             //correct taking the dpi into consideration.
             m_DrawingObjects.HorizontalResolution = (int)(g.DpiX);
             m_DrawingObjects.VerticalResolution = (int)(g.DpiY);
+            g.TranslateTransform((float)this.Size.Width / 2, (float)this.Size.Height / 2);
+            g.RotateTransform(surfaceRotation);
             m_DrawingObjects.DrawObjects(g, m_Zoom);
 
             //doesn't really draw the selected object, but instead the
@@ -744,11 +748,11 @@ namespace SustainableChemistry
             }
             else if (m_RotatingSurface)
             {
-                currentRotation = (float)AngleToPoint(dragOffset, dragPoint);
-                currentRotation = ((int)(currentRotation - startingRotation + originalRotation) % 360);
+                surfaceRotation = surfaceRotation + (float)AngleToPoint(dragOffset, dragPoint) / 100;
+                //currentRotation = ((int)(currentRotation - startingRotation + originalRotation) % 360);
                 if (StatusUpdate != null) StatusUpdate(this, new StatusUpdateEventArgs(StatusUpdateType.ObjectRotated,
-                      SelectedObject, String.Format("Object Rotated to {0} degrees", currentRotation),
-                      new System.Drawing.Point(0, 0), currentRotation));
+                      SelectedObject, String.Format("Surface Rotated to {0} degrees", surfaceRotation),
+                      new System.Drawing.Point(0, 0), surfaceRotation));
                 Invalidate();
             }
             Invalidate();
