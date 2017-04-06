@@ -77,11 +77,139 @@ namespace ChemInfo
         }
     };
 
+    public class WeiningerInvariant :Comparer<WeiningerInvariant>
+    {
+        Atom m_Atom;
+        public int NumberOfConnections { get; set; } = 0;
+        public int NumberOfNonHydrogenBonds { get; set; } = 0;
+        public int AtomicNumber { get; set; } = 0;
+        public int SignOfCharge { get; set; } = 0;
+        public int Charge { get; set; } = 0;
+        public int NumberOfAttachedHydrogens { get; set; } = 0;
+
+        public WeiningerInvariant(Atom a)
+        {
+            m_Atom = a;
+            this.Reset();
+        }
+
+        public void Reset()
+        {
+            this.NumberOfConnections = m_Atom.Degree;
+            this.NumberOfNonHydrogenBonds = m_Atom.NumberOfNonHydrogens;
+            this.AtomicNumber = m_Atom.AtomicNumber;
+            this.SignOfCharge = m_Atom.Charge;
+            this.Charge = m_Atom.Charge;
+            this.NumberOfAttachedHydrogens = m_Atom.NumHydrogens;
+        }
+
+        public void AddExtendedConnectivity(WeiningerInvariant y)
+        {
+            this.NumberOfConnections = y.NumberOfConnections;
+            this.NumberOfNonHydrogenBonds = y.NumberOfNonHydrogenBonds;
+            this.AtomicNumber = y.AtomicNumber;
+            this.SignOfCharge = y.SignOfCharge;
+            this.Charge = y.Charge;
+            this.NumberOfAttachedHydrogens = y.NumberOfAttachedHydrogens;
+        }
+
+        public void AddExtendedConnectivity(Atom a)
+        {
+            this.NumberOfConnections = a.Degree;
+            this.NumberOfNonHydrogenBonds = a.NumberOfNonHydrogens;
+            this.AtomicNumber =a.AtomicNumber;
+            this.SignOfCharge = a.Charge;
+            this.Charge = a.Charge;
+            this.NumberOfAttachedHydrogens = a.NumHydrogens;
+        }
+
+        public static bool operator > (WeiningerInvariant w1, WeiningerInvariant w2)
+        {
+            // Number of connections is the first test.
+            if (w1.NumberOfConnections > w2.NumberOfConnections) return true;
+            // Followed by the number of non-hydrogen bonds.
+            if (w1.NumberOfNonHydrogenBonds > w2.NumberOfNonHydrogenBonds) return true;
+            //Then atomic number        
+            if (w1.AtomicNumber > w2.AtomicNumber) return true;
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+            if (w1.SignOfCharge > w2.SignOfCharge) return true;
+            // Next is number of attached hydrogens.
+            if (w1.NumberOfAttachedHydrogens > w2.NumberOfAttachedHydrogens) return true;
+            return false;
+        }
+
+        public static bool operator <(WeiningerInvariant w1, WeiningerInvariant w2)
+        {
+            // Number of connections is the first test.
+            if (w1.NumberOfConnections < w2.NumberOfConnections) return true;
+            // Followed by the number of non-hydrogen bonds.
+            if (w1.NumberOfNonHydrogenBonds < w2.NumberOfNonHydrogenBonds) return true;
+            //Then atomic number        
+            if (w1.AtomicNumber < w2.AtomicNumber) return true;
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+            if (w1.SignOfCharge < w2.SignOfCharge) return true;
+            // Next is number of attached hydrogens.
+            if (w1.NumberOfAttachedHydrogens < w2.NumberOfAttachedHydrogens) return true;
+            return false;
+        }
+
+        public static bool operator ==(WeiningerInvariant w1, WeiningerInvariant w2)
+        {
+            // Number of connections is the first test.
+            if (w1.NumberOfConnections != w2.NumberOfConnections) return false;
+            // Followed by the number of non-hydrogen bonds.
+            if (w1.NumberOfNonHydrogenBonds != w2.NumberOfNonHydrogenBonds) return false;
+            //Then atomic number        
+            if (w1.AtomicNumber != w2.AtomicNumber) return false;
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+            if (w1.SignOfCharge != w2.SignOfCharge) return false;
+            // Next is number of attached hydrogens.
+            if (w1.NumberOfAttachedHydrogens != w2.NumberOfAttachedHydrogens) return false;
+            return true;
+        }
+
+        public static bool operator !=(WeiningerInvariant w1, WeiningerInvariant w2)
+        {
+            // Number of connections is the first test.
+            if ((w1.NumberOfConnections == w2.NumberOfConnections) &&
+            // Followed by the number of non-hydrogen bonds.
+                (w1.NumberOfNonHydrogenBonds == w2.NumberOfNonHydrogenBonds) &&
+            //Then atomic number        
+                (w1.AtomicNumber == w2.AtomicNumber) &&
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+                (w1.SignOfCharge == w2.SignOfCharge) && 
+            // Next is number of attached hydrogens.
+                (w1.NumberOfAttachedHydrogens == w2.NumberOfAttachedHydrogens)) return false;
+            return true;
+        }
+
+        public override int Compare(WeiningerInvariant x, WeiningerInvariant y)
+        {
+            // Number of connections is the first test.
+            if (x.NumberOfConnections != y.NumberOfConnections) return x.NumberOfConnections - y.NumberOfConnections;
+            // Followed by the number of non-hydrogen bonds.
+            if (x.NumberOfNonHydrogenBonds != y.NumberOfNonHydrogenBonds) return x.NumberOfNonHydrogenBonds - y.NumberOfNonHydrogenBonds;
+            //Then atomic number        
+            if (x.AtomicNumber != y.AtomicNumber) return x.AtomicNumber - y.AtomicNumber;
+            // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
+            // This can be done in one sort, which the same results, especially since the comparer returns an integer.
+            if (x.Charge != y.Charge) return x.Charge - y.Charge;
+            // Next is number of attached hydrogens.
+            if (x.NumberOfAttachedHydrogens != y.NumberOfAttachedHydrogens) return x.NumberOfAttachedHydrogens - y.NumberOfAttachedHydrogens;
+            return 0;
+        }
+    }
+
     [System.ComponentModel.TypeConverter(typeof(AtomTypeConverter))]
     public class Atom
     {
         BondCollection m_Bonds = new ChemInfo.BondCollection();
         List<Atom> m_ConnectedAtoms = new List<Atom>();
+        WeiningerInvariant m_WeiningerInvariant;
 
         //int degree;
         ELEMENTS e;
@@ -111,6 +239,7 @@ namespace ChemInfo
             this.m_CovalentRadius = ChemInfo.Element.CovalentRadius(e);
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
+            m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, AtomType type)
@@ -125,6 +254,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
+            m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, AtomType type, Chirality chirality)
@@ -138,6 +268,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
+            m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, int isotope)
@@ -151,6 +282,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
+            m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public ELEMENTS Element { get { return e; } }
@@ -426,6 +558,19 @@ namespace ChemInfo
             }
         }
 
+        public int NumberOfNonHydrogens
+        {
+            get
+            {
+                int retVal = 0;
+                foreach(Atom a in this.m_ConnectedAtoms)
+                {
+                    if (a.Element != ELEMENTS.H) retVal++;
+                }
+                return retVal;
+            }
+        }
+
 
         public int NumHydrogens
         {
@@ -494,6 +639,29 @@ namespace ChemInfo
             set
             {
                 chiral = value;
+            }
+        }
+
+        public WeiningerInvariant WeiningerInvariant
+        {
+            get
+            {
+                return this.m_WeiningerInvariant;
+            }
+        }
+
+        public int WeiningerRank { get; set; } = 0;
+        public int WeiningerSymmetryClass { get; set; } = 0;
+        public int WeiningerProductOfPrimes
+        {
+            get
+            {
+                int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71};
+                int retVal = 1;
+                foreach (Atom a in m_ConnectedAtoms)
+                {
+                    retVal = retVal * a.WeiningerRank;
+                }return retVal;
             }
         }
 

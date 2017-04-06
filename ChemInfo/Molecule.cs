@@ -385,47 +385,58 @@ namespace ChemInfo
             // Step 1. Set Initial Invariants and go to Step 3.
             // The initial invariants are handled by the comparer.
             // Step 3. Sort the vector.
-            m_Atoms.Sort(atomInvariantComparerWeinginger);
+            m_Atoms.Sort(AtomInvariantComparerWeinginger);
 
-            // Step 4. RankException Atomic Vector
-
-            // Step 5. If not invariant, go to Step 2.
-
+            // Step 4. RankException Atomic Vector 
+            int highestRank = this.RankAtomsWeinginger();
             // Step 6. Save partition as symmetry class.
-
+            foreach (Atom a in this.m_Atoms) a.WeiningerSymmetryClass = a.WeiningerRank;
+            // If the number of ranks is smaller than the number of atoms, break ties...
+            // Step 5. If not invariant, go to Step 2.
             // Step 7. If highest rank is smaller than the number of nodes, break ties and go to Step 2.
-
-            // Step 8. Else done
-            return;
-
-            // Step 2. 
+            // if the number of ranks equals the number of atoms, we're done.
+            while (highestRank < this.m_Atoms.Count)
             {
-
+                this.m_Atoms.Sort(WeiningerProductOfPrimesComparer);
+                highestRank = this.RankAtomsWeinginger();
             }
         }
 
-        int atomInvariantComparerWeinginger(Atom atom1, Atom atom2)
+        int AtomInvariantComparerWeinginger(Atom atom1, Atom atom2)
         {
             // Number of connections is the first test.
-            if (atom1.Degree != atom2.Degree) return atom1.Degree - atom2.Degree;
+            if (atom1.WeiningerInvariant.NumberOfConnections != atom2.WeiningerInvariant.NumberOfConnections) return atom1.WeiningerInvariant.NumberOfConnections - atom2.WeiningerInvariant.NumberOfConnections;
             // Followed by the number of non-hydrogen bonds.
-            if (atom1.numberOfBonds > atom2.numberOfBonds) return atom1.numberOfBonds - atom2.numberOfBonds;
+            if (atom1.WeiningerInvariant.NumberOfNonHydrogenBonds != atom2.WeiningerInvariant.NumberOfNonHydrogenBonds) return atom1.WeiningerInvariant.NumberOfNonHydrogenBonds - atom2.WeiningerInvariant.NumberOfNonHydrogenBonds;
             //Then atomic number        
-            if (atom1.AtomicNumber > atom2.AtomicNumber) return atom1.AtomicNumber - atom2.AtomicNumber;
+            if (atom1.WeiningerInvariant.AtomicNumber != atom2.WeiningerInvariant.AtomicNumber) return atom1.WeiningerInvariant.AtomicNumber - atom2.WeiningerInvariant.AtomicNumber;
             // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
             // This can be done in one sort, which the same results, especially since the comparer returns an integer.
-            if (atom1.Charge > atom2.Charge) return atom1.Charge - atom2.Charge;
-            // Next is number of attached hydrogens.
-            if (atom1.hydrogenCount > atom2.hydrogenCount) return atom1.hydrogenCount - atom2.hydrogenCount;
-            //Then simple connectivity.
-
+            if (atom1.WeiningerInvariant.Charge != atom2.WeiningerInvariant.Charge) return atom1.WeiningerInvariant.Charge - atom2.WeiningerInvariant.Charge;
+            // Next is number of attached hydrogens
+            if (atom1.WeiningerInvariant.NumberOfAttachedHydrogens != atom2.WeiningerInvariant.NumberOfAttachedHydrogens) return atom1.WeiningerInvariant.NumberOfAttachedHydrogens - atom2.WeiningerInvariant.NumberOfAttachedHydrogens;
             return 0;
         }
 
-        int CompareAtomsByDegree(Atom a1, Atom a2)
+        int WeiningerProductOfPrimesComparer(Atom atom1, Atom atom2)
         {
-            return a1.Degree - a2.Degree;
+            if (atom1.WeiningerRank != atom2.WeiningerRank) return atom1.WeiningerRank - atom2.WeiningerRank;
+            return atom1.WeiningerProductOfPrimes - atom2.WeiningerProductOfPrimes;
         }
+
+        int RankAtomsWeinginger()
+        {
+            int currentRank = 1;
+            m_Atoms[0].WeiningerRank = currentRank;
+            for (int i = 1; i < m_Atoms.Count; i++)
+            {
+                if (m_Atoms[i = 1].WeiningerInvariant != m_Atoms[i].WeiningerInvariant) currentRank++;
+                else if (m_Atoms[i - 1].WeiningerProductOfPrimes != m_Atoms[i].WeiningerProductOfPrimes) currentRank++;
+                m_Atoms[i].WeiningerRank = currentRank;
+            }
+            return currentRank;
+        }
+
 
         // Molecule Boundaries for drawing algorithm
 
@@ -538,8 +549,10 @@ namespace ChemInfo
         double GetNextBondLength(Atom a1, Atom a2, Atom a3)
         {
             Bond b1 = GetBond(a1, a2);
-            Bond b2 = GetBond(a1, a3);
-            return Math.Sqrt(Math.Pow(100 * b1.BondLength, 2) + Math.Pow(100 * b1.BondLength, 2));
+            Bond b2 = GetBond(a2, a3);
+            if (b1.BondType == BondType.Single && b2.BondType == BondType.Single)
+                return Math.Sqrt(Math.Pow(100 * b1.BondLength, 2) + Math.Pow(100 * b1.BondLength, 2));
+            return -1;
         }
 
         protected void SetHydrogens()
@@ -657,12 +670,12 @@ namespace ChemInfo
         public void ForceDirectedGraph()
         {
             RandomLocateAtoms();
-            SetHydrogens();            
+            SetHydrogens();
             Temperature = InitialTemperature;
             int maxIter = 500;
             for (int i = 0; i < maxIter; i++)
             {
-                IterateFGD(i >  25);
+                IterateFGD(i > 25);
                 Temperature *= (1.0 - (double)i / (double)maxIter);
             }
         }
@@ -682,6 +695,7 @@ namespace ChemInfo
                     if (u != v)
                     {
                         double distance = DistanceBetweenAtoms(u, v);
+                        if (distance < 0) continue;
                         if (distance < 1) distance = 1;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
@@ -713,7 +727,8 @@ namespace ChemInfo
             }
 
             // This adds the Angle force to fix bond angles from Fraczek 2016
-            if (addBonds) {
+            if (addBonds)
+            {
                 foreach (Atom v in this.m_Atoms)
                 {
                     foreach (Atom u in v.ConnectedAtoms)
@@ -728,8 +743,8 @@ namespace ChemInfo
                                     if (distance < 10) distance = 10;
                                     double delX = v.Location2D.X - a.Location2D.X;
                                     double delY = v.Location2D.Y - a.Location2D.Y;
-                                    double deltaX = 0.3 * (delX / distance) * frAttractiveForce(distance);
-                                    double deltaY = 0.3 * (delY / distance) * frAttractiveForce(distance);
+                                    double deltaX = 0.5 * (delX / distance) * frAttractiveForce(distance);
+                                    double deltaY = 0.5 * (delY / distance) * frAttractiveForce(distance);
                                     v.deltaX = v.deltaX - deltaX;
                                     v.deltaY = v.deltaY - deltaY;
                                     a.deltaX = a.deltaX + deltaX;
@@ -756,6 +771,13 @@ namespace ChemInfo
                                     u.deltaY = u.deltaY + deltaY;
                                 }
                             }
+                        }
+                    }
+                    foreach(ChemInfo.Bond bond in v.BondedAtoms)
+                    {
+                        if (bond.BondType == BondType.Double)
+                        {
+
                         }
                     }
                 }

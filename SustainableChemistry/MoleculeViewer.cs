@@ -113,7 +113,7 @@ namespace SustainableChemistry
                 ChemInfo.Molecule m = value;
                 m.ForceDirectedGraph();
                 m_MoleculeRectangle = m.GetLocationBounds();
-                m.CenterMolecule();
+                m.CenterMolecule(m_MoleculeRectangle);
 
                 List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
                 foreach (ChemInfo.Atom a in m.GetAtoms())
@@ -444,8 +444,8 @@ namespace SustainableChemistry
             //correct taking the dpi into consideration.
             m_DrawingObjects.HorizontalResolution = (int)(g.DpiX);
             m_DrawingObjects.VerticalResolution = (int)(g.DpiY);
-            g.TranslateTransform((float)this.Size.Width / 2, (float)this.Size.Height / 2);
-            g.RotateTransform(surfaceRotation);
+            // g.TranslateTransform((float)this.Size.Width / 2, (float)this.Size.Height / 2);
+            //g.RotateTransform(surfaceRotation);
             m_DrawingObjects.DrawObjects(g, m_Zoom);
 
             //doesn't really draw the selected object, but instead the
