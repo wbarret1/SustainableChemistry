@@ -695,7 +695,6 @@ namespace ChemInfo
             }
         }
 
-        public int WeiningerRank { get; set; } = 0;
         public int WeiningerSymmetryClass { get; set; } = 0;
         public int WeiningerProductOfPrimes
         {
