@@ -244,7 +244,7 @@ namespace ChemInfo
                     }
                     if ((O.Count == 1) && (C.Count == 3))
                     {
-                        retVal.Add("phospine oxide");
+                        retVal.Add("phosphine oxide");
                     }
                     if ((O.Count == 3) && (N.Count == 1))
                     {
