@@ -15,6 +15,8 @@ namespace ChemInfo
         public int[] count;
     }
 
+
+
     public class Molecule
     {
         List<Atom> m_Atoms;
@@ -24,10 +26,12 @@ namespace ChemInfo
         bool[,] fused;
         bool ringsFound;
         bool pathsFound;
+        System.Collections.Hashtable atomsCount;
 
         public Molecule()
         {
             m_Atoms = new List<Atom>();
+            atomsCount = new System.Collections.Hashtable();
             ringsFound = false;
             pathsFound = false;
         }
@@ -41,6 +45,7 @@ namespace ChemInfo
         {
             if (m_Atoms.Contains(a)) return;
             m_Atoms.Add(a);
+            IncrementAtomCount(a);
             ringsFound = false;
             pathsFound = false;
         }
@@ -52,6 +57,16 @@ namespace ChemInfo
             m_Atoms.Add(a);
             ringsFound = false;
             pathsFound = false;
+        }
+
+        void IncrementAtomCount(Atom a)
+        {
+            if (atomsCount.Contains(a.Element))
+            {
+                atomsCount[a.Element] = ((int)atomsCount[a.Element])+1;
+                return;
+            }
+            atomsCount.Add(a.Element, 1);
         }
 
         public void AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
@@ -101,6 +116,18 @@ namespace ChemInfo
         //    }
         //    return 0;
         //}
+
+        
+        public double MolecularWeight
+        {
+            get
+            {
+                double retval = 0.0;
+                foreach (Atom a in m_Atoms)
+                    retval = retval + a.AtomicMass;
+                return retval;
+            }
+        }
 
         public Bond GetBond(Atom atom1, Atom atom2)
         {
@@ -369,6 +396,25 @@ namespace ChemInfo
                 }
             }
         }
+
+        //PROCEDURE Match(s)
+        //    INPUT: an intermediate state s; the initial state s0 has M(s0)=
+        //    OUTPUT: the mappings between the two graphs
+        //    IF M(s) covers all the nodes of G2 THEN
+        //        OUTPUT M(s)
+        //    ELSE
+        //        Compute the set P(s) of the pairs candidate for inclusion in M(s)
+        //        FOREACH(n, m) P(s)
+        //            IF F(s, n, m) THEN
+        //                Compute the state s´ obtained by adding(n, m) to M(s)
+        //                CALL Match(s )
+        //            END IF
+        //        END FOREACH
+        //         Restore data structures
+        //    END IF
+        //END PROCEDURE
+
+        
 
         int CompareArrayByCount<T>(T[] array1, T[] array2)
         {
