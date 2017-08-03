@@ -44,6 +44,7 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.findSMARTSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -103,7 +104,8 @@
             // functionalityToolStripMenuItem
             // 
             this.functionalityToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.phosphorousToolStripMenuItem});
+            this.phosphorousToolStripMenuItem,
+            this.findSMARTSToolStripMenuItem});
             this.functionalityToolStripMenuItem.Name = "functionalityToolStripMenuItem";
             this.functionalityToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this.functionalityToolStripMenuItem.Text = "Functionality";
@@ -111,7 +113,7 @@
             // phosphorousToolStripMenuItem
             // 
             this.phosphorousToolStripMenuItem.Name = "phosphorousToolStripMenuItem";
-            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.phosphorousToolStripMenuItem.Text = "Phosphorous";
             this.phosphorousToolStripMenuItem.Click += new System.EventHandler(this.phosphorousToolStripMenuItem_Click);
             // 
@@ -252,6 +254,13 @@
             this.tabPage2.Text = "Functionalities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // findSMARTSToolStripMenuItem
+            // 
+            this.findSMARTSToolStripMenuItem.Name = "findSMARTSToolStripMenuItem";
+            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.findSMARTSToolStripMenuItem.Text = "Find SMARTS";
+            this.findSMARTSToolStripMenuItem.Click += new System.EventHandler(this.findSMARTSToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -301,6 +310,7 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private MoleculeViewer moleculeViewer1;
+        private System.Windows.Forms.ToolStripMenuItem findSMARTSToolStripMenuItem;
     }
 }
 

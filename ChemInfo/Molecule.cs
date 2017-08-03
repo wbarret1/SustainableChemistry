@@ -397,6 +397,17 @@ namespace ChemInfo
             }
         }
 
+        public void FindSmarts(string smart)
+        {
+            smilesParser parser = new smilesParser(smart);
+            Molecule m = parser.Parse();
+        }
+
+        List<Atom> Match(List<Atom> s)
+        {
+            return null;
+        }
+
         //PROCEDURE Match(s)
         //    INPUT: an intermediate state s; the initial state s0 has M(s0)=
         //    OUTPUT: the mappings between the two graphs

@@ -106,5 +106,10 @@ namespace SustainableChemistry
             string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
             listBox1.Items.AddRange(phos);
         }
+
+        private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.molecule.FindSmarts("[H]P([H])[H]");
+        }
     }
 }
