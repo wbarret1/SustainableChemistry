@@ -41,6 +41,11 @@ namespace ChemInfo
             return m_Atoms.ToArray<Atom>();
         }
 
+        public Atom getNextAtom(Atom a)
+        {
+            return m_Atoms[m_Atoms.IndexOf(a) + 1];
+        }
+
         public void AddAtom(Atom a)
         {
             if (m_Atoms.Contains(a)) return;
