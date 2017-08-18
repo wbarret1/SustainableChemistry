@@ -451,33 +451,42 @@ namespace ChemInfo
         {
             smilesParser parser = new smilesParser(smart);
             Molecule m = parser.Parse();
+            int pn = 0;
+            Atom[] matches = null;
+            Atom[] group = null;
+            this.Match(ref pn, ref matches, ref group, new VF2SubState(this, m, false));
         }
 
-        List<Atom> Match(List<Atom> s)
+        bool Match(ref int pn, ref Atom[] c1, ref Atom[] c2, State s)
         {
-            return null;
+            if (s.IsGoal())
+            {
+                pn = s.CoreLen();
+                c1 = s.GetCoreSet();
+                return true;
+            }
+
+            if (s.IsDead())
+                return false;
+
+            Atom n1 = null;
+            Atom n2 = null;
+            bool found = false;
+            while (!found && s.NextPair(ref n1, ref n2, n1, n2))
+            {
+                if (s.isFeasiblePair(n1, n2))
+                {
+                    State s1 = s.Clone();
+                    s1.AddPair(n1, n2);
+                    found = Match(ref pn, ref c1, ref c2, s1);
+                    s1.BackTrack();
+                    //delete s1;
+                }
+            }
+            return found;
         }
 
-        //PROCEDURE Match(s)
-        //    INPUT: an intermediate state s; the initial state s0 has M(s0)=
-        //    OUTPUT: the mappings between the two graphs
-        //    IF M(s) covers all the nodes of G2 THEN
-        //        OUTPUT M(s)
-        //    ELSE
-        //        Compute the set P(s) of the pairs candidate for inclusion in M(s)
-        //        FOREACH(n, m) P(s)
-        //            IF F(s, n, m) THEN
-        //                Compute the state s´ obtained by adding(n, m) to M(s)
-        //                CALL Match(s )
-        //            END IF
-        //        END FOREACH
-        //         Restore data structures
-        //    END IF
-        //END PROCEDURE
-
-
-
-        int CompareArrayByCount<T>(T[] array1, T[] array2)
+       int CompareArrayByCount<T>(T[] array1, T[] array2)
         {
             return array1.Length - array2.Length;
         }
