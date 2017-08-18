@@ -122,52 +122,7 @@ namespace ChemInfo
         //    return 0;
         //}
 
-        public bool CompatibleAtom(Atom a1, Atom a2)
-        {
-            return a1.Element == a2.Element;
-        }
-
-        public int InEdgeCount(int atom)
-        {
-            return m_Atoms[atom].Degree;
-        }
-
-        public int OutEdgeCount(int atom)
-        {
-            return m_Atoms[atom].Degree;
-        }
-
-        public int InEdgeCount(Atom a)
-        {
-            return a.Degree;
-        }
-
-        public int GetInEdge(int atom, int edge)
-        {
-            return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
-        }
-
-        public Bond GetInEdge(Atom atom, int edge)
-        {
-            return atom.BondedAtoms[edge];
-        }
-
-        //public int GetOutEdge(int atom, int edge)
-        //{
-        //    return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
-        //}
-
-        //public Bond GetOutEdge(Atom atom, int edge)
-        //{
-        //    return atom.BondedAtoms[edge];
-        //}
-
-        public int OutEdgeCount(Atom a)
-        {
-            return a.Degree;
-        }
-
-        //public bool CompatibleNode()
+        
         public double MolecularWeight
         {
             get

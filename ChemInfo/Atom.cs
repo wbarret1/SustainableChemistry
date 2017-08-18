@@ -352,7 +352,7 @@ namespace ChemInfo
             }
         }
 
-       public int WeiningerRank { get; set; } = 0;
+        public int WeiningerRank { get; set; } = 0;
 
         public long WeiningerInitialInvariant
         {
@@ -536,57 +536,6 @@ namespace ChemInfo
             {
                 return m_Bonds;
             }
-        }
-
-        public Bond GetBond(Atom a)
-        {
-            foreach (Bond b in m_Bonds)
-            {
-                if (b.ConnectedAtom == a)
-                    return b;
-            }
-            return null;
-        }
-
-        public Bond[] GetBondsToAtomByElement(Atom a)
-        {
-            List<Bond> bonds = new List<Bond>();
-            foreach (Bond b in m_Bonds)
-            {
-                if (b.ConnectedAtom.Element == a.Element)
-                    bonds.Add(b);
-            }
-            return bonds.ToArray<Bond>();
-        }
-
-        public Bond[] GetBondsToElement(ELEMENTS element)
-        {
-            List<Bond> bonds = new List<Bond>();
-            foreach (Bond b in m_Bonds)
-            {
-                if (b.ConnectedAtom.Element == element)
-                    bonds.Add(b);
-            }
-            return bonds.ToArray<Bond>();
-        }
-
-        public Bond[] GetBondsToElementSymbol(String element)
-        {
-            List<Bond> bonds = new List<Bond>();
-            foreach (Bond b in m_Bonds)
-            {
-                if (b.ConnectedAtom.Element.ToString() == element)
-                    bonds.Add(b);
-            }
-            return bonds.ToArray<Bond>();
-        }
-
-        public Bond[] GetCompatibileBonds(Bond bondToCompare)
-        {
-            List<Bond> bonds = new List<Bond>();
-            foreach (Bond b in m_Bonds)
-                if (b.CompareTo(bondToCompare)) bonds.Add(b);
-            return bonds.ToArray<Bond>();
         }
 
         public int Degree

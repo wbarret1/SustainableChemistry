@@ -715,7 +715,32 @@ namespace ChemInfo
 
             if (t_1.Count > core_1.Count && t_2.Count > core_1.Count)
             {
-                while ()
+//<<<<<<< HEAD
+                while (prevAtom2 != null || (out_1.Peek() != m2.GetAtoms()[0]) && in_1.Peek() != m2.GetAtoms()[0])
+                {
+                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                }
+            }
+            else if (out_1.Count > core_1.Count && out_2.Count > core_1.Count)
+            {
+                while (prevAtom2 != null || (out_1.Peek() != m2.GetAtoms()[0]))
+                {
+                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                }
+            }
+            else if (in_1.Count > core_1.Count && in_2.Count > core_1.Count)
+            {
+                while (prevAtom2 != null || (in_1.Peek() != m2.GetAtoms()[0]))
+                {
+                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                }
+            }
+            else
+            {
+                while (prevAtom2 != m2.GetAtoms()[m2.GetAtoms().Length - 1])
+                {
+                    prevAtom2 = m2.getNextAtom(prevAtom1);
+                }
             }
 
             if ((prevAtom1 != m1.GetAtoms()[m1.GetAtoms().Length - 1]) && (prevAtom2 != m2.GetAtoms()[m2.GetAtoms().Length - 1]))
@@ -856,8 +881,8 @@ namespace ChemInfo
 
 //        }
 
-        public abstract void BackTrack()
-        {
+//        public abstract void BackTrack()
+//        {
 
 //        }
 

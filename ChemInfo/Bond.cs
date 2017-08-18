@@ -134,16 +134,6 @@ namespace ChemInfo
             }
         }
 
-        public bool CompareTo(Bond b)
-        {
-            if (b.ParentAtom.Element != this.ParentAtom.Element) return false;
-            if (b.ConnectedAtom.Element != this.ConnectedAtom.Element) return false;
-            if (b.BondType != m_bondType) return false;
-            if (b.Stereo != m_bondStereo) return false;
-            if (b.Topology != m_BondTopology) return false;
-            return true;
-        }
-
         public double DistanceBetweenAtoms
         {
             get
