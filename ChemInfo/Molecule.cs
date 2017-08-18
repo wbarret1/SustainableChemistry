@@ -68,7 +68,7 @@ namespace ChemInfo
         {
             if (atomsCount.Contains(a.Element))
             {
-                atomsCount[a.Element] = ((int)atomsCount[a.Element])+1;
+                atomsCount[a.Element] = ((int)atomsCount[a.Element]) + 1;
                 return;
             }
             atomsCount.Add(a.Element, 1);
@@ -122,7 +122,52 @@ namespace ChemInfo
         //    return 0;
         //}
 
-        
+        public bool CompatibleAtom(Atom a1, Atom a2)
+        {
+            return a1.Element == a2.Element;
+        }
+
+        public int InEdgeCount(int atom)
+        {
+            return m_Atoms[atom].Degree;
+        }
+
+        public int OutEdgeCount(int atom)
+        {
+            return m_Atoms[atom].Degree;
+        }
+
+        public int InEdgeCount(Atom a)
+        {
+            return a.Degree;
+        }
+
+        public int GetInEdge(int atom, int edge)
+        {
+            return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
+        }
+
+        public Bond GetInEdge(Atom atom, int edge)
+        {
+            return atom.BondedAtoms[edge];
+        }
+
+        //public int GetOutEdge(int atom, int edge)
+        //{
+        //    return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
+        //}
+
+        //public Bond GetOutEdge(Atom atom, int edge)
+        //{
+        //    return atom.BondedAtoms[edge];
+        //}
+
+        public int OutEdgeCount(Atom a)
+        {
+            return a.Degree;
+        }
+
+        //public bool CompatibleNode()
         public double MolecularWeight
         {
             get
@@ -430,7 +475,7 @@ namespace ChemInfo
         //    END IF
         //END PROCEDURE
 
-        
+
 
         int CompareArrayByCount<T>(T[] array1, T[] array2)
         {
@@ -835,7 +880,7 @@ namespace ChemInfo
                             }
                         }
                     }
-                    foreach(ChemInfo.Bond bond in v.BondedAtoms)
+                    foreach (ChemInfo.Bond bond in v.BondedAtoms)
                     {
                         if (bond.BondType == BondType.Double)
                         {

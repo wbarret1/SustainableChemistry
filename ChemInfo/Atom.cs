@@ -94,7 +94,7 @@ namespace ChemInfo
         }
     };
 
-    public class WeiningerInvariant :Comparer<WeiningerInvariant>
+    public class WeiningerInvariant : Comparer<WeiningerInvariant>
     {
         Atom m_Atom;
         public int NumberOfConnections { get; set; } = 0;
@@ -134,13 +134,13 @@ namespace ChemInfo
         {
             this.NumberOfConnections = a.Degree;
             this.NumberOfNonHydrogenBonds = a.NumberOfNonHydrogens;
-            this.AtomicNumber =a.AtomicNumber;
+            this.AtomicNumber = a.AtomicNumber;
             this.SignOfCharge = a.Charge;
             this.Charge = a.Charge;
             this.NumberOfAttachedHydrogens = a.NumHydrogens;
         }
 
-        public static bool operator > (WeiningerInvariant w1, WeiningerInvariant w2)
+        public static bool operator >(WeiningerInvariant w1, WeiningerInvariant w2)
         {
             // Number of connections is the first test.
             if (w1.NumberOfConnections > w2.NumberOfConnections) return true;
@@ -198,8 +198,8 @@ namespace ChemInfo
                 (w1.AtomicNumber == w2.AtomicNumber) &&
             // Sign of charge, and then charge, but why both. I'm guessing 1980s computer issues that Moore's Law solved.
             // This can be done in one sort, which the same results, especially since the comparer returns an integer.
-                (w1.SignOfCharge == w2.SignOfCharge) && 
-            // Next is number of attached hydrogens.
+                (w1.SignOfCharge == w2.SignOfCharge) &&
+                // Next is number of attached hydrogens.
                 (w1.NumberOfAttachedHydrogens == w2.NumberOfAttachedHydrogens)) return false;
             return true;
         }
@@ -389,14 +389,14 @@ namespace ChemInfo
 
         public Atom RemoveOneHydrogen()
         {
-            foreach(Atom a in this.ConnectedAtoms)
+            foreach (Atom a in this.ConnectedAtoms)
             {
-                if(a.Element == ELEMENTS.H)
+                if (a.Element == ELEMENTS.H)
                 {
                     Bond bondToRemove = null;
-                    foreach(Bond b in this.m_Bonds)
+                    foreach (Bond b in this.m_Bonds)
                     {
-                        if(b.ConnectedAtom == a) bondToRemove = b;
+                        if (b.ConnectedAtom == a) bondToRemove = b;
                     }
                     if (bondToRemove != null)
                     {
@@ -404,7 +404,7 @@ namespace ChemInfo
                         this.m_ConnectedAtoms.Remove(a);
                         return a;
                     }
-               }
+                }
             }
             return null;
         }
@@ -538,6 +538,57 @@ namespace ChemInfo
             }
         }
 
+        public Bond GetBond(Atom a)
+        {
+            foreach (Bond b in m_Bonds)
+            {
+                if (b.ConnectedAtom == a)
+                    return b;
+            }
+            return null;
+        }
+
+        public Bond[] GetBondsToAtomByElement(Atom a)
+        {
+            List<Bond> bonds = new List<Bond>();
+            foreach (Bond b in m_Bonds)
+            {
+                if (b.ConnectedAtom.Element == a.Element)
+                    bonds.Add(b);
+            }
+            return bonds.ToArray<Bond>();
+        }
+
+        public Bond[] GetBondsToElement(ELEMENTS element)
+        {
+            List<Bond> bonds = new List<Bond>();
+            foreach (Bond b in m_Bonds)
+            {
+                if (b.ConnectedAtom.Element == element)
+                    bonds.Add(b);
+            }
+            return bonds.ToArray<Bond>();
+        }
+
+        public Bond[] GetBondsToElementSymbol(String element)
+        {
+            List<Bond> bonds = new List<Bond>();
+            foreach (Bond b in m_Bonds)
+            {
+                if (b.ConnectedAtom.Element.ToString() == element)
+                    bonds.Add(b);
+            }
+            return bonds.ToArray<Bond>();
+        }
+
+        public Bond[] GetCompatibileBonds(Bond bondToCompare)
+        {
+            List<Bond> bonds = new List<Bond>();
+            foreach (Bond b in m_Bonds)
+                if (b.CompareTo(bondToCompare)) bonds.Add(b);
+            return bonds.ToArray<Bond>();
+        }
+
         public int Degree
         {
             get
@@ -560,7 +611,7 @@ namespace ChemInfo
                     }
                     if (b == null)
                     {
-                        foreach(Bond testBond in a.BondedAtoms)
+                        foreach (Bond testBond in a.BondedAtoms)
                         {
                             if (testBond.ConnectedAtom == this) b = testBond;
                         }
@@ -608,7 +659,7 @@ namespace ChemInfo
             get
             {
                 int retVal = 0;
-                foreach(Atom a in this.m_ConnectedAtoms)
+                foreach (Atom a in this.m_ConnectedAtoms)
                 {
                     if (a.Element != ELEMENTS.H) retVal++;
                 }
@@ -700,12 +751,13 @@ namespace ChemInfo
         {
             get
             {
-                int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71};
+                int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71 };
                 int retVal = 1;
                 foreach (Atom a in m_ConnectedAtoms)
                 {
                     retVal = retVal * a.WeiningerRank;
-                }return retVal;
+                }
+                return retVal;
             }
         }
 
