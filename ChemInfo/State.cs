@@ -46,7 +46,7 @@ namespace ChemInfo
     public class VF2SubState : State
     {
         Molecule m1, m2;
-
+        bool ordered;
         Atom addedAtom1;
 
         Stack<Atom> core_1;
@@ -87,15 +87,40 @@ namespace ChemInfo
 
             if (t_1.Count > core_1.Count && t_2.Count > core_1.Count)
             {
-                while ()
+                while (prevAtom1 != m1.GetAtoms()[m1.GetAtoms().Length-1] && (!core_1.Contains(prevAtom1) || !t_1.Contains(prevAtom1) || !t_1.Contains(prevAtom1))){
+                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom2 = m2.GetAtoms()[0];
+                    }
             }
+            else if (out_1.Count > core_1.Count && out_2.Count > core_1.Count)
+            {
+                while (prevAtom1 != m1.GetAtoms()[m1.GetAtoms().Length-1] && (!core_1.Contains(prevAtom1) || !out_1.Contains(prevAtom1))){
+                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom2 = m2.GetAtoms()[0];
+                    }
+            }
+           else if (in_1.Count > core_1.Count && in_2.Count > core_1.Count)
+            {
+                while (prevAtom1 != m1.GetAtoms()[m1.GetAtoms().Length-1] && (!core_1.Contains(prevAtom1) || !in_1.Contains(prevAtom1))){
+                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom2 = m2.GetAtoms()[0];
+                    }
+            }
+            else if ((prevAtom1 == m1.GetAtoms()[0]) && !ordered )
+{
+                while (true)
+{
+
+}
+
+                }
 
             return false;
 
         }
         public override bool isFeasiblePair(Atom atom1, Atom atom2)
         {
-
+            return false;
         }
         public override void AddPair(Atom atom1, Atom atom2)
         {
@@ -103,17 +128,17 @@ namespace ChemInfo
             core_2.Push(atom1);
             addedAtom1 = atom1;
             if (!in_1.Contains(atom1)){
-                in_1.Add(atom1);
+                in_1.Push(atom1);
             }
 
-            out_1.Add(atom1);
+            out_1.Push(atom1);
 
 
         }
         public override bool IsGoal() { return core_1.Count == m1.GetAtoms().Length && core_2.Count == m2.GetAtoms().Length; }
         public override bool IsDead()
         {
-
+            return false;
         }
         public override int CoreLen() { return core_1.Count; }
         public override void GetCoreSet(Atom a1, Atom a2)
@@ -121,7 +146,7 @@ namespace ChemInfo
 
         }
 
-        public abstract void BackTrack()
+        public override void BackTrack()
         {
 
         }
