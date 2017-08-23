@@ -234,8 +234,11 @@ namespace ChemInfo
                 if (aromatic.Length > 0)
                 {
                     current = new Atom(aromatic.Value.ToUpper(), AtomType.AROMATIC);
-                    nextBond = BondType.Aromatic;
+                    nextBond = BondType.Single;
                     molecule.AddAtom(current);
+                    if (last.Element != ELEMENTS.C)
+                    {
+                    }
                     molecule.AddBond(last, current, BondType.Aromatic, BondStereo.NotStereoOrUseXYZ, BondTopology.Ring, BondReactingCenterStatus.Unmarked);
                     last = current;
                     smileLeftToParse = smileLeftToParse.Remove(0, 1);

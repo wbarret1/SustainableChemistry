@@ -35,6 +35,7 @@
             this.enterSMILEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.functionalityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.phosphorousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findSMARTSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -44,7 +45,8 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.findSMARTSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testSubgraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -65,7 +67,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.functionalityToolStripMenuItem});
+            this.functionalityToolStripMenuItem,
+            this.testsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(824, 24);
@@ -116,6 +119,13 @@
             this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.phosphorousToolStripMenuItem.Text = "Phosphorous";
             this.phosphorousToolStripMenuItem.Click += new System.EventHandler(this.phosphorousToolStripMenuItem_Click);
+            // 
+            // findSMARTSToolStripMenuItem
+            // 
+            this.findSMARTSToolStripMenuItem.Name = "findSMARTSToolStripMenuItem";
+            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.findSMARTSToolStripMenuItem.Text = "Find SMARTS";
+            this.findSMARTSToolStripMenuItem.Click += new System.EventHandler(this.findSMARTSToolStripMenuItem_Click);
             // 
             // listBox1
             // 
@@ -254,12 +264,20 @@
             this.tabPage2.Text = "Functionalities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // findSMARTSToolStripMenuItem
+            // testsToolStripMenuItem
             // 
-            this.findSMARTSToolStripMenuItem.Name = "findSMARTSToolStripMenuItem";
-            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.findSMARTSToolStripMenuItem.Text = "Find SMARTS";
-            this.findSMARTSToolStripMenuItem.Click += new System.EventHandler(this.findSMARTSToolStripMenuItem_Click);
+            this.testsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testSubgraphToolStripMenuItem});
+            this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.testsToolStripMenuItem.Text = "Tests";
+            // 
+            // testSubgraphToolStripMenuItem
+            // 
+            this.testSubgraphToolStripMenuItem.Name = "testSubgraphToolStripMenuItem";
+            this.testSubgraphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testSubgraphToolStripMenuItem.Text = "Test Subgraph";
+            this.testSubgraphToolStripMenuItem.Click += new System.EventHandler(this.testSubgraphToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -311,6 +329,8 @@
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private MoleculeViewer moleculeViewer1;
         private System.Windows.Forms.ToolStripMenuItem findSMARTSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testSubgraphToolStripMenuItem;
     }
 }
 

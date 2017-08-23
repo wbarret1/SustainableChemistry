@@ -43,6 +43,7 @@ namespace ChemInfo
 
         public Atom getNextAtom(Atom a)
         {
+            if (a == m_Atoms[m_Atoms.Count-1]) return null;
             return m_Atoms[m_Atoms.IndexOf(a) + 1];
         }
 
@@ -122,52 +123,6 @@ namespace ChemInfo
         //    return 0;
         //}
 
-        public bool CompatibleAtom(Atom a1, Atom a2)
-        {
-            return a1.Element == a2.Element;
-        }
-
-        public int InEdgeCount(int atom)
-        {
-            return m_Atoms[atom].Degree;
-        }
-
-        public int OutEdgeCount(int atom)
-        {
-            return m_Atoms[atom].Degree;
-        }
-
-        public int InEdgeCount(Atom a)
-        {
-            return a.Degree;
-        }
-
-        public int GetInEdge(int atom, int edge)
-        {
-            return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
-        }
-
-        public Bond GetInEdge(Atom atom, int edge)
-        {
-            return atom.BondedAtoms[edge];
-        }
-
-        //public int GetOutEdge(int atom, int edge)
-        //{
-        //    return m_Atoms.IndexOf(m_Atoms[atom].BondedAtoms[edge].ConnectedAtom);
-        //}
-
-        //public Bond GetOutEdge(Atom atom, int edge)
-        //{
-        //    return atom.BondedAtoms[edge];
-        //}
-
-        public int OutEdgeCount(Atom a)
-        {
-            return a.Degree;
-        }
-
-        //public bool CompatibleNode()
         public double MolecularWeight
         {
             get
@@ -447,34 +402,33 @@ namespace ChemInfo
             }
         }
 
-        public void FindSmarts(string smart)
+        public bool FindSmarts(string smart, ref int[] group)
         {
             smilesParser parser = new smilesParser(smart);
             Molecule m = parser.Parse();
             int pn = 0;
-            Atom[] matches = null;
-            Atom[] group = null;
-            this.Match(ref pn, ref matches, ref group, new VF2SubState(this, m, false));
+            int[] matches = null;
+            return this.Match(ref pn, ref matches, ref group, new VF2SubState(m, this, false));
         }
 
-        bool Match(ref int pn, ref Atom[] c1, ref Atom[] c2, State s)
+        internal bool Match(ref int pn, ref int[] c1, ref int[] c2, State s)
         {
             if (s.IsGoal())
             {
                 pn = s.CoreLen();
-                c1 = s.GetCoreSet();
+                s.GetCoreSet(ref c1, ref c2);
                 return true;
             }
 
             if (s.IsDead())
                 return false;
 
-            Atom n1 = null;
-            Atom n2 = null;
+            int n1 = -1;
+            int n2 = -1;
             bool found = false;
             while (!found && s.NextPair(ref n1, ref n2, n1, n2))
             {
-                if (s.isFeasiblePair(n1, n2))
+                if (s.IsFeasiblePair(n1, n2))
                 {
                     State s1 = s.Clone();
                     s1.AddPair(n1, n2);
@@ -486,7 +440,135 @@ namespace ChemInfo
             return found;
         }
 
-       int CompareArrayByCount<T>(T[] array1, T[] array2)
+        internal bool HasEdge(int n1, int n2)
+        {
+            Atom[] atoms = this.m_Atoms[n1].ConnectedAtoms;
+            foreach (Atom a in atoms)
+            {
+                if (this.m_Atoms.IndexOf(a) > -1) return true;
+            }
+            return false;
+        }
+
+        internal bool HasEdge(Atom n1, Atom n2)
+        {
+            Atom[] atoms = n1.ConnectedAtoms;
+            foreach (Atom a in atoms)
+            {
+                if (a == n2) return true;
+            }
+            return false;
+        }
+
+        internal Bond GetEdgeAttr(int n1, int n2)
+        {
+            return this.GetBond(m_Atoms[n1], m_Atoms[n2]);
+        }
+
+        internal Bond GetEdgeAttr(Atom n1, Atom n2)
+        {
+            return this.GetBond(n1, n2);
+        }
+
+        internal int InEdgeCount(int node)
+        {
+            return m_Atoms[node].Degree;
+        }
+
+        internal int InEdgeCount(Atom node)
+        {
+            return node.Degree;
+        }
+
+        internal int OutEdgeCount(int node)
+        {
+            return m_Atoms[node].Degree;
+        }
+
+        internal int OutEdgeCount(Atom node)
+        {
+            return node.Degree;
+        }
+
+        internal int EdgeCount(int node)
+        {
+            return m_Atoms[node].Degree;
+        }
+
+        internal int EdgeCount(Atom node)
+        {
+            return node.Degree;
+        }
+
+        internal int GetInEdge(int node, int i)
+        {
+            Atom a = m_Atoms[node].ConnectedAtoms[i];
+            return m_Atoms.IndexOf(a);
+        }
+
+        internal Atom GetInEdge(Atom node, int i)
+        {
+            return node.ConnectedAtoms[i];
+        }
+
+        internal int GetInEdge(int node, int i, ref Bond pattr)
+        {
+            Atom a = m_Atoms[node].ConnectedAtoms[i];
+            pattr = this.GetBond(m_Atoms[node], a);
+            return m_Atoms.IndexOf(a);
+        }
+
+        internal Atom GetInEdge(Atom node, int i, ref Bond pattr)
+        {
+            Atom a = node.ConnectedAtoms[i];
+            pattr = this.GetBond(node, a);
+            return a;
+        }
+
+        internal int GetOutEdge(int node, int i)
+        {
+            Atom a = m_Atoms[node].ConnectedAtoms[i];
+            return m_Atoms.IndexOf(a);
+        }
+
+        internal Atom GetOutEdge(Atom node, int i)
+        {
+            return node.ConnectedAtoms[i];
+        }
+
+        internal int GetOutEdge(int node, int i, ref Bond pattr)
+        {
+            Atom a = m_Atoms[node].ConnectedAtoms[i];
+            pattr = this.GetBond(m_Atoms[node], a);
+            return m_Atoms.IndexOf(a);
+        }
+
+        internal Atom GetOutEdge(Atom node, int i, ref Bond pattr)
+        {
+            Atom a = node.ConnectedAtoms[i];
+            pattr = this.GetBond(node, a);
+            return a;
+        }
+
+        internal bool CompatibleNode(ELEMENTS attr1, ELEMENTS attr2)
+        {
+            return (attr1 == attr2);
+        }
+
+        internal bool CompatibleEdge(Bond attr1, Bond attr2)
+        {
+            if (attr2 == null) return false;
+            if (attr1.BondType != attr2.BondType) return false;
+            return true;
+        }
+
+        internal ELEMENTS GetNodeAttr(int i)
+        {
+            return m_Atoms[i].Element;
+        }
+
+
+        int CompareArrayByCount<T>(T[] array1, T[] array2)
         {
             return array1.Length - array2.Length;
         }

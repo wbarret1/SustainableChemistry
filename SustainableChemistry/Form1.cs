@@ -109,7 +109,71 @@ namespace SustainableChemistry
 
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.molecule.FindSmarts("[H]P([H])[H]");
+            int[] atoms = null;
+            this.molecule.FindSmarts("NP(=O)(C)C", ref atoms);
+        }
+
+        private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] molecules = {"COP(OC)OC",
+                "CCOP(C)OCC",
+                "COP(C1=CC=CC=C1)C2=CC=CC=C2",
+                "P(c1ccccc1)(c1ccccc1)c1ccccc1",
+                "CCN(CC)P(OC)OC",
+                "CC(C)N(C(C)C)P(N(C(C)C)C(C)C)OCCC#N",
+                "O(P(N(C)C)C)C",
+                "C(COP(O)S)NC(=O)CS",
+                "CCOP(SC)SC(C)C",
+                "COP(=O)(OC)OC",
+                "COP(=O)(C)OC",
+                "CCOP(=O)(C1=CC=CC=C1)C2=CC=CC=C2",
+                "C1=CC=C(C=C1)P(=O)(C2=CC=CC=C2)C3=CC=CC=C3",
+                "CCOP(=O)(N)OCC",
+                "CCOP(=O)(N(C)C)N(C)C",
+                "CN(C)P(=O)(N(C)C)N(C)C",
+                "CCCOC1=CC=C(C=C1)NP(=O)(C)OC2=CC=C(C=C2)CC",
+                "C1=CC=C(C=C1)P(=O)(C2=CC=CC=C2)N",
+                "CCOP(=S)(OCC)OCC",
+                "CCOP(=S)(OCC)SCC",
+                "CN(C)P(=O)(C)N(C)C"};
+            string[] groups = {"OP(O)O",
+                "OP(C)O",
+                "OP(C)C",
+                "CP(C)C",
+                "NP(O)O",
+                "NP(N)O",
+                "OP(N)C",
+                "OP(O)S",
+                "OP(S)S",
+                "OP(=O)(O)O",
+                "OP(=O)(O)C",
+                "OP(=O)(C)C",
+                "CP(=O)(C)C",
+                "OP(=O)(N)O",
+                "OP(=O)(N)N",
+                "NP(=O)(N)N",
+                "NP(=O)(C)O",
+                "NP(=O)(C)C",
+                "OP(=S)(O)O",
+                "OP(=S)(O)S",
+                "NP(=O)(C)N"};
+            ChemInfo.Molecule m = null;
+            ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
+            int[] temp = null;
+            foreach (string molecule in molecules)
+            {
+                parser.SMILE = molecule;
+                m = parser.Parse();
+                bool found = false;
+                foreach (string smart in groups)
+                {
+                    if (m.FindSmarts(smart, ref temp)) found = true;
+                }
+                if (!found)
+                {
+                    MessageBox.Show(molecule);
+                }
+            }
         }
     }
 }

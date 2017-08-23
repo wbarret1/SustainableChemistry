@@ -237,7 +237,6 @@ namespace ChemInfo
         int color;
         int _x = 0;
         int _y = 0;
-        int _angle = 0;
         public bool Visited { get; set; } = false;
         System.Random random = new Random();
 
