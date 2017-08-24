@@ -127,12 +127,12 @@ namespace SustainableChemistry
                 "COP(=O)(OC)OC",
                 "COP(=O)(C)OC",
                 "CCOP(=O)(C1=CC=CC=C1)C2=CC=CC=C2",
-                "C1=CC=C(C=C1)P(=O)(C2=CC=CC=C2)C3=CC=CC=C3",
+                "P(c1ccccc1)(c1ccccc1)(c1ccccc1)=O",
                 "CCOP(=O)(N)OCC",
                 "CCOP(=O)(N(C)C)N(C)C",
                 "CN(C)P(=O)(N(C)C)N(C)C",
-                "CCCOC1=CC=C(C=C1)NP(=O)(C)OC2=CC=C(C=C2)CC",
-                "C1=CC=C(C=C1)P(=O)(C2=CC=CC=C2)N",
+                "CCCc1ccccc1NP(=O)(C)Oc1ccccc1CC",
+                "P(c1ccccc1)(c1ccccc1)(N)=O",
                 "CCOP(=S)(OCC)OCC",
                 "CCOP(=S)(OCC)SCC",
                 "CN(C)P(=O)(C)N(C)C"};
@@ -174,6 +174,7 @@ namespace SustainableChemistry
                     MessageBox.Show(molecule);
                 }
             }
+            MessageBox.Show("Test Completed Successfully");
         }
     }
 }
