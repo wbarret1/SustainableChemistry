@@ -43,7 +43,7 @@ namespace ChemInfo
 
         public Atom getNextAtom(Atom a)
         {
-            if (a == m_Atoms[m_Atoms.Count-1]) return null;
+            if (a == m_Atoms[m_Atoms.Count - 1]) return null;
             return m_Atoms[m_Atoms.IndexOf(a) + 1];
         }
 
@@ -411,6 +411,18 @@ namespace ChemInfo
             return this.Match(ref pn, ref matches, ref group, new VF2SubState(m, this, false));
         }
 
+        public bool FindSmarts2(string smart, ref Atom[] group)
+        {
+            smilesParser parser = new smilesParser(smart);
+            Molecule m = parser.Parse();
+            Stack<Atom> temp = new Stack<Atom>();
+            Stack<Atom> matches = new Stack<Atom>();
+            int pn = 0;
+            bool result = this.Match(temp, matches, new VF2SubState2(m, this, false));
+            //bool result = this.Match(null, null, temp, matches, m);
+            return result;
+        }
+
         internal bool Match(ref int pn, ref int[] c1, ref int[] c2, State s)
         {
             if (s.IsGoal())
@@ -440,6 +452,92 @@ namespace ChemInfo
             return found;
         }
 
+        internal bool Match(Stack<Atom> atomsInGroup, Stack<Atom> matchedInMolecule, State2 s)
+        {
+            if (s.IsGoal())
+            {
+                //pn = s.CoreLen();
+                //s.GetCoreSet(ref c1, ref c2);
+                return true;
+            }
+
+            Atom n1 = null;
+            Atom n2 = null;
+            bool found = false;
+            while (!found && s.NextPair(ref n1, ref n2, n1, n2))
+            {
+                if (s.isFeasiblePair(n1, n2))
+                {
+                    State2 s1 = s.Clone();
+                    s1.AddPair(n1, n2);
+                    found = Match(atomsInGroup, matchedInMolecule, s1);
+                    s1.BackTrack();
+                    //delete s1;
+                }
+            }
+            return found;
+        }
+
+        internal bool Match(Atom currentInGroup, Atom currentInMolecule, Stack<Atom> atomsInGroup, Stack<Atom> matchedInMolecule, Molecule groupToMatch)
+        {
+            if (atomsInGroup.Count == groupToMatch.GetAtoms().Length)
+            {
+                //pn = s.CoreLen();
+                //s.GetCoreSet(ref c1, ref c2);
+                return true;
+            }
+
+            Atom currentGroupParent = currentInGroup;
+            currentInGroup = groupToMatch.getNextAtom(currentInGroup);
+            Atom currentMoleculeParent = currentInMolecule;
+            while (currentInGroup != null)
+            {
+                currentInMolecule = m_Atoms[0];
+                while (currentInMolecule != null)
+                {
+                    foreach (Atom next in currentInGroup.ConnectedAtoms)
+                    {
+                        if (next != currentGroupParent)
+                        {
+                            foreach (Atom nextInMolecule in currentInMolecule.ConnectedAtoms)
+                            {
+                                if (nextInMolecule != currentMoleculeParent)
+                                {
+                                    if (next.Element == nextInMolecule.Element)
+                                    {
+                                        Bond b1 = groupToMatch.GetBond(next, currentInGroup);
+                                        Bond b2 = this.GetBond(nextInMolecule, currentInMolecule);
+                                        if (b1.BondType == b2.BondType)
+                                        {
+                                            atomsInGroup.Push(currentInGroup);
+                                            matchedInMolecule.Push(currentInMolecule);
+                                            if (Match(next, currentInGroup, atomsInGroup, matchedInMolecule, groupToMatch)) return true;
+                                            matchedInMolecule.Pop();
+                                            atomsInGroup.Pop();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    currentMoleculeParent = currentInMolecule;
+                    currentInMolecule = this.getNextAtom(currentInMolecule);
+                }
+                currentMoleculeParent = null;
+                currentGroupParent = currentInGroup;
+                currentInGroup = groupToMatch.getNextAtom(currentInGroup);
+            }
+            return false;
+        }
+
+        internal Atom NextConnectedAtom(Atom atom, Atom currentConnectedAtom)
+        {
+            if (currentConnectedAtom == null) return atom.ConnectedAtoms[0];
+            for (int i = 0; i < atom.ConnectedAtoms.Length - 1; i++)
+                if (atom.ConnectedAtoms[i] == currentConnectedAtom) return atom.ConnectedAtoms[i + 1];
+            return null;
+        }
+
         internal bool HasEdge(int n1, int n2)
         {
             Atom[] atoms = this.m_Atoms[n1].ConnectedAtoms;
@@ -452,12 +550,7 @@ namespace ChemInfo
 
         internal bool HasEdge(Atom n1, Atom n2)
         {
-            Atom[] atoms = n1.ConnectedAtoms;
-            foreach (Atom a in atoms)
-            {
-                if (a == n2) return true;
-            }
-            return false;
+            return n1.ConnectedAtoms.Contains(n2);
         }
 
         internal Bond GetEdgeAttr(int n1, int n2)
@@ -553,6 +646,11 @@ namespace ChemInfo
         internal bool CompatibleNode(ELEMENTS attr1, ELEMENTS attr2)
         {
             return (attr1 == attr2);
+        }
+
+        internal bool CompatibleAtom(Atom atom1, Atom atom2)
+        {
+            return (atom1.Element == atom2.Element);
         }
 
         internal bool CompatibleEdge(Bond attr1, Bond attr2)

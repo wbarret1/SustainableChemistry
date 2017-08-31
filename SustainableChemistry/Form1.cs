@@ -109,8 +109,8 @@ namespace SustainableChemistry
 
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int[] atoms = null;
-            this.molecule.FindSmarts("NP(=O)(C)C", ref atoms);
+            ChemInfo.Atom[] atoms = null;
+            this.molecule.FindSmarts2("NP(=O)(C)C", ref atoms);
         }
 
         private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
@@ -157,9 +157,10 @@ namespace SustainableChemistry
                 "OP(=S)(O)O",
                 "OP(=S)(O)S",
                 "NP(=O)(C)N"};
+            DateTime start = DateTime.Now;
             ChemInfo.Molecule m = null;
             ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
-            int[] temp = null;
+            ChemInfo.Atom[] temp = null;
             foreach (string molecule in molecules)
             {
                 parser.SMILE = molecule;
@@ -167,14 +168,14 @@ namespace SustainableChemistry
                 bool found = false;
                 foreach (string smart in groups)
                 {
-                    if (m.FindSmarts(smart, ref temp)) found = true;
+                    if (m.FindSmarts2(smart, ref temp)) found = true;
                 }
                 if (!found)
                 {
                     MessageBox.Show(molecule);
                 }
             }
-            MessageBox.Show("Test Completed Successfully");
+            MessageBox.Show("Time Required is: " + (double)DateTime.Now.Subtract(start).Milliseconds + " milliseconds", "Test Completed Successfully");
         }
     }
 }

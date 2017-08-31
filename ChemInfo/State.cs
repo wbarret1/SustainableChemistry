@@ -27,28 +27,28 @@ namespace ChemInfo
     *   can safely assume that at most one AddPair has been
     *   performed on the state.
     ---------------------------------------------------------*/
-    //public abstract class State
-    //{
-    //    public abstract State Clone();
-    //    public abstract Molecule GetMolecule1();
-    //    public abstract Molecule GetMolecule2();
-    //    public abstract bool NextPair(ref Atom nextAtom1, ref Atom nextAtom2, Atom prevAtom1 = null, Atom prevAtom2 = null);
-    //    public abstract bool isFeasiblePair(Atom atom1, Atom atom2);
-    //    public abstract void AddPair(Atom atom1, Atom atom2);
-    //    public abstract bool IsGoal();
-    //    public abstract bool IsDead();
-    //    public abstract int CoreLen();
-    //    public abstract Atom[] GetCoreSet();
-    //    public abstract void BackTrack();
-    //}
+    public abstract class State2
+    {
+        public abstract State2 Clone();
+        public abstract Molecule GetMolecule1();
+        public abstract Molecule GetMolecule2();
+        public abstract bool NextPair(ref Atom nextAtom1, ref Atom nextAtom2, Atom prevAtom1 = null, Atom prevAtom2 = null);
+        public abstract bool isFeasiblePair(Atom atom1, Atom atom2);
+        public abstract void AddPair(Atom atom1, Atom atom2);
+        public abstract bool IsGoal();
+        public abstract bool IsDead();
+        public abstract int CoreLen();
+        public abstract void GetCoreSet(ref Atom[] a1, ref Atom[] a2);
+        public abstract void BackTrack();
+    }
 
     public abstract class State
     {
 
         //  public:
         //virtual ~State() { }
-        //  public abstract Atom[] GetGraph1();
-        //public abstract Graph* GetGraph2();
+        public abstract Atom[] GetGraph1();
+        public abstract Atom[] GetGraph2();
         public abstract bool NextPair(ref int pn1, ref int pn2,
                       int prev_n1, int prev_n2);
         public abstract bool IsFeasiblePair(int n1, int n2);
@@ -261,6 +261,15 @@ namespace ChemInfo
         //    }
         //}
 
+        public override Atom[] GetGraph1()
+        {
+            return g1.GetAtoms();
+        }
+
+        public override Atom[] GetGraph2()
+        {
+            return g2.GetAtoms();
+        }
 
         /*--------------------------------------------------------------------------
          * bool VF2SubState::NextPair(pn1, pn2, prev_n1, prev_n2)
@@ -684,257 +693,182 @@ namespace ChemInfo
 
 
 
-        //public class VF2SubState : State
-        //{
-        //    Molecule m1, m2;
-        //    Atom addedAtom1;
-        //    bool nodesSorted;
-        //    Stack<Atom> core_1;
-        //    Stack<Atom> core_2;
-        //    Stack<Atom> in_1;
-        //    Stack<Atom> in_2;
-        //    Stack<Atom> out_1;
-        //    Stack<Atom> out_2;
-        //    Stack<Atom> t_1;
-        //    Stack<Atom> t_2;
-        //    int t1_both, t2_both;
+    public class VF2SubState2 : State2
+    {
+        Molecule m1, m2;
+        Atom addedAtom1;
+        Atom addedAtom2;
+        bool nodesSorted;
+        Stack<Atom> core_1;
+        Stack<Atom> core_2;
+        List<Atom> terminal_1;
+        List<Atom> terminal_2;
+        //Stack<Atom> in_1;
+        //Stack<Atom> in_2;
+        //Stack<Atom> out_1;
+        //Stack<Atom> out_2;
+        //Stack<Atom> t_1;
+        //Stack<Atom> t_2;
+        //int t1both_len, t2both_len;
 
-        //    public VF2SubState(Molecule molecule1, Molecule molecule2, bool SortNodes)
-        //    {
-        //        m1 = molecule1;
-        //        m2 = molecule2;
-        //        t1_both = 0;
-        //        t2_both = 0;
-        //        core_1 = new Stack<Atom>();
-        //        core_2 = new Stack<Atom>();
-        //        in_1 = new Stack<Atom>();
-        //        in_2 = new Stack<Atom>();
-        //        out_1 = new Stack<Atom>();
-        //        out_2 = new Stack<Atom>();
-        //        t_1 = new Stack<Atom>();
-        //        t_2 = new Stack<Atom>();
-        //        addedAtom1 = null;
-        //        nodesSorted = SortNodes;
-        //    }
+        public VF2SubState2(Molecule molecule1, Molecule molecule2, bool SortNodes)
+        {
+            m1 = molecule1;
+            m2 = molecule2;
+            //t1both_len = 0;
+            //t2both_len = 0;
+            core_1 = new Stack<Atom>();
+            core_2 = new Stack<Atom>();
+            terminal_1 = new List<Atom>();
+            terminal_2 = new List<Atom>();
+            //in_1 = new Stack<Atom>();
+            //in_2 = new Stack<Atom>();
+            //out_1 = new Stack<Atom>();
+            //out_2 = new Stack<Atom>();
+            //t_1 = new Stack<Atom>();
+            //t_2 = new Stack<Atom>();
+            addedAtom1 = null;
+            nodesSorted = SortNodes;
+        }
 
-        //    public VF2SubState(State s)
-        //    {
-        //        VF2SubState vf2 = (VF2SubState)s;
-        //        m1 = s.GetMolecule1();
-        //        m2 = s.GetMolecule2();
-        //        t1_both = vf2.t1_both;
-        //        t2_both = vf2.t2_both;
-        //        core_1 = vf2.core_1;
-        //        core_2 = vf2.core_2;
-        //        in_1 = vf2.in_1;
-        //        in_2 = vf2.in_2;
-        //        out_1 = vf2.out_1;
-        //        out_2 = vf2.out_2;
-        //        t_1 = vf2.t_1;
-        //        t_2 = vf2.t_2;
-        //        addedAtom1 = vf2.addedAtom1;
-        //        nodesSorted = vf2.nodesSorted;
-        //    }
+        public VF2SubState2(VF2SubState2 s)
+        {
+            VF2SubState2 vf2 = (VF2SubState2)s;
+            m1 = s.GetMolecule1();
+            m2 = s.GetMolecule2();
+            //t1both_len = vf2.t1both_len;
+            //t2both_len = vf2.t2both_len;
+            core_1 = vf2.core_1;
+            core_2 = vf2.core_2;
+            //in_1 = vf2.in_1;
+            //in_2 = vf2.in_2;
+            //out_1 = vf2.out_1;
+            //out_2 = vf2.out_2;
+            //t_1 = vf2.t_1;
+            //t_2 = vf2.t_2;
+            addedAtom1 = vf2.addedAtom1;
+            addedAtom2 = vf2.addedAtom2;
+            nodesSorted = vf2.nodesSorted;
+        }
 
-        //    public override State Clone()
-        //    {
-        //        return new VF2SubState(this);
-        //    }
+        public override State2 Clone()
+        {
+            return new VF2SubState2(this);
+        }
 
-        //    public override Molecule GetMolecule1() { return m1; }
-        //    public override Molecule GetMolecule2() { return m2; }
-        //    public override bool NextPair(ref Atom nextAtom1, ref Atom nextAtom2, Atom prevAtom1 = null, Atom prevAtom2 = null)
-        //    {
-        //        if (prevAtom1 == null)
-        //        {
-        //            prevAtom1 = m1.GetAtoms()[0];
-        //        }
-        //        if (prevAtom2 == null)
-        //        {
-        //            prevAtom2 = m2.GetAtoms()[0];
-        //        }
-        //        else prevAtom2 = m2.getNextAtom(prevAtom2);
+        public override Molecule GetMolecule1() { return m1; }
+        public override Molecule GetMolecule2() { return m2; }
+        public override bool NextPair(ref Atom nextAtom1, ref Atom nextAtom2, Atom prevAtom1 = null, Atom prevAtom2 = null)
+        {
 
-        //        if (core_1.Count == m1.GetAtoms().Length)
-        //        {
+            if (prevAtom1 == null)
+            {
+                nextAtom1 = m1.GetAtoms()[0];
+                nextAtom2 = m2.GetAtoms()[0];
+                return true;
+            }
 
-        //        }
+            if (terminal_1.Count > core_1.Count)
+            {
+                while (core_1.Contains(prevAtom1) && !terminal_1.Contains(prevAtom1))
+                {
+                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom2 = m2.GetAtoms()[0];
+                }
+            }
+            else
+            {
+                while (!core_1.Contains(prevAtom1))
+                {
+                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom2 = m2.GetAtoms()[0];
+                }
+            }
 
-        //        if (prevAtom1 != null && prevAtom2 != null)
-        //        {
-        //            nextAtom1 = prevAtom1;
-        //            nextAtom2 = prevAtom2;
-        //            return true;
-        //        }
-        //        return false;
+            if(terminal_2.Count > core_2.Count)
+            {
+                while (core_2.Contains(prevAtom2) && !terminal_2.Contains(prevAtom2))
+                {
+                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                }
+            }
+            else
+            {
+                while (!core_2.Contains(prevAtom1))
+                    prevAtom2 = m2.getNextAtom(prevAtom2);
+            }
 
-        //        //if (t1_both > core_1.Count && t2_both > core_1.Count)
-        //        //{
-        //        //    while (core_1.Contains(prevAtom1) || in_1.Contains(prevAtom1) || out_1.Contains(prevAtom1))
-        //        //    {
-        //        //        prevAtom1 = m1.getNextAtom(prevAtom1);
-        //        //    }
-        //        //    prevAtom2 = m2.GetAtoms()[0];
-        //        //}
-        //        //else if (out_1.Count > core_1.Count && out_2.Count > core_1.Count)
-        //        //{
-        //        //    while (core_1.Contains(prevAtom1) || out_1.Contains(prevAtom1))
-        //        //    {
-        //        //        prevAtom1 = m1.getNextAtom(prevAtom1);
-        //        //    }
-        //        //    prevAtom2 = m2.GetAtoms()[0];
-        //        //}
-        //        //else if (in_1.Count > core_1.Count && in_2.Count > core_1.Count)
-        //        //{
-        //        //    while (core_1.Contains(prevAtom1) || in_1.Contains(prevAtom1))
-        //        //    {
-        //        //        prevAtom1 = m1.getNextAtom(prevAtom1);
-        //        //    }
-        //        //    prevAtom2 = m2.GetAtoms()[0];
-        //        //}
-        //        //else if (prevAtom1 == m1.GetAtoms()[0] && nodesSorted)
-        //        //{
+            if (prevAtom1 != null && prevAtom2 != null)
+            {
+                nextAtom1 = prevAtom1;
+                nextAtom2 = prevAtom2;
+                return true;
+            }
+            return false;
+        }
 
-        //        //}
-        //        //else
-        //        //{
-        //        //    while (core_1.Contains(prevAtom1))
-        //        //    {
-        //        //        prevAtom1 = m1.getNextAtom(prevAtom1);
-        //        //    }
-        //        //    prevAtom2 = m2.GetAtoms()[0];
-        //        //}
+        public override bool isFeasiblePair(Atom atom1, Atom atom2)
+        {
+            if (atom1.Element != atom2.Element) return false;
 
-        //        //if (t_1.Count > core_1.Count && t_2.Count > core_1.Count)
-        //        //{
-        //        //    while (core_2.Contains(prevAtom2) || in_2.Contains(prevAtom2) || out_2.Contains(prevAtom2))
-        //        //    {
-        //        //        prevAtom2 = m2.getNextAtom(prevAtom2);
-        //        //    }
-        //        //}
-        //        //else if (out_1.Count > core_1.Count && out_2.Count > core_1.Count)
-        //        //{
-        //        //    while (core_2.Contains(prevAtom2) || out_2.Contains(prevAtom2))
-        //        //    {
-        //        //        prevAtom2 = m2.getNextAtom(prevAtom2);
-        //        //    }
-        //        //}
-        //        //else if (in_1.Count > core_1.Count && in_2.Count > core_1.Count)
-        //        //{
-        //        //    while (core_2.Contains(prevAtom2) || in_2.Contains(prevAtom2) )
-        //        //    {
-        //        //        prevAtom2 = m2.getNextAtom(prevAtom2);
-        //        //    }
-        //        //}
-        //        //else
-        //        //{
-        //        //    while (core_2.Contains(prevAtom2))
-        //        //    {
-        //        //        prevAtom2 = m2.getNextAtom(prevAtom2);
-        //        //    }
-        //        //}
+            foreach (Atom a1 in atom1.ConnectedAtoms)
+            {
+                foreach (Atom a2 in atom2.ConnectedAtoms)
+                {
+                    if (a1.Element == a2.Element)
+                    {
+                        if (a1.GetBond(atom1).BondType == a2.GetBond(atom2).BondType) return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-        //        //if ((prevAtom1 != null) && (prevAtom2 != null))
-        //        //{
-        //        //    nextAtom1 = prevAtom1;
-        //        //    nextAtom2 = prevAtom2;
-        //        //    return true;
-        //        //}
-        //        //return false;
-        //    }
+        public override void AddPair(Atom atom1, Atom atom2)
+        {
+            core_1.Push(atom2);
+            core_2.Push(atom1);
+            terminal_1.AddRange(atom1.ConnectedAtoms);
+            terminal_2.AddRange(atom2.ConnectedAtoms);
+        }
 
-        //    public override bool isFeasiblePair(Atom atom1, Atom atom2)
-        //    {
-        //        if (!this.m1.CompatibleAtom(atom1, atom2))
-        //            return false;
-        //        //Atom[] other2 = atom2.ConnectedAtoms;
-        //        //bool[] matched = new bool[other2.Length];
-        //        //foreach (Atom other1 in atom1.ConnectedAtoms)
-        //        //{
-        //        //    for (int i = 0; i < other2.Length; i++)
-        //        //    {
-        //        //        if (other1.Element == other2[i].Element)
-        //        //        {
-        //        //            if (!matched[i] && atom1.GetBond(other1).BondType == atom2.GetBond(other2[i]).BondType)
-        //        //            {
-        //        //                matched[i] = true;
-        //        //            }
-        //        //        }
-        //        //    }
-        //        //}
-        //        //foreach (bool m in matched)
-        //        //    if (!m) return false;
-        //        return true;
-        //    }
+        public override bool IsGoal()
+        {
+            return core_1.Count == m1.GetAtoms().Length;
+        }
 
-        //    public override void AddPair(Atom atom1, Atom atom2)
-        //    {
-        //        if (!in_1.Contains(atom1))
-        //        {
-        //            in_1.Push(atom1);
-        //            if (out_1.Contains(atom1))
-        //                t1_both++;
-        //        }
-        //        if (!out_1.Contains(atom1))
-        //        {
-        //            out_1.Push(atom1);
-        //            if (in_1.Contains(atom1))
-        //                t1_both++;
-        //        }
-        //        if (!in_2.Contains(atom1))
-        //        {
-        //            in_2.Push(atom2);
-        //            if (out_2.Contains(atom1))
-        //                t2_both++;
-        //        }
-        //        if (!out_2.Contains(atom1))
-        //        {
-        //            out_2.Push(atom2);
-        //            if (in_2.Contains(atom1))
-        //                t2_both++;
-        //        }
-        //        if (!in_1.Contains(atom1)) core_1.Push(atom2);
-        //        if (!in_1.Contains(atom1)) core_2.Push(atom1);
-        //        if (!in_1.Contains(atom1)) addedAtom1 = atom1;            
-        //    }
+        public override bool IsDead()
+        {
+            return m1.GetAtoms().Length > m2.GetAtoms().Length;
+            //bool b2 = t_1.Count > t_2.Count;
+            //bool b3 = out_1.Count > out_2.Count;
+            //bool b4 = in_1.Count > in_2.Count;
+            //return b1 || b2 || b3 || b4;
+        }
 
-        //    public override bool IsGoal()
-        //    {
-        //        return core_1.Count == m1.GetAtoms().Length && core_2.Count == m2.GetAtoms().Length;
-        //    }
+        public override int CoreLen()
+        {
+            return core_1.Count;
+        }
 
-        //    public override bool IsDead()
-        //    {
-        //        bool b1 = m1.GetAtoms().Length > m2.GetAtoms().Length;
-        //        bool b2 = t_1.Count > t_2.Count;
-        //        bool b3 = out_1.Count > out_2.Count;
-        //        bool b4 = in_1.Count > in_2.Count;
-        //        return b1 || b2 || b3 || b4;
-        //    }
+        public override void GetCoreSet(ref Atom[] c1, ref Atom[] c2)
+        {
+            c1 = core_2.ToArray<Atom>();
+            c2 = core_1.ToArray<Atom>(); 
+        }
 
-        //    public override int CoreLen()
-        //    {
-        //        return core_1.Count;
-        //    }
-
-        //    public override Atom[] GetCoreSet()
-        //    {
-        //        return core_1.ToArray<Atom>();
-        //    }
-
-        //    public override void BackTrack()
-        //    {
-        //        if (addedAtom1 == null) return;
-        //        while (core_1.Peek() != addedAtom1 && core_1.Count > 0)
-        //        {
-        //            in_1.Pop();
-        //            out_1.Pop();
-        //            in_2.Pop();
-        //            out_2.Pop();
-        //            core_1.Pop();
-        //            core_2.Pop();
-        //        }
-        //        addedAtom1 = null;
-        //    }
-        //}
+        public override void BackTrack()
+        {
+            Atom a1 = core_1.Pop();
+            Atom a2 = core_2.Pop();
+            foreach (Atom a in a2.ConnectedAtoms)
+            {
+                terminal_1.Remove(a);
+            }
+            foreach (Atom a in a1.ConnectedAtoms)
+            {
+                terminal_2.Remove(a);
+            }
+        }
+    }
 }
