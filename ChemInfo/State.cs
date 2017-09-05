@@ -770,7 +770,7 @@ namespace ChemInfo
 
             if (terminal_1.Count > core_1.Count)
             {
-                while (core_1.Contains(prevAtom1) && !terminal_1.Contains(prevAtom1))
+                while (prevAtom1 != null && (core_1.Contains(prevAtom1) || !terminal_1.Contains(prevAtom1)))
                 {
                     prevAtom1 = m1.getNextAtom(prevAtom1);
                     prevAtom2 = m2.GetAtoms()[0];
@@ -778,7 +778,7 @@ namespace ChemInfo
             }
             else
             {
-                while (!core_1.Contains(prevAtom1))
+                while (prevAtom1 != null && core_1.Contains(prevAtom1))
                 {
                     prevAtom1 = m1.getNextAtom(prevAtom1);
                     prevAtom2 = m2.GetAtoms()[0];
@@ -787,14 +787,14 @@ namespace ChemInfo
 
             if(terminal_2.Count > core_2.Count)
             {
-                while (core_2.Contains(prevAtom2) && !terminal_2.Contains(prevAtom2))
+                while (prevAtom2 != null && (core_2.Contains(prevAtom2) || !terminal_2.Contains(prevAtom2)))
                 {
                     prevAtom2 = m2.getNextAtom(prevAtom2);
                 }
             }
             else
             {
-                while (!core_2.Contains(prevAtom1))
+                while (prevAtom2 != null && core_2.Contains(prevAtom1))
                     prevAtom2 = m2.getNextAtom(prevAtom2);
             }
 
@@ -810,6 +810,8 @@ namespace ChemInfo
         public override bool isFeasiblePair(Atom atom1, Atom atom2)
         {
             if (atom1.Element != atom2.Element) return false;
+
+            if (atom1.Degree == 1) return true;
 
             foreach (Atom a1 in atom1.ConnectedAtoms)
             {
