@@ -466,7 +466,7 @@ namespace ChemInfo
             bool found = false;
             while (!found && s.NextPair(ref n1, ref n2, n1, n2))
             {
-                if (s.isFeasiblePair(n1, n2))
+                if (s.IsFeasiblePair(n1, n2))
                 {
                     State2 s1 = s.Clone();
                     s1.AddPair(n1, n2);
@@ -860,6 +860,18 @@ namespace ChemInfo
             }
         }
 
+        protected void ResetHydrogens()
+        {
+            for (int i = this.m_Atoms.Count - 1; i >= 0; i--)
+            {
+                Atom[] hydrogens = m_Atoms[i].RemoveHydrogens();
+                foreach (Atom a in hydrogens)
+                {
+                    this.m_Atoms.Remove(a);
+                }
+            }
+        }
+
         protected void SetUnboundedPairs()
         {
 
@@ -974,6 +986,8 @@ namespace ChemInfo
                 IterateFGD(i > 25);
                 Temperature *= (1.0 - (double)i / (double)maxIter);
             }
+            ResetHydrogens();
+            
         }
 
         protected void IterateFGD(bool addBonds)

@@ -33,7 +33,7 @@ namespace ChemInfo
         public abstract Molecule GetMolecule1();
         public abstract Molecule GetMolecule2();
         public abstract bool NextPair(ref Atom nextAtom1, ref Atom nextAtom2, Atom prevAtom1 = null, Atom prevAtom2 = null);
-        public abstract bool isFeasiblePair(Atom atom1, Atom atom2);
+        public abstract bool IsFeasiblePair(Atom atom1, Atom atom2);
         public abstract void AddPair(Atom atom1, Atom atom2);
         public abstract bool IsGoal();
         public abstract bool IsDead();
@@ -740,6 +740,8 @@ namespace ChemInfo
             //t2both_len = vf2.t2both_len;
             core_1 = vf2.core_1;
             core_2 = vf2.core_2;
+            terminal_1 = vf2.terminal_1;
+            terminal_2 = vf2.terminal_2;
             //in_1 = vf2.in_1;
             //in_2 = vf2.in_2;
             //out_1 = vf2.out_1;
@@ -763,10 +765,13 @@ namespace ChemInfo
 
             if (prevAtom1 == null)
             {
-                nextAtom1 = m1.GetAtoms()[0];
-                nextAtom2 = m2.GetAtoms()[0];
-                return true;
+                prevAtom1 = m1.GetAtoms()[0];
             }
+            if (prevAtom2 == null)
+            {
+                prevAtom2 = m2.GetAtoms()[0];
+            }
+            else prevAtom2 = m2.getNextAtom(prevAtom2);
 
             if (terminal_1.Count > core_1.Count)
             {
@@ -807,11 +812,37 @@ namespace ChemInfo
             return false;
         }
 
-        public override bool isFeasiblePair(Atom atom1, Atom atom2)
+        public override bool IsFeasiblePair(Atom atom1, Atom atom2)
         {
             if (atom1.Element != atom2.Element) return false;
+            if (atom1.ConnectedAtoms.Length == 1) return true;
 
-            if (atom1.Degree == 1) return true;
+            //int i, other1, other2;
+            //Bond attr1 = null;
+            //int termout1 = 0, termout2 = 0, termin1 = 0, termin2 = 0, new1 = 0, new2 = 0;
+
+            //// Check the 'out' edges of node1
+            //for (i = 0; i < g1.OutEdgeCount(node1); i++)
+            //{
+            //    other1 = g1.GetOutEdge(node1, i, ref attr1);
+            //    if (core_1[other1] != NULL_NODE)
+            //    {
+            //        other2 = core_1[other1];
+            //        if (!g2.HasEdge(node2, other2) ||
+            //            !g1.CompatibleEdge(attr1, g2.GetEdgeAttr(node2, other2)))
+            //            return false;
+            //    }
+            //    else
+            //    {
+            //        if (in_1[other1] != 0)
+            //            termin1++;
+            //        if (out_1[other1] != 0)
+            //            termout1++;
+            //        if (in_1[other1] == 0 && out_1[other1] == 0)
+            //            new1++;
+            //    }
+            //}
+
 
             foreach (Atom a1 in atom1.ConnectedAtoms)
             {
@@ -824,6 +855,29 @@ namespace ChemInfo
                 }
             }
             return false;
+
+
+            //// Check the 'out' edges of node2
+            //for (i = 0; i < g2.OutEdgeCount(node2); i++)
+            //{
+            //    other2 = g2.GetOutEdge(node2, i);
+            //    if (core_2[other2] != NULL_NODE)
+            //    {
+            //        other1 = core_2[other2];
+            //        if (!g1.HasEdge(node1, other1))
+            //            return false;
+            //    }
+            //    else
+            //    {
+            //        if (in_2[other2] != 0)
+            //            termin2++;
+            //        if (out_2[other2] != 0)
+            //            termout2++;
+            //        if (in_2[other2] == 0 && out_2[other2] == 0)
+            //            new2++;
+            //    }
+            //}
+            //return termin1 <= termin2 && termout1 <= termout2 && new1 <= new2;
         }
 
         public override void AddPair(Atom atom1, Atom atom2)

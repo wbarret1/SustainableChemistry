@@ -408,6 +408,29 @@ namespace ChemInfo
             return null;
         }
 
+        public Atom[] RemoveHydrogens()
+        {
+            List<Atom> hydrogens = new List<Atom>();
+            foreach (Atom a in this.ConnectedAtoms)
+            {
+                if (a.Element == ELEMENTS.H)
+                {
+                    Bond bondToRemove = null;
+                    foreach (Bond b in this.m_Bonds)
+                    {
+                        if (b.ConnectedAtom == a) bondToRemove = b;
+                    }
+                    if (bondToRemove != null)
+                    {
+                        this.m_Bonds.Remove(bondToRemove);
+                        this.m_ConnectedAtoms.Remove(a);
+                        hydrogens.Add(a);
+                    }
+                }
+            }
+            return hydrogens.ToArray();
+        }
+
         void SetColor(int[] argb)
         {
             if (argb.Length == 3) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]).ToArgb();
