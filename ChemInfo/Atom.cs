@@ -232,6 +232,7 @@ namespace ChemInfo
         ELEMENTS e;
         int m_Isotope;
         int m_Charge;
+        int m_ExplicitHydrogens;
         Chirality m_Chiral;
         AtomType atomType;
         int color;
@@ -245,6 +246,7 @@ namespace ChemInfo
         {
             if (element == "*") e = ELEMENTS.WILD_CARD;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_ExplicitHydrogens = 0;
             //degree = 0;
             m_Isotope = 0;
             m_Charge = 0;
@@ -263,7 +265,7 @@ namespace ChemInfo
         {
             if (element == "*") e = ELEMENTS.WILD_CARD;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
-            //degree = 0;
+            m_ExplicitHydrogens = 0;
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
@@ -280,6 +282,7 @@ namespace ChemInfo
             //degree = 0;
             if (element == "*") e = ELEMENTS.WILD_CARD;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_ExplicitHydrogens = 0;
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
@@ -296,6 +299,7 @@ namespace ChemInfo
             //degree = 0;
             if (element == "*") e = ELEMENTS.WILD_CARD;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_ExplicitHydrogens = 0;
             isotope = (byte)isotope;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
@@ -312,6 +316,7 @@ namespace ChemInfo
             //degree = 0;
             if (element == "*") e = ELEMENTS.WILD_CARD;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_ExplicitHydrogens = hCount;
             m_Isotope = isotope;
             m_Charge = charge;
             m_Chiral = chirality;
@@ -715,6 +720,8 @@ namespace ChemInfo
         {
             get
             {
+                if (hydrogenCount != 0) return hydrogenCount;
+                if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
                 if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
                 {
                     return this.Valence - this.numberOfBonds;
@@ -812,23 +819,23 @@ namespace ChemInfo
         //[System.ComponentModel.BrowsableAttribute(false)]
         //public double z { get; set; } = 0.0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int massDiff { get; set; } = 0;
+        internal int massDiff { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int stereoParity { get; set; } = 0;
+        internal int stereoParity { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int hydrogenCount { get; set; } = 0;
+        internal int hydrogenCount { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int stereoCareBox { get; set; } = 0;
+        internal int stereoCareBox { get; set; } = 0;
         //public int HO;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public string rNotUsed { get; set; } = string.Empty;
+        internal string rNotUsed { get; set; } = string.Empty;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public string iNotUsed { get; set; } = string.Empty;
+        internal string iNotUsed { get; set; } = string.Empty;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int atomMapping { get; set; } = 0;
+        internal int atomMapping { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int inversionRetension { get; set; } = 0;
+        internal int inversionRetension { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        public int exactChange { get; set; } = 0;
+        internal int exactChange { get; set; } = 0;
     }
 }
