@@ -230,9 +230,9 @@ namespace ChemInfo
 
         //int degree;
         ELEMENTS e;
-        int isotope;
-        int charge;
-        Chirality chiral;
+        int m_Isotope;
+        int m_Charge;
+        Chirality m_Chiral;
         AtomType atomType;
         int color;
         int _x = 0;
@@ -243,13 +243,14 @@ namespace ChemInfo
         // Constructors
         public Atom(string element)
         {
-            e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") e = ELEMENTS.WILD_CARD;
+            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             //degree = 0;
-            isotope = 0;
-            charge = 0;
-            chiral = Chirality.UNSPECIFIED;
+            m_Isotope = 0;
+            m_Charge = 0;
+            m_Chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
-            chiral = Chirality.UNSPECIFIED;
+            m_Chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             this.m_AtomicMass = ChemInfo.Element.ExactMass(e);
             this.m_CovalentRadius = ChemInfo.Element.CovalentRadius(e);
@@ -260,13 +261,14 @@ namespace ChemInfo
 
         public Atom(string element, AtomType type)
         {
-            e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") e = ELEMENTS.WILD_CARD;
+            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             //degree = 0;
-            isotope = 0;
-            charge = 0;
-            chiral = Chirality.UNSPECIFIED;
+            m_Isotope = 0;
+            m_Charge = 0;
+            m_Chiral = Chirality.UNSPECIFIED;
             atomType = type;
-            chiral = Chirality.UNSPECIFIED;
+            m_Chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
@@ -276,11 +278,13 @@ namespace ChemInfo
         public Atom(string element, AtomType type, Chirality chirality)
         {
             //degree = 0;
-            isotope = 0;
-            charge = 0;
-            chiral = Chirality.UNSPECIFIED;
+            if (element == "*") e = ELEMENTS.WILD_CARD;
+            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_Isotope = 0;
+            m_Charge = 0;
+            m_Chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
-            chiral = chirality;
+            m_Chiral = chirality;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
@@ -290,11 +294,28 @@ namespace ChemInfo
         public Atom(string element, int isotope)
         {
             //degree = 0;
+            if (element == "*") e = ELEMENTS.WILD_CARD;
+            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             isotope = (byte)isotope;
-            charge = 0;
-            chiral = Chirality.UNSPECIFIED;
+            m_Charge = 0;
+            m_Chiral = Chirality.UNSPECIFIED;
             atomType = AtomType.NONE;
-            chiral = Chirality.UNSPECIFIED;
+            m_Chiral = Chirality.UNSPECIFIED;
+            this.SetColor(ChemInfo.Element.ElementColor(e));
+            _x = (int)(random.NextDouble() * 100);
+            _y = (int)(random.NextDouble() * 100);
+            m_WeiningerInvariant = new WeiningerInvariant(this);
+        }
+
+        public Atom(string element, AtomType type, int isotope, Chirality chirality, int hCount, int charge, int atomClass)
+        {
+            //degree = 0;
+            if (element == "*") e = ELEMENTS.WILD_CARD;
+            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            m_Isotope = isotope;
+            m_Charge = charge;
+            m_Chiral = chirality;
+            atomType = type;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
@@ -315,11 +336,11 @@ namespace ChemInfo
         {
             get
             {
-                return (int)isotope;
+                return (int)m_Isotope;
             }
             set
             {
-                isotope = (byte)value;
+                m_Isotope = (byte)value;
             }
         }
 
@@ -363,7 +384,7 @@ namespace ChemInfo
                 retval[2] = BitConverter.GetBytes(this.Degree)[0];
                 retval[3] = BitConverter.GetBytes(this.numberOfBonds)[0];
                 retval[4] = BitConverter.GetBytes(this.AtomicNumber)[0];
-                retval[5] = this.charge > 0 ? (byte)1 : (byte)0;
+                retval[5] = this.m_Charge > 0 ? (byte)1 : (byte)0;
                 retval[6] = BitConverter.GetBytes(this.Charge)[0];
                 retval[7] = BitConverter.GetBytes(this.NumHydrogens)[0];
                 if (BitConverter.IsLittleEndian) Array.Reverse(retval);
@@ -726,11 +747,11 @@ namespace ChemInfo
         {
             get
             {
-                return charge;
+                return m_Charge;
             }
             set
             {
-                charge = value;
+                m_Charge = value;
             }
         }
 
@@ -752,11 +773,11 @@ namespace ChemInfo
         {
             get
             {
-                return this.chiral;
+                return this.m_Chiral;
             }
             set
             {
-                chiral = value;
+                m_Chiral = value;
             }
         }
 

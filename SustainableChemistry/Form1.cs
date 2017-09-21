@@ -64,9 +64,7 @@ namespace SustainableChemistry
             smilesInput smiles = new smilesInput();
             smiles.ShowDialog();
             if (string.IsNullOrEmpty(smiles.SMILES)) return;
-            ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
-            parser.SMILE = smiles.SMILES;
-            molecule = parser.Parse();
+            molecule = new ChemInfo.Molecule(smiles.SMILES);
             this.listBox1.Items.Clear();
             if (molecule == null) return;
             molecule.FindRings();
@@ -159,12 +157,12 @@ namespace SustainableChemistry
                 "NP(=O)(C)N"};
             DateTime start = DateTime.Now;
             ChemInfo.Molecule m = null;
-            ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
+            //ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
             int[] temp = null;
             foreach (string molecule in molecules)
             {
-                parser.SMILE = molecule;
-                m = parser.Parse();
+                //parser.SMILE = molecule;
+                m = new ChemInfo.Molecule(molecule);
                 bool found = false;
                 foreach (string smart in groups)
                 {

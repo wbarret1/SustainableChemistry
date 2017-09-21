@@ -36,6 +36,18 @@ namespace ChemInfo
             pathsFound = false;
         }
 
+        public Molecule(string smiles)
+        {
+            m_Atoms = new List<Atom>();
+            atomsCount = new System.Collections.Hashtable();
+            ringsFound = false;
+            pathsFound = false;
+            smilesLexer lexer = new smilesLexer(new Antlr4.Runtime.AntlrInputStream(smiles));
+            smilesParser parser = new smilesParser(new Antlr4.Runtime.CommonTokenStream(lexer));
+            int err = parser.NumberOfSyntaxErrors;
+            this.m_Atoms.AddRange((Atom[])new SmilesVisitor().Visit(parser.smiles()));
+        }
+
         public Atom[] GetAtoms()
         {
             return m_Atoms.ToArray<Atom>();
@@ -404,8 +416,7 @@ namespace ChemInfo
 
         public bool FindSmarts(string smart, ref int[] group)
         {
-            smilesParser parser = new smilesParser(smart);
-            Molecule m = parser.Parse();
+            Molecule m = new Molecule(smart);
             int pn = 0;
             int[] matches = null;
             return this.Match(ref pn, ref matches, ref group, new VF2SubState(m, this, false));
@@ -413,8 +424,7 @@ namespace ChemInfo
 
         public bool FindSmarts2(string smart, ref Atom[] group)
         {
-            smilesParser parser = new smilesParser(smart);
-            Molecule m = parser.Parse();
+            Molecule m = new Molecule(smart);
             Stack<Atom> temp = new Stack<Atom>();
             Stack<Atom> matches = new Stack<Atom>();
             int pn = 0;
