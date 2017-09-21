@@ -200,8 +200,9 @@ namespace ChemInfo
                         BondType nextType = (BondType)ringbonds[ring];
                         if (nextType != BondType.Single && (nextBond == BondType.Single || nextBond == nextType)) nextBond = nextType;
                         retVal.AddBond(last, (Atom)ringAtoms[ring], nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
-                        ringAtoms.Remove(ring);
                         nextBond = BondType.Single;
+                        ringAtoms.Remove(ring);
+                        ringbonds.Remove(ring);
                     }
                     else
                     {
