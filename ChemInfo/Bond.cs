@@ -15,7 +15,8 @@ namespace ChemInfo
         SingleOrDouble = 5,
         SingleOrAromatic = 6,
         DoubleOrAromatic = 7,
-        Any = 8
+        Any = 8,
+        Disconnected = 16
     }
 
     public enum BondStereo
@@ -25,6 +26,8 @@ namespace ChemInfo
         cisOrTrans = 3,
         Down = 4,
         Either = 6,
+        cis = 16,
+        trans = 32
     }
 
     public enum BondTopology
@@ -112,6 +115,10 @@ namespace ChemInfo
             get
             {
                 return m_bondStereo;
+            }
+            internal set
+            {
+                m_bondStereo = value;
             }
         }
 

@@ -107,8 +107,12 @@ namespace SustainableChemistry
 
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            smilesInput smiles = new smilesInput();
+            smiles.Text = "Enter SMARTS String";
+            smiles.ShowDialog();
+            if (string.IsNullOrEmpty(smiles.SMILES)) return;
             int[] atoms = null;
-            this.molecule.FindSmarts("NP(=O)(C)C", ref atoms);
+            if (!this.molecule.FindSmarts(smiles.SMILES, ref atoms)) MessageBox.Show("SMARTS not found in molecule.");
         }
 
         private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)

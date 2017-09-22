@@ -567,14 +567,11 @@ namespace ChemInfo
             }
         }
 
-        public void AddBond(Atom atom, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
+        public Bond AddBond(Atom atom, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
-            //this.m_ConnectedAtoms.Add(atom);
             Bond b = new Bond(this, atom, type, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.notACenter);
-            //b.StartPoint = this.Location2D;
-            //b.EndPoint = atom.Location2D;
             this.BondedAtoms.Add(b);
-            //degree = (byte)this.BondedAtoms.Count;
+            return b;
         }
 
         [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]

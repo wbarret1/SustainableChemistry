@@ -87,16 +87,17 @@ namespace ChemInfo
             atomsCount.Add(a.Element, 1);
         }
 
-        public void AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
+        public Bond AddBond(Atom atomOne, Atom atomTwo, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
             if (atomOne != null)
             {
-                atomOne.AddBond(atomTwo, type, stereo, topology, rcStatus);
                 atomOne.AddConnectedAtom(atomTwo);
                 atomTwo.AddConnectedAtom(atomOne);
                 ringsFound = false;
                 pathsFound = false;
+                return atomOne.AddBond(atomTwo, type, stereo, topology, rcStatus);
             }
+            return null;
         }
 
         //public int GetBondAngle(Atom atom1, Atom atom2)

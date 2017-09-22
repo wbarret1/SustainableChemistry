@@ -11,8 +11,6 @@ namespace ChemInfo
     //
     // This smiles parser is based upon an ANTLR 4 visitor developed from the included G4 grammar.
     //
-    // Steroechemsitry is currently not implemented.
-    //
     class SmilesVisitor : smilesBaseVisitor<object>
     {
         Molecule retVal;
@@ -20,12 +18,17 @@ namespace ChemInfo
         Atom last = null;
         System.Collections.Hashtable ringAtoms;
         System.Collections.Hashtable ringbonds;
+        string cisTrans;
+
+        System.Collections.Generic.List<Bond> doubleBonds;
 
         public SmilesVisitor()
         {
             retVal = new Molecule();
             ringAtoms = new System.Collections.Hashtable();
             ringbonds = new System.Collections.Hashtable();
+            cisTrans = string.Empty;
+            doubleBonds = new List<Bond>();
         }
 
 
@@ -110,11 +113,54 @@ namespace ChemInfo
         public override object VisitBond([NotNull] smilesParser.BondContext context)
         {
             if (context.GetText() == "-") return BondType.Single;
-            if (context.GetText() == "=") return BondType.Double;
-            if (context.GetText() == "#") return BondType.Triple;
-            if (context.GetText() == "$") return BondType.Any;
-            if (context.GetText() == "\\") return BondType.Single;
-            if (context.GetText() == "/") return BondType.Single;
+            else if (context.GetText() == "=")
+            {
+                return BondType.Double;
+            }
+            else if (context.GetText() == "#") return BondType.Triple;
+            else if (context.GetText() == "$") return BondType.Any;
+            else if (context.GetText() == "\\")
+            {
+                if (string.IsNullOrEmpty(cisTrans)) cisTrans = context.GetText();
+                else
+                {
+                    if (context.GetText() == cisTrans)
+                    {
+                        if (((doubleBonds.Count - 1) % 2) == 0)
+                            foreach (Bond b in doubleBonds)
+                                b.Stereo = BondStereo.trans;
+                    }
+                    else
+                    {
+                        if (((doubleBonds.Count - 1) % 2) == 0)
+                            foreach (Bond b in doubleBonds)
+                                b.Stereo = BondStereo.cis;
+                    }
+                    cisTrans = string.Empty;
+                    doubleBonds.Clear();
+                }
+            }
+            else if (context.GetText() == "/")
+            {
+                if (string.IsNullOrEmpty(cisTrans)) cisTrans = context.GetText();
+                else
+                {
+                    if (context.GetText() == cisTrans)
+                    {
+                        if (((doubleBonds.Count - 1) % 2) == 0)
+                            foreach (Bond b in doubleBonds)
+                                b.Stereo = BondStereo.trans;
+                    }
+                    else
+                    {
+                        if (((doubleBonds.Count - 1) % 2) == 0)
+                            foreach (Bond b in doubleBonds)
+                                b.Stereo = BondStereo.cis;
+                    }
+                    cisTrans = string.Empty;
+                    doubleBonds.Clear();
+                }
+            }
             return BondType.Single;
         }
 
@@ -158,22 +204,61 @@ namespace ChemInfo
 
         public override object VisitBranch([NotNull] smilesParser.BranchContext context)
         {
-            if (context.ChildCount != 3) return null;
-            if (typeof(smilesParser.BondContext).IsAssignableFrom(context.GetChild(1).GetType()))
+            if (context.ChildCount == 3)
             {
-                nextBond = (BondType)VisitBond((smilesParser.BondContext)context.GetChild(1));
-                return VisitChain((smilesParser.ChainContext)context.GetChild(2));
-            }
-            if (typeof(smilesParser.DotContext).IsAssignableFrom(context.GetChild(1).GetType()))
-            {
-                nextBond = (BondType)VisitDot((smilesParser.DotContext)context.GetChild(1));
-                return VisitChain((smilesParser.ChainContext)context.GetChild(2));
-            }
-            if (typeof(smilesParser.BranchContext).IsAssignableFrom(context.GetChild(1).GetType()))
-            {
+                if (typeof(smilesParser.ChainContext).IsAssignableFrom(context.GetChild(1).GetType()))
+                    return VisitChain((smilesParser.ChainContext)context.GetChild(1));
                 return VisitBranch((smilesParser.BranchContext)context.GetChild(1));
             }
-            return VisitChain((smilesParser.ChainContext)context.GetChild(1));
+            if (typeof(smilesParser.BondContext).IsAssignableFrom(context.GetChild(1).GetType()))
+            {
+                if (context.GetChild(1).GetText() == "\\")
+                {
+                    if (string.IsNullOrEmpty(cisTrans)) cisTrans = "/";
+                    else
+                    {
+                        if (context.GetText() == cisTrans)
+                        {
+                            if (((doubleBonds.Count - 1) % 2) == 0)
+                                foreach (Bond b in doubleBonds)
+                                    b.Stereo = BondStereo.cis;
+                        }
+                        else
+                        {
+                            if (((doubleBonds.Count - 1) % 2) == 0)
+                                foreach (Bond b in doubleBonds)
+                                    b.Stereo = BondStereo.trans;
+                        }
+                        cisTrans = string.Empty;
+                        doubleBonds.Clear();
+                    }
+                }
+                else if (context.GetChild(1).GetText() == "/")
+                {
+                    if (string.IsNullOrEmpty(cisTrans)) cisTrans = "\\";
+                    else
+                    {
+                        if (context.GetText() == cisTrans)
+                        {
+                            if (((doubleBonds.Count - 1) % 2) == 0)
+                                foreach (Bond b in doubleBonds)
+                                    b.Stereo = BondStereo.cis;
+                        }
+                        else
+                        {
+                            if (((doubleBonds.Count - 1) % 2) == 0)
+                                foreach (Bond b in doubleBonds)
+                                    b.Stereo = BondStereo.trans;
+                        }
+                        cisTrans = string.Empty;
+                        doubleBonds.Clear();
+                    }
+                }
+                else nextBond = (BondType)VisitBond((smilesParser.BondContext)context.GetChild(1));
+                return VisitChain((smilesParser.ChainContext)context.GetChild(2));
+            }
+            nextBond = (BondType)VisitDot((smilesParser.DotContext)context.GetChild(1));
+            return VisitChain((smilesParser.ChainContext)context.GetChild(2));
         }
 
         public override object VisitBranched_atom([NotNull] smilesParser.Branched_atomContext context)
@@ -188,7 +273,8 @@ namespace ChemInfo
                     {
                         if (last.AtomType == AtomType.AROMATIC && current.AtomType == AtomType.AROMATIC) nextBond = BondType.Aromatic;
                     }
-                    retVal.AddBond(last, current, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
+                    Bond b = retVal.AddBond(last, current, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
+                    if (!string.IsNullOrEmpty(cisTrans) && nextBond == BondType.Double) doubleBonds.Add(b);
                     nextBond = BondType.Single;
                     last = current;
                 }
@@ -199,7 +285,8 @@ namespace ChemInfo
                     {
                         BondType nextType = (BondType)ringbonds[ring];
                         if (nextType != BondType.Single && (nextBond == BondType.Single || nextBond == nextType)) nextBond = nextType;
-                        retVal.AddBond(last, (Atom)ringAtoms[ring], nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
+                        Bond b = retVal.AddBond(last, (Atom)ringAtoms[ring], nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
+                        if (!string.IsNullOrEmpty(cisTrans) && nextBond == BondType.Double) doubleBonds.Add(b);
                         nextBond = BondType.Single;
                         ringAtoms.Remove(ring);
                         ringbonds.Remove(ring);
@@ -237,8 +324,10 @@ namespace ChemInfo
                 {
                     VisitBranched_atom((smilesParser.Branched_atomContext)tree);
                 }
-                else if (typeof(smilesParser.BondContext).IsAssignableFrom(tree.GetType()) || typeof(smilesParser.DotContext).IsAssignableFrom(tree.GetType()))
+                else if (typeof(smilesParser.BondContext).IsAssignableFrom(tree.GetType()))
                     nextBond = (BondType)VisitBond((smilesParser.BondContext)tree);
+                else if (typeof(smilesParser.DotContext).IsAssignableFrom(tree.GetType()))
+                    nextBond = (BondType)VisitDot((smilesParser.DotContext)tree);
                 else nextBond = BondType.Any;
             }
             return null;
@@ -270,7 +359,7 @@ namespace ChemInfo
 
         public override object VisitDot([NotNull] smilesParser.DotContext context)
         {
-            return BondType.Any;
+            return BondType.Disconnected;
         }
 
         public override object VisitHcount([NotNull] smilesParser.HcountContext context)
