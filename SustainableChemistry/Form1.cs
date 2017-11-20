@@ -161,18 +161,23 @@ namespace SustainableChemistry
                 "NP(=O)(C)N"};
             DateTime start = DateTime.Now;
             ChemInfo.Molecule m = null;
-            //ChemInfo.smilesParser parser = new ChemInfo.smilesParser();
-            int[] temp = null;
+            int[] indices = null;
+            ChemInfo.Atom[] temp = null;
             foreach (string molecule in molecules)
             {
-                //parser.SMILE = molecule;
                 m = new ChemInfo.Molecule(molecule);
                 bool found = false;
+                int numFound = 0;
                 foreach (string smart in groups)
                 {
-                    if (m.FindSmarts(smart, ref temp)) found = true;
+                    if (m.FindFunctionalGroup(smart, ref indices))
+                    {
+                        found = true;
+                        numFound++;
+                    }
+                    //if (m.FindSmarts2(smart, ref temp)) found = true;
                 }
-                if (!found)
+                if (!found || numFound >1)
                 {
                     MessageBox.Show(molecule);
                 }

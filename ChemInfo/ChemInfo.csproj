@@ -148,6 +148,7 @@
     <Content Include="bodr\typing\atomtyp.txt" />
     <Content Include="bodr\typing\bondtyp.txt" />
     <Content Include="bodr\typing\types.txt" />
+    <None Include="Resources\Phosphate Functional Groups.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

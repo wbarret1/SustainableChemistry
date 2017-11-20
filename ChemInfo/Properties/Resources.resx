@@ -121,4 +121,7 @@
   <data name="elements" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bodr\elements\elements.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Phosphate_Functional_Groups" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Phosphate Functional Groups.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

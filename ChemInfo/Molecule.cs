@@ -415,6 +415,16 @@ namespace ChemInfo
             }
         }
 
+        // VF2 Implementation
+
+        public bool FindFunctionalGroup(string smart, ref int[] group)
+        {
+            Molecule m = new Molecule(smart);
+            int pn = 0;
+            int[] matches = null;
+            return this.Match(ref pn, ref matches, ref group, new FunctionalGroupState(m, this, false));
+        }
+
         public bool FindSmarts(string smart, ref int[] group)
         {
             Molecule m = new Molecule(smart);
@@ -659,6 +669,12 @@ namespace ChemInfo
             return (attr1 == attr2);
         }
 
+        internal bool CompatibleNode(int attr1, int attr2)
+        {
+            if (attr1 == 1) return true;
+            return (attr1 == attr2);
+        }
+
         internal bool CompatibleAtom(Atom atom1, Atom atom2)
         {
             return (atom1.Element == atom2.Element);
@@ -674,6 +690,11 @@ namespace ChemInfo
         internal ELEMENTS GetNodeAttr(int i)
         {
             return m_Atoms[i].Element;
+        }
+
+        internal int GetNodeDegree(int i)
+        {
+            return m_Atoms[i].Degree;
         }
 
 
