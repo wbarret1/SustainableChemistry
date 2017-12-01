@@ -7,9 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SQLite;
 
 namespace SustainableChemistry
 {
+    // CCN(CC)P(OC)OC
 
     public struct descriptor
     {
@@ -28,14 +30,52 @@ namespace SustainableChemistry
     {
 
         ChemInfo.Molecule molecule;
-
+        List<ChemInfo.FunctionalGroup> functionalGroups;
+        static Encoding enc8 = Encoding.UTF8;
+        References m_References;
+        string documentPath;
 
         public Form1()
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
-            //moleculeViewer1.s
+            documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            documentPath = documentPath + "\\USEPA\\SustainableChemistry";
+            System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
+
+            // Construct a BinaryFormatter and use it to serialize the data to the stream.
+            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            try
+            {
+                m_References = (References)formatter.Deserialize(fs);
+            }
+            catch (System.Runtime.Serialization.SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            //m_References.Clear();
+            //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403901904617)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.achs_jacsat105_661)));
+            //m_References.AddReference(new Reference("phosphate", "No Name", enc8.GetString(Properties.Resources.S1001841712003142)));
+            //m_References.AddReference(new Reference("phosphate", "Catalyst", Properties.Resources._10_1002_2Fchin_199605199));
+            //m_References.AddReference(new Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc1)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.achs_oprdfk4_175)));
+            //m_References.AddReference(new Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.BIB)));
+
+            //Results res = new Results("phosphoramidite", m_References);
+            //string results = json.Serialize(res);
         }
 
         private void importFormTESTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -84,7 +124,16 @@ namespace SustainableChemistry
         {
             listBox1.Items.Clear();
             string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
-            listBox1.Items.AddRange(phos);
+            foreach (string p in phos)
+            {
+                listBox1.Items.Add(p);
+                listBox1.Items.Add(string.Empty);
+                var refs = m_References.GetReferences(p);
+                foreach (Reference r in refs) listBox1.Items.Add(r.ToString());
+                listBox1.Items.Add(string.Empty);
+                listBox1.Items.Add(string.Empty);
+            }
+            //listBox1.Items.AddRange(phos);
         }
 
         private void moleculeViewer1_SelectionChanged(object sender, SelectionChangedEventArgs args)
@@ -183,6 +232,43 @@ namespace SustainableChemistry
                 }
             }
             MessageBox.Show("Time Required is: " + (double)DateTime.Now.Subtract(start).Milliseconds + " milliseconds", "Test Completed Successfully");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            System.IO.Directory.CreateDirectory(documentPath);
+            System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Create);
+            // Construct a BinaryFormatter and use it to serialize the data to the stream.
+            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            try
+            {
+                formatter.Serialize(fs, m_References);
+            }
+            catch (System.Runtime.Serialization.SerializationException ex)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void showReferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> references = new List<string>();
+            string[] funcs = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            foreach (string f in funcs)
+            {
+                var refs = m_References.GetReferences(f);
+                foreach (Reference r in refs) references.Add(r.ToString());
+            }
+        }
+
+        private void editReferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -36,17 +36,20 @@
             this.functionalityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.phosphorousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findSMARTSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testSubgraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testSubgraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
+            this.referencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -68,7 +71,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.functionalityToolStripMenuItem,
-            this.testsToolStripMenuItem});
+            this.testsToolStripMenuItem,
+            this.referencesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(824, 24);
@@ -116,16 +120,31 @@
             // phosphorousToolStripMenuItem
             // 
             this.phosphorousToolStripMenuItem.Name = "phosphorousToolStripMenuItem";
-            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.phosphorousToolStripMenuItem.Text = "Phosphorous";
             this.phosphorousToolStripMenuItem.Click += new System.EventHandler(this.phosphorousToolStripMenuItem_Click);
             // 
             // findSMARTSToolStripMenuItem
             // 
             this.findSMARTSToolStripMenuItem.Name = "findSMARTSToolStripMenuItem";
-            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.findSMARTSToolStripMenuItem.Text = "Find SMARTS";
             this.findSMARTSToolStripMenuItem.Click += new System.EventHandler(this.findSMARTSToolStripMenuItem_Click);
+            // 
+            // testsToolStripMenuItem
+            // 
+            this.testsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testSubgraphToolStripMenuItem});
+            this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.testsToolStripMenuItem.Text = "Tests";
+            // 
+            // testSubgraphToolStripMenuItem
+            // 
+            this.testSubgraphToolStripMenuItem.Name = "testSubgraphToolStripMenuItem";
+            this.testSubgraphToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.testSubgraphToolStripMenuItem.Text = "Test Subgraph";
+            this.testSubgraphToolStripMenuItem.Click += new System.EventHandler(this.testSubgraphToolStripMenuItem_Click);
             // 
             // listBox1
             // 
@@ -178,6 +197,60 @@
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 0;
             // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.trackBar1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Size = new System.Drawing.Size(192, 485);
+            this.splitContainer2.SplitterDistance = 57;
+            this.splitContainer2.SplitterWidth = 3;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBar1.Location = new System.Drawing.Point(0, 0);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.trackBar1.Maximum = 250;
+            this.trackBar1.Minimum = 20;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(192, 45);
+            this.trackBar1.TabIndex = 0;
+            this.trackBar1.Value = 20;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(2);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(192, 425);
+            this.propertyGrid1.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.listBox1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(816, 491);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Functionalities";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // moleculeViewer1
             // 
             this.moleculeViewer1.AutoScroll = true;
@@ -210,74 +283,28 @@
             this.moleculeViewer1.Zoom = 1D;
             this.moleculeViewer1.SelectionChanged += new SustainableChemistry.MoleculeViewer.SelectionChangedHandler(this.moleculeViewer1_SelectionChanged);
             // 
-            // splitContainer2
+            // referencesToolStripMenuItem
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.referencesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editReferencesToolStripMenuItem,
+            this.showReferencesToolStripMenuItem});
+            this.referencesToolStripMenuItem.Name = "referencesToolStripMenuItem";
+            this.referencesToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
+            this.referencesToolStripMenuItem.Text = "References";
             // 
-            // splitContainer2.Panel1
+            // showReferencesToolStripMenuItem
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.trackBar1);
+            this.showReferencesToolStripMenuItem.Name = "showReferencesToolStripMenuItem";
+            this.showReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.showReferencesToolStripMenuItem.Text = "Show References";
+            this.showReferencesToolStripMenuItem.Click += new System.EventHandler(this.showReferencesToolStripMenuItem_Click);
             // 
-            // splitContainer2.Panel2
+            // editReferencesToolStripMenuItem
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer2.Size = new System.Drawing.Size(192, 485);
-            this.splitContainer2.SplitterDistance = 57;
-            this.splitContainer2.SplitterWidth = 3;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar1.Location = new System.Drawing.Point(0, 0);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
-            this.trackBar1.Maximum = 250;
-            this.trackBar1.Minimum = 20;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(192, 57);
-            this.trackBar1.TabIndex = 0;
-            this.trackBar1.Value = 20;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(2);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(192, 425);
-            this.propertyGrid1.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.listBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(816, 491);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Functionalities";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // testsToolStripMenuItem
-            // 
-            this.testsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testSubgraphToolStripMenuItem});
-            this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
-            this.testsToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
-            this.testsToolStripMenuItem.Text = "Tests";
-            // 
-            // testSubgraphToolStripMenuItem
-            // 
-            this.testSubgraphToolStripMenuItem.Name = "testSubgraphToolStripMenuItem";
-            this.testSubgraphToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.testSubgraphToolStripMenuItem.Text = "Test Subgraph";
-            this.testSubgraphToolStripMenuItem.Click += new System.EventHandler(this.testSubgraphToolStripMenuItem_Click);
+            this.editReferencesToolStripMenuItem.Name = "editReferencesToolStripMenuItem";
+            this.editReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.editReferencesToolStripMenuItem.Text = "Edit References";
+            this.editReferencesToolStripMenuItem.Click += new System.EventHandler(this.editReferencesToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -289,6 +316,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -331,6 +359,9 @@
         private System.Windows.Forms.ToolStripMenuItem findSMARTSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testSubgraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem referencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showReferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editReferencesToolStripMenuItem;
     }
 }
 

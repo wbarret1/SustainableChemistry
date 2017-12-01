@@ -6,6 +6,23 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
+    [Serializable]
+    public class FunctionalGroup
+    {
+        public FunctionalGroup()
+        {
+        }
+
+        public FunctionalGroup(string name, string smart)
+        {
+            Name = name;
+            Smart = smart;
+        }
+
+        public string Name { get; set; }
+        public string Smart { get; set; }
+    }
+
     public static class Functionalities
     {
 
@@ -123,9 +140,57 @@ namespace ChemInfo
                 string[] b = line.Split('\t');
                 if (m.FindFunctionalGroup(b[1], ref atoms)) retVal.Add(b[0]);
                 line = reader.ReadLine();
-
             }
             return retVal.ToArray<string>();
+        }
+
+        static public string FunctionalGroups(string smiles, string format)
+        {
+            Molecule m = new Molecule(smiles);
+            List<string> retVal = new List<string>();
+            System.IO.StringReader reader = new System.IO.StringReader(Properties.Resources.Phosphate_Functional_Groups);
+            int[] atoms = null;
+            string line = reader.ReadLine();
+            while (!String.IsNullOrEmpty(line))
+            {
+                string[] b = line.Split('\t');
+                if (m.FindFunctionalGroup(b[1], ref atoms)) retVal.Add(b[0]);
+                line = reader.ReadLine();
+            }
+            if (format == "json") ;
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return json.Serialize(retVal.ToArray<string>());
+        }
+
+        static public string[] FunctionalGroups(string smiles)
+        {
+            Molecule m = new Molecule(smiles);
+            List<string> retVal = new List<string>();
+            System.IO.StringReader reader = new System.IO.StringReader(Properties.Resources.Phosphate_Functional_Groups);
+            int[] atoms = null;
+            string line = reader.ReadLine();
+            while (!String.IsNullOrEmpty(line))
+            {
+                string[] b = line.Split('\t');
+                if (m.FindFunctionalGroup(b[1], ref atoms)) retVal.Add(b[0]);
+                line = reader.ReadLine();
+            }
+            return retVal.ToArray<string>();
+        }
+
+        static public string AvailableFunctionalGroups()
+        {
+            List<FunctionalGroup> groups = new List<FunctionalGroup>();
+            System.IO.StringReader reader = new System.IO.StringReader(Properties.Resources.Phosphate_Functional_Groups);
+            string line = reader.ReadLine();
+            while (!String.IsNullOrEmpty(line))
+            {
+                string[] b = line.Split('\t');
+                groups.Add(new FunctionalGroup(b[0], b[1]));
+                line = reader.ReadLine();
+            }
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return json.Serialize(groups);
         }
     }
 }
