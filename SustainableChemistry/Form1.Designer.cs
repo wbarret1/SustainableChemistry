@@ -38,18 +38,20 @@
             this.findSMARTSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testSubgraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.referencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importRISFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportJSONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
-            this.referencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editReferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -146,10 +148,50 @@
             this.testSubgraphToolStripMenuItem.Text = "Test Subgraph";
             this.testSubgraphToolStripMenuItem.Click += new System.EventHandler(this.testSubgraphToolStripMenuItem_Click);
             // 
+            // referencesToolStripMenuItem
+            // 
+            this.referencesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editReferencesToolStripMenuItem,
+            this.showReferencesToolStripMenuItem,
+            this.importRISFileToolStripMenuItem,
+            this.exportJSONToolStripMenuItem});
+            this.referencesToolStripMenuItem.Name = "referencesToolStripMenuItem";
+            this.referencesToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
+            this.referencesToolStripMenuItem.Text = "References";
+            // 
+            // editReferencesToolStripMenuItem
+            // 
+            this.editReferencesToolStripMenuItem.Name = "editReferencesToolStripMenuItem";
+            this.editReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.editReferencesToolStripMenuItem.Text = "Edit References";
+            this.editReferencesToolStripMenuItem.Click += new System.EventHandler(this.editReferencesToolStripMenuItem_Click);
+            // 
+            // showReferencesToolStripMenuItem
+            // 
+            this.showReferencesToolStripMenuItem.Name = "showReferencesToolStripMenuItem";
+            this.showReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.showReferencesToolStripMenuItem.Text = "Show References";
+            this.showReferencesToolStripMenuItem.Click += new System.EventHandler(this.showReferencesToolStripMenuItem_Click);
+            // 
+            // importRISFileToolStripMenuItem
+            // 
+            this.importRISFileToolStripMenuItem.Name = "importRISFileToolStripMenuItem";
+            this.importRISFileToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.importRISFileToolStripMenuItem.Text = "Import RIS File";
+            this.importRISFileToolStripMenuItem.Click += new System.EventHandler(this.importRISFileToolStripMenuItem_Click);
+            // 
+            // exportJSONToolStripMenuItem
+            // 
+            this.exportJSONToolStripMenuItem.Name = "exportJSONToolStripMenuItem";
+            this.exportJSONToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.exportJSONToolStripMenuItem.Text = "Export JSON";
+            this.exportJSONToolStripMenuItem.Click += new System.EventHandler(this.exportJSONToolStripMenuItem_Click);
+            // 
             // listBox1
             // 
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(810, 485);
@@ -197,60 +239,6 @@
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 0;
             // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.trackBar1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer2.Size = new System.Drawing.Size(192, 485);
-            this.splitContainer2.SplitterDistance = 57;
-            this.splitContainer2.SplitterWidth = 3;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar1.Location = new System.Drawing.Point(0, 0);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
-            this.trackBar1.Maximum = 250;
-            this.trackBar1.Minimum = 20;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(192, 45);
-            this.trackBar1.TabIndex = 0;
-            this.trackBar1.Value = 20;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(2);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(192, 425);
-            this.propertyGrid1.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.listBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(816, 491);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Functionalities";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // moleculeViewer1
             // 
             this.moleculeViewer1.AutoScroll = true;
@@ -283,28 +271,59 @@
             this.moleculeViewer1.Zoom = 1D;
             this.moleculeViewer1.SelectionChanged += new SustainableChemistry.MoleculeViewer.SelectionChangedHandler(this.moleculeViewer1_SelectionChanged);
             // 
-            // referencesToolStripMenuItem
+            // splitContainer2
             // 
-            this.referencesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editReferencesToolStripMenuItem,
-            this.showReferencesToolStripMenuItem});
-            this.referencesToolStripMenuItem.Name = "referencesToolStripMenuItem";
-            this.referencesToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
-            this.referencesToolStripMenuItem.Text = "References";
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // showReferencesToolStripMenuItem
+            // splitContainer2.Panel1
             // 
-            this.showReferencesToolStripMenuItem.Name = "showReferencesToolStripMenuItem";
-            this.showReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.showReferencesToolStripMenuItem.Text = "Show References";
-            this.showReferencesToolStripMenuItem.Click += new System.EventHandler(this.showReferencesToolStripMenuItem_Click);
+            this.splitContainer2.Panel1.Controls.Add(this.trackBar1);
             // 
-            // editReferencesToolStripMenuItem
+            // splitContainer2.Panel2
             // 
-            this.editReferencesToolStripMenuItem.Name = "editReferencesToolStripMenuItem";
-            this.editReferencesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.editReferencesToolStripMenuItem.Text = "Edit References";
-            this.editReferencesToolStripMenuItem.Click += new System.EventHandler(this.editReferencesToolStripMenuItem_Click);
+            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Size = new System.Drawing.Size(192, 485);
+            this.splitContainer2.SplitterDistance = 57;
+            this.splitContainer2.SplitterWidth = 3;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBar1.Location = new System.Drawing.Point(0, 0);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.trackBar1.Maximum = 250;
+            this.trackBar1.Minimum = 20;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(192, 57);
+            this.trackBar1.TabIndex = 0;
+            this.trackBar1.Value = 20;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(2);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(192, 425);
+            this.propertyGrid1.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.listBox1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(816, 491);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Functionalities";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -362,6 +381,8 @@
         private System.Windows.Forms.ToolStripMenuItem referencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showReferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editReferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importRISFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportJSONToolStripMenuItem;
     }
 }
 

@@ -82,6 +82,18 @@ namespace SustainableChemistry
             return retVal.ToArray<Reference>();
         }
 
+        public List<string[]> ReferenceList
+        {
+            get
+            {
+                List<string[]> retVal = new List<string[]>();
+                foreach (Reference r in m_References)
+                {
+                    retVal.Add(new string[] { r.FunctionalGroup, r.ToString() });
+                }
+                return retVal;
+            }
+        }
 
     }
 }

@@ -12,6 +12,8 @@ using System.Data.SQLite;
 namespace SustainableChemistry
 {
     // CCN(CC)P(OC)OC
+    // COP(=O)(OC)OC
+
 
     public struct descriptor
     {
@@ -149,9 +151,7 @@ namespace SustainableChemistry
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBox1.Items.Clear();
-            string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
-            listBox1.Items.AddRange(phos);
+            this.phosphorousToolStripMenuItem_Click(sender, e);
         }
 
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,18 +257,49 @@ namespace SustainableChemistry
 
         private void showReferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            List<string> references = new List<string>();
-            string[] funcs = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
-            foreach (string f in funcs)
-            {
-                var refs = m_References.GetReferences(f);
-                foreach (Reference r in refs) references.Add(r.ToString());
-            }
+            //List<string> references = new List<string>();
+            //string[] funcs = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            //foreach (string f in funcs)
+            //{
+            //    var refs = m_References.GetReferences(f);
+            //    foreach (Reference r in refs) references.Add(r.ToString());
+            //}
+            ReferenceList form = new ReferenceList();
+            form.References = m_References;
+            form.ShowDialog();
         }
 
         private void editReferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void importRISFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddNewReference form = new AddNewReference();
+            if (form.ShowDialog() == DialogResult.OK)
+                m_References.AddReference(new Reference(form.FunctionalGroup, form.ReactionName, form.Data));
+        }
+
+        private void moleculeViewer1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportJSONToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<Reference> refs = new List<Reference>();
+            string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            foreach (string p in phos)
+            {
+                var pRefs = m_References.GetReferences(p);
+                foreach (Reference r in pRefs) refs.Add(r);
+            }
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            System.IO.StreamWriter writer = new System.IO.StreamWriter(documentPath + "\\output.json");
+            writer.Write(serializer.Serialize(refs));
+            writer.Close();
+          //  System.Diagnostics.Process.Start(documentPath + "\\output.json");
         }
     }
 }

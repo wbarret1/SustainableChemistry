@@ -157,9 +157,14 @@ namespace ChemInfo
                 if (m.FindFunctionalGroup(b[1], ref atoms)) retVal.Add(b[0]);
                 line = reader.ReadLine();
             }
-            if (format == "json") ;
-            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
-            return json.Serialize(retVal.ToArray<string>());
+            if (format == "json")
+            {
+                var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+                return json.Serialize(retVal.ToArray<string>());
+            }
+            string val = string.Empty;
+            foreach (string s in retVal) val = val + "; ";
+            return val.Remove(val.Length - 1);
         }
 
         static public string[] FunctionalGroups(string smiles)
@@ -176,6 +181,22 @@ namespace ChemInfo
                 line = reader.ReadLine();
             }
             return retVal.ToArray<string>();
+        }
+
+        static public string[] AvailablePhosphateFunctionalGroups
+        {
+            get {
+                List<string> groups = new List<string>();
+                System.IO.StringReader reader = new System.IO.StringReader(Properties.Resources.Phosphate_Functional_Groups);
+                string line = reader.ReadLine();
+                while (!String.IsNullOrEmpty(line))
+                {
+                    string[] b = line.Split('\t');
+                    groups.Add(b[0]);
+                    line = reader.ReadLine();
+                }
+                return groups.ToArray();
+            }
         }
 
         static public string AvailableFunctionalGroups()

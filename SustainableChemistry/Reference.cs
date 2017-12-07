@@ -11,13 +11,14 @@ namespace SustainableChemistry
     {
         List<string> m_authors;
 
-        public Reference()
-        {
-        }
+        //public Reference(string data)
+        //{
+        //}
 
-        public Reference(string functionalGorup, string reactionName, string data)
+        public Reference(string functionalGroup, string reactionName, string data)
         {
-            FunctionalGroup = functionalGorup;
+            FunctionalGroup = functionalGroup;
+            ReactionName = reactionName;
             m_authors = new List<string>();
             //var reader = new System.IO.StringReader(data);
             //string line = reader.ReadLine();
@@ -45,6 +46,7 @@ namespace SustainableChemistry
         }
 
         public string FunctionalGroup { get; }
+        public string ReactionName { get; }
         public string Type { get; }
         public string Title { get; }
         public string[] Authors

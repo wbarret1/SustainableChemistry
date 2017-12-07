@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNewReference.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddNewReference.Designer.cs">
+      <DependentUpon>AddNewReference.cs</DependentUpon>
+    </Compile>
     <Compile Include="GraphicRing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -80,6 +86,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Reference.cs" />
+    <Compile Include="ReferenceList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReferenceList.Designer.cs">
+      <DependentUpon>ReferenceList.cs</DependentUpon>
+    </Compile>
     <Compile Include="References.cs" />
     <Compile Include="Results.cs" />
     <Compile Include="ShapeGraphic.cs" />
@@ -116,6 +128,9 @@
       <DependentUpon>TestResults.cs</DependentUpon>
     </Compile>
     <Compile Include="TextGraphics.cs" />
+    <EmbeddedResource Include="AddNewReference.resx">
+      <DependentUpon>AddNewReference.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -126,6 +141,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReferenceList.resx">
+      <DependentUpon>ReferenceList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="smilesInput.resx">
       <DependentUpon>smilesInput.cs</DependentUpon>
