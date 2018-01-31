@@ -79,6 +79,8 @@
     <Compile Include="AddNewReference.Designer.cs">
       <DependentUpon>AddNewReference.cs</DependentUpon>
     </Compile>
+    <Compile Include="FunctionalGroup.cs" />
+    <Compile Include="FunctionalGroupCollection.cs" />
     <Compile Include="GraphicRing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -199,6 +201,7 @@
     <None Include="Resources\harvard.txt.txt" />
     <None Include="Resources\References.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

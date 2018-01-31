@@ -147,6 +147,12 @@ namespace ChemInfo
             }
         }
 
+        /// <summary>
+        /// Returns the <see cref="ChemInfo.Bond"/> between two <see cref="ChemInfo.Atom"/> objects.
+        /// </summary>
+        /// <param name="atom1">One <see cref="ChemInfo.Atom"/></param> object to locate the <see cref="ChemInfo.Bond"/>.
+        /// <param name="atom2">The other <see cref="ChemInfo.Atom"/></param> object attached by the <see cref="ChemInfo.Bond"/>.</param>
+        /// <returns><see cref="ChemInfo.Bond"/> between the two <see cref="ChemInfo.Atom"/> objects. If there is no bond bewteen the atoms, it returns null.</returns>
         public Bond GetBond(Atom atom1, Atom atom2)
         {
             foreach (Bond b in atom1.BondedAtoms)
@@ -160,6 +166,10 @@ namespace ChemInfo
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Atom[][] FindRings()
         {
             if (ringsFound) return convertToArrayArray(cycles);
