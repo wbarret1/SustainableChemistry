@@ -52,6 +52,8 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.functionalGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -114,7 +116,9 @@
             // 
             this.functionalityToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.phosphorousToolStripMenuItem,
-            this.findSMARTSToolStripMenuItem});
+            this.findSMARTSToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.functionalGroupsToolStripMenuItem});
             this.functionalityToolStripMenuItem.Name = "functionalityToolStripMenuItem";
             this.functionalityToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this.functionalityToolStripMenuItem.Text = "Functionality";
@@ -122,14 +126,14 @@
             // phosphorousToolStripMenuItem
             // 
             this.phosphorousToolStripMenuItem.Name = "phosphorousToolStripMenuItem";
-            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.phosphorousToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.phosphorousToolStripMenuItem.Text = "Phosphorous";
             this.phosphorousToolStripMenuItem.Click += new System.EventHandler(this.phosphorousToolStripMenuItem_Click);
             // 
             // findSMARTSToolStripMenuItem
             // 
             this.findSMARTSToolStripMenuItem.Name = "findSMARTSToolStripMenuItem";
-            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.findSMARTSToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.findSMARTSToolStripMenuItem.Text = "Find SMARTS";
             this.findSMARTSToolStripMenuItem.Click += new System.EventHandler(this.findSMARTSToolStripMenuItem_Click);
             // 
@@ -325,6 +329,18 @@
             this.tabPage2.Text = "Functionalities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(168, 6);
+            // 
+            // functionalGroupsToolStripMenuItem
+            // 
+            this.functionalGroupsToolStripMenuItem.Name = "functionalGroupsToolStripMenuItem";
+            this.functionalGroupsToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.functionalGroupsToolStripMenuItem.Text = "Functional Groups";
+            this.functionalGroupsToolStripMenuItem.Click += new System.EventHandler(this.functionalGroupsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -383,6 +399,8 @@
         private System.Windows.Forms.ToolStripMenuItem editReferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRISFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportJSONToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem functionalGroupsToolStripMenuItem;
     }
 }
 
