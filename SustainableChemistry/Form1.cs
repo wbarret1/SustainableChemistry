@@ -29,6 +29,7 @@ namespace SustainableChemistry
         public string fragment;
     }
 
+
     public partial class Form1 : Form
     {
 
@@ -74,8 +75,55 @@ namespace SustainableChemistry
             {
                 fs.Close();
             }
-            
-            //m_References = new References();//.Clear();
+
+            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List.Split('\n');
+            fGroups = new FunctionalGroupCollection();
+            foreach (string line in functionalGroupStrs)
+            {
+                FunctionalGroup temp = new FunctionalGroup(line);
+                string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
+                if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
+                 fGroups.Add(temp);
+            }
+
+            //ReferenceList list = new ReferenceList();
+            //list.Data = groups.ToArray<FunctGroup>();
+            //list.ShowDialog();
+
+
+
+            //// Srepasheet file name
+            //string docName = "Full Functional Group List 01042018.xlsx";
+            //DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = null;
+            //DocumentFormat.OpenXml.Packaging.WorksheetPart worksheetPart = null;
+            //DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData = null;
+            //DocumentFormat.OpenXml.Spreadsheet.Cell c;
+            //DocumentFormat.OpenXml.OpenXmlReader reader = null;
+            //// Open the spreadsheet document for editing.
+            //using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(docName, false))
+            //{
+            //    wbPart = document.WorkbookPart;
+            //    worksheetPart = wbPart.WorksheetParts.First();
+            //    reader = DocumentFormat.OpenXml.OpenXmlReader.Create(worksheetPart);
+            //    sheetData = worksheetPart.Worksheet.Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
+
+            //    string text;
+            //    foreach (DocumentFormat.OpenXml.Spreadsheet.Row r in sheetData.Elements<DocumentFormat.OpenXml.Spreadsheet.Row>())
+            //    {
+            //        c = r.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Cell>();
+            //        if (c.CellReference.Value.StartsWith("A") && c.CellValue != null)
+            //        {
+            //            text = c.CellValue.Text;
+            //            DocumentFormat.OpenXml.Spreadsheet.SharedStringItem t = wbPart.SharedStringTablePart.SharedStringTable.Elements<DocumentFormat.OpenXml.Spreadsheet.SharedStringItem>().ElementAt(Int32.Parse(text));
+            //            if (!string.IsNullOrEmpty(text))
+            //            {
+
+            //            }
+            //        }
+            //    }
+            //}
+
+            //m_References.Clear();
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403901904617)));
@@ -330,6 +378,12 @@ namespace SustainableChemistry
             writer.Write(serializer.Serialize(refs));
             writer.Close();
           //  System.Diagnostics.Process.Start(documentPath + "\\output.json");
+        }
+
+        private void functionalGroupsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FunctionalGroupViewer viewer = new FunctionalGroupViewer(this.fGroups);
+            viewer.ShowDialog();
         }
     }
 }

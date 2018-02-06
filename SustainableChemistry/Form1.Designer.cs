@@ -122,7 +122,9 @@
             // 
             this.functionalityToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.phosphorousToolStripMenuItem,
-            this.findSMARTSToolStripMenuItem});
+            this.findSMARTSToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.functionalGroupsToolStripMenuItem});
             this.functionalityToolStripMenuItem.Name = "functionalityToolStripMenuItem";
             this.functionalityToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
             this.functionalityToolStripMenuItem.Text = "Functionality";
@@ -429,6 +431,8 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem functionalGroupsToolStripMenuItem;
     }
 }
 

@@ -260,13 +260,11 @@ namespace SustainableChemistry.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 	Structure	Count	Fragment	Test Frag	Count	Fragment	Test Frag	Count	Fragment	Test Frag	Count	Fragment	Test Frag	Count	Fragment	Test Frag	Count	Fragment	Test Frag
-        ///Alkanes		2	CH3     AA	-CH3 [aliphatic attach]															
-        ///Alkenes		2	CH2     AA	-CH2- [aliphatic attach]															
-        ///Alkynes		2	CH3     AA	-CH3 [aliphatic attach]															
-        ///Alkyl Halide		1	CH3     AA	-CH3 [aliphatic attach]	1	Cl       AA	-Cl [aliphatic attach]												
-        ///Aromatic		6	ArCH	AC															
-        ///Arenes		8	ArCH	AC	2	Fused  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to ACETALS		CO C(C)(C )OC		Aldehyde + Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	&gt;C&lt;    AA						
+        ///ACYLOINS		CC(=O)C(C)O	Acyloin condensation	carboxylic esters 	Base 		alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA				
+        ///ALCOHOLS		CO	Grignard	alkene + water	Acid 		alcohol 		1	CH3  AA	1	OH    AA								
+        ///ALCOHOLS, ALLYLIC		C=CCO	Luche reduction/ Prins 	Keton + alkene 	Acid 	water	allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA				
+        ///ALDEHYDES		[H]C(C)=O	Corey-Kim oxidation/S [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Full_Functional_Group_List {
             get {
