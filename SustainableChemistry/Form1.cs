@@ -64,6 +64,37 @@ namespace SustainableChemistry
                 fs.Close();
             }
 
+            // Srepasheet file name
+            string docName = "Full Functional Group List 01042018.xlsx";
+            DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = null;
+            DocumentFormat.OpenXml.Packaging.WorksheetPart worksheetPart = null;
+            DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData = null;
+            DocumentFormat.OpenXml.Spreadsheet.Cell c;
+            DocumentFormat.OpenXml.OpenXmlReader reader = null;
+            // Open the spreadsheet document for editing.
+            using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(docName, false))
+            {
+                wbPart = document.WorkbookPart;
+                worksheetPart = wbPart.WorksheetParts.First();
+                reader = DocumentFormat.OpenXml.OpenXmlReader.Create(worksheetPart);
+                sheetData = worksheetPart.Worksheet.Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
+
+                string text;
+                foreach (DocumentFormat.OpenXml.Spreadsheet.Row r in sheetData.Elements<DocumentFormat.OpenXml.Spreadsheet.Row>())
+                {
+                    c = r.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Cell>();
+                    if (c.CellReference.Value.StartsWith("A") && c.CellValue != null)
+                    {
+                        text = c.CellValue.Text;
+                        DocumentFormat.OpenXml.Spreadsheet.SharedStringItem t = wbPart.SharedStringTablePart.SharedStringTable.Elements<DocumentFormat.OpenXml.Spreadsheet.SharedStringItem>().ElementAt(Int32.Parse(text));
+                        if (!string.IsNullOrEmpty(text))
+                        {
+
+                        }
+                    }
+                }
+            }
+
             //m_References.Clear();
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
