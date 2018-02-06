@@ -11,6 +11,7 @@ using System.Data.SQLite;
 
 namespace SustainableChemistry
 {
+    // CCOP(=O)(N(C)C)N(C)C
     // CCN(CC)P(OC)OC
     // COP(=O)(OC)OC
 
@@ -33,6 +34,7 @@ namespace SustainableChemistry
 
         ChemInfo.Molecule molecule;
         List<ChemInfo.FunctionalGroup> functionalGroups;
+        List<FunctionalGroup> m_FGroups;
         static Encoding enc8 = Encoding.UTF8;
         References m_References;
         string documentPath;
@@ -46,6 +48,15 @@ namespace SustainableChemistry
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             documentPath = documentPath + "\\USEPA\\SustainableChemistry";
+            string[] directories = System.IO.Directory.GetDirectories(documentPath);
+            m_FGroups = new List<FunctionalGroup>();
+            foreach(string dir in directories)
+            {
+                string groupName = dir.Remove(0, documentPath.Length + 1);
+                m_FGroups.Add(new FunctionalGroup(groupName, dir));
+            }
+
+            
             System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
 
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
@@ -63,8 +74,8 @@ namespace SustainableChemistry
             {
                 fs.Close();
             }
-
-            //m_References.Clear();
+            
+            //m_References = new References();//.Clear();
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
             //m_References.AddReference(new Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403901904617)));
@@ -126,14 +137,33 @@ namespace SustainableChemistry
         {
             listBox1.Items.Clear();
             string[] phos = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            int i = 0;
+            List<SustainableChemistry.FunctionalGroup> groups = new List<SustainableChemistry.FunctionalGroup>();
             foreach (string p in phos)
             {
-                listBox1.Items.Add(p);
-                listBox1.Items.Add(string.Empty);
-                var refs = m_References.GetReferences(p);
-                foreach (Reference r in refs) listBox1.Items.Add(r.ToString());
-                listBox1.Items.Add(string.Empty);
-                listBox1.Items.Add(string.Empty);
+                foreach (SustainableChemistry.FunctionalGroup group in m_FGroups)
+                {
+                    if (group.Name.ToLower() == p)
+                    {
+                        groups.Add(group);
+                        i++;
+                    }
+                }
+                //listBox1.Items.Add(p);
+                //listBox1.Items.Add(string.Empty);
+                //var refs = m_References.GetReferences(p);
+                //foreach (Reference r in refs) listBox1.Items.Add(r.ToString());
+                //listBox1.Items.Add(string.Empty);
+                //listBox1.Items.Add(string.Empty);
+
+            }
+            if (i== 1)
+            {
+                this.pictureBox1.Image = groups[0].ReactionImage;
+                foreach(Reference r in groups[0].References)
+                {
+                    this.listBox1.Items.Add(r.ToString());
+                }
             }
             //listBox1.Items.AddRange(phos);
         }

@@ -19,7 +19,7 @@ namespace SustainableChemistry
     }
 
     [Serializable]
-    public class References
+    public class References : List<Reference>
     {
         List<Reference> m_References;
         public event EventHandler ReferenceAdded;

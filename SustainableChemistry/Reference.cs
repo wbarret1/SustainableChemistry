@@ -24,6 +24,7 @@ namespace SustainableChemistry
             //string line = reader.ReadLine();
             //while (string.IsNullOrEmpty(line))
             string[] lines = data.Replace("\r", string.Empty).Split('\n');
+            RISData = data;
             foreach (string line in lines)
             {
 
@@ -45,6 +46,7 @@ namespace SustainableChemistry
             }
         }
 
+        public string RISData { get; }
         public string FunctionalGroup { get; }
         public string ReactionName { get; }
         public string Type { get; }
