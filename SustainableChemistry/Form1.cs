@@ -39,6 +39,7 @@ namespace SustainableChemistry
         static Encoding enc8 = Encoding.UTF8;
         References m_References;
         string documentPath;
+        FunctionalGroupCollection fGroups;
 
         public Form1()
         {
