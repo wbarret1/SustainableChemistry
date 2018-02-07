@@ -8,6 +8,9 @@ namespace SustainableChemistry
 {
     public class FunctionalGroup
     {
+        List<Reference> m_refList;
+        System.Drawing.Image m_RxnImage;
+
         public FunctionalGroup(string str)
         {
             string[] parts = str.Split('\t');
@@ -23,6 +26,18 @@ namespace SustainableChemistry
             ByProduct = parts[8];
         }
 
+        public FunctionalGroup(string func, string directory)
+        {
+            Name = func;
+            m_refList = new List<Reference>();
+            string[] imageFile = System.IO.Directory.GetFiles(directory, "*.jpg");
+            if (imageFile.Length == 1)
+                m_RxnImage = System.Drawing.Image.FromFile(imageFile[0]);
+            string[] references = System.IO.Directory.GetFiles(directory, "*.ris");
+            foreach (string file in references)
+                m_refList.Add(new Reference(func, "", System.IO.File.ReadAllText(file)));
+        }
+
         public string Name { get; set; }
         public System.Drawing.Image Image { get; set; }
         public string Smart { get; set; }
@@ -32,5 +47,21 @@ namespace SustainableChemistry
         public string Solvent { get; set; }
         public string Product { get; set; }
         public string ByProduct { get; set; }
+
+        public System.Drawing.Image ReactionImage
+        {
+            get
+            {
+                return m_RxnImage;
+            }
+        }
+
+        public Reference[] References
+        {
+            get
+            {
+                return m_refList.ToArray<Reference>();
+            }
+        }
     }
 }
