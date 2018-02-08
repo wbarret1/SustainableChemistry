@@ -127,17 +127,11 @@
   <data name="BIB" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BIB.RIS;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Descriptors" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Descriptors.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="europepmc" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\europepmc.ris;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="europepmc1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\europepmc1.ris;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Fragments" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Fragments.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Icon1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon1.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -163,7 +157,7 @@
   <data name="_10_1002_2Fchin_199605199" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\10.1002%2Fchin.199605199.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Full_Functional_Group_List" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Full Functional Group List.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="Full_Functional_Group_List_01042018" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Full Functional Group List 01042018.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

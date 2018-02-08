@@ -1,4 +1,4 @@
-ACETALS		COC(C)(C)OC		Aldehyde + Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA						
+ACETALS		CO C(C)(C )OC		Aldehyde + Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA						
 ACYLOINS		CC(=O)C(C)O	Acyloin condensation	carboxylic esters 	Base 		alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA				
 ALCOHOLS		CO	Grignard	alkene + water	Acid 		alcohol 		1	CH3  AA	1	OH    AA								
 ALCOHOLS, ALLYLIC		C=CCO	Luche reduction/ Prins 	Keton + alkene 	Acid 	water	allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA				

@@ -17,7 +17,7 @@ namespace SustainableChemistry
             InitializeComponent();
         }
 
-        public References References
+        public ChemInfo.References References
         {
             set
             {

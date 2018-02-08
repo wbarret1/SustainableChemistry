@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SustainableChemistry
+namespace ChemInfo
 {
+    [Serializable]
     public class FunctionalGroup
     {
+        List<NamedReaction> m_Reactions;
         List<Reference> m_refList;
-        System.Drawing.Image m_RxnImage;
+        System.Drawing.Image m_FunctGroupImage;
 
         public FunctionalGroup(string str)
         {
@@ -24,6 +26,8 @@ namespace SustainableChemistry
             Solvent = parts[6];
             Product = parts[7];
             ByProduct = parts[8];
+            m_Reactions = new List<NamedReaction>();
+            m_Reactions.Add(new NamedReaction(parts[3], parts[0], reacts, parts[7], parts[5], parts[6], parts[8]));
         }
 
         public FunctionalGroup(string func, string directory)
@@ -32,7 +36,7 @@ namespace SustainableChemistry
             m_refList = new List<Reference>();
             string[] imageFile = System.IO.Directory.GetFiles(directory, "*.jpg");
             if (imageFile.Length == 1)
-                m_RxnImage = System.Drawing.Image.FromFile(imageFile[0]);
+                m_FunctGroupImage = System.Drawing.Image.FromFile(imageFile[0]);
             string[] references = System.IO.Directory.GetFiles(directory, "*.ris");
             foreach (string file in references)
                 m_refList.Add(new Reference(func, "", System.IO.File.ReadAllText(file)));
@@ -52,7 +56,15 @@ namespace SustainableChemistry
         {
             get
             {
-                return m_RxnImage;
+                return m_FunctGroupImage;
+            }
+        }
+
+        public NamedReaction[] NamedReactions
+        {
+            get
+            {
+                return this.m_Reactions.ToArray<NamedReaction>();
             }
         }
 

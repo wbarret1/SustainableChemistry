@@ -46,7 +46,7 @@ namespace SustainableChemistry
                         {
                             System.IO.StreamReader reader = new System.IO.StreamReader(myStream);
                             Data = reader.ReadToEnd();
-                            Reference reference = new Reference(string.Empty, string.Empty, Data);
+                            ChemInfo.Reference reference = new ChemInfo.Reference(string.Empty, string.Empty, Data);
                             textBox1.Text = reference.ToString();
                             label5.Text = string.Empty;
                         }

@@ -10,13 +10,13 @@ namespace SustainableChemistry
     public class Results
     {
 
-        public Results(string functionalGroup, References references)
+        public Results(string functionalGroup, ChemInfo.References references)
         {
             FunctionalGroup = functionalGroup;
             References = references.GetReferences(functionalGroup);
         }
 
         public string FunctionalGroup;
-        public Reference[] References { get; } 
+        public ChemInfo.Reference[] References { get; } 
     }
 }

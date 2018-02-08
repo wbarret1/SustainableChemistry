@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SustainableChemistry
+namespace ChemInfo
 {
     [Serializable]
     public class Reference
@@ -120,6 +120,3 @@ namespace SustainableChemistry
         }
     }
 }
-
-
-

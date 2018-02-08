@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SustainableChemistry
+namespace ChemInfo
 {
     public class ReferenceAddedEventArgs : EventArgs
     {
@@ -60,7 +60,7 @@ namespace SustainableChemistry
         public void AddReference(Reference newRef)
         {
             this.m_References.Add(newRef);
-            OnReferenceAdded(new ReferenceAddedEventArgs(new Reference[]{ newRef}));
+            OnReferenceAdded(new ReferenceAddedEventArgs(new Reference[] { newRef }));
         }
 
         public void AddReferences(Reference[] newRef)
@@ -94,6 +94,5 @@ namespace SustainableChemistry
                 return retVal;
             }
         }
-
     }
 }

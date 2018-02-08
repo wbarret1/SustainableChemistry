@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
-    [Serializable]
-    public class FunctionalGroup
-    {
-        public FunctionalGroup()
-        {
-        }
+    //[Serializable]
+    //public class FunctionalGroup
+    //{
+    //    public FunctionalGroup()
+    //    {
+    //    }
 
-        public FunctionalGroup(string name, string smart)
-        {
-            Name = name;
-            Smart = smart;
-        }
+    //    public FunctionalGroup(string name, string smart)
+    //    {
+    //        Name = name;
+    //        Smart = smart;
+    //    }
 
-        public string Name { get; set; }
-        public string Smart { get; set; }
-    }
+    //    public string Name { get; set; }
+    //    public string Smart { get; set; }
+    //}
 
     public static class Functionalities
     {

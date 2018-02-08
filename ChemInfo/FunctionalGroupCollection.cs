@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SustainableChemistry
+namespace ChemInfo
 {
-    class BondCollectionTypeConverter : System.ComponentModel.ExpandableObjectConverter
+    class FunctionalGroupCollectionTypeConverter : System.ComponentModel.ExpandableObjectConverter
     {
         public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
         {
@@ -28,7 +28,7 @@ namespace SustainableChemistry
         }
     };
 
-    [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]
+    [System.ComponentModel.TypeConverter(typeof(FunctionalGroupCollectionTypeConverter))]
     public sealed class FunctionalGroupCollection : System.ComponentModel.BindingList<FunctionalGroup>,
         System.ComponentModel.ICustomTypeDescriptor
     {
@@ -57,7 +57,7 @@ namespace SustainableChemistry
                     return g.Image;
                 }
             }
-            return null;            
+            return null;
         }
 
         public FunctionalGroup this[string name]
