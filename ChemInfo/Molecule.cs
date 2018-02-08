@@ -448,7 +448,6 @@ namespace ChemInfo
             Molecule m = new Molecule(smart);
             Stack<Atom> temp = new Stack<Atom>();
             Stack<Atom> matches = new Stack<Atom>();
-            int pn = 0;
             bool result = this.Match(temp, matches, new VF2SubState2(m, this, false));
             //bool result = this.Match(null, null, temp, matches, m);
             return result;

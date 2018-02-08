@@ -445,7 +445,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem functionalGroupsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }

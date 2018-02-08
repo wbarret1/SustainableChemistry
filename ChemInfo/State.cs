@@ -609,7 +609,7 @@ namespace ChemInfo
         {
             List<int> temp1 = new List<int>();
             List<int> temp2 = new List<int>();
-            int i, j;
+            int i;
             for (i = 0; i < n1; i++)
                 if (core_1[i] != NULL_NODE)
                 {
@@ -1199,8 +1199,7 @@ namespace ChemInfo
         {
             List<int> temp1 = new List<int>();
             List<int> temp2 = new List<int>();
-            int i, j;
-            for (i = 0; i < n1; i++)
+            for (int i = 0; i < n1; i++)
                 if (core_1[i] != NULL_NODE)
                 {
                     temp1.Add(i);

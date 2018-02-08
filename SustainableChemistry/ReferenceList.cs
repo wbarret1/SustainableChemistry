@@ -21,7 +21,7 @@ namespace SustainableChemistry
         {
             set
             {
-                this.dataGridView1.DataSource = value.Items;
+                this.dataGridView1.DataSource = value;
             }
         }
     }

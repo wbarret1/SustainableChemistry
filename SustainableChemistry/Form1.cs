@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SQLite;
 
 namespace SustainableChemistry
 {
@@ -34,7 +33,7 @@ namespace SustainableChemistry
     {
 
         ChemInfo.Molecule molecule;
-        List<ChemInfo.FunctionalGroup> functionalGroups;
+        //List<ChemInfo.FunctionalGroup> functionalGroups;
         List<ChemInfo.FunctionalGroup> m_FGroups;
         static Encoding enc8 = Encoding.UTF8;
         ChemInfo.References m_References;
@@ -254,7 +253,6 @@ namespace SustainableChemistry
             DateTime start = DateTime.Now;
             ChemInfo.Molecule m = null;
             int[] indices = null;
-            ChemInfo.Atom[] temp = null;
             foreach (string molecule in molecules)
             {
                 m = new ChemInfo.Molecule(molecule);
@@ -321,12 +319,7 @@ namespace SustainableChemistry
         {
             AddNewReference form = new AddNewReference();
             if (form.ShowDialog() == DialogResult.OK)
-                m_References.AddReference(new ChemInfo.Reference(form.FunctionalGroup, form.ReactionName, form.Data));
-        }
-
-        private void moleculeViewer1_Load(object sender, EventArgs e)
-        {
-
+                m_References.Add(new ChemInfo.Reference(form.FunctionalGroup, form.ReactionName, form.Data));
         }
 
         private void exportJSONToolStripMenuItem_Click(object sender, EventArgs e)
