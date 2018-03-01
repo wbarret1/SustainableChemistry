@@ -11,10 +11,12 @@ namespace ChemInfo
     {
         References m_refList;
         List<System.Drawing.Image> m_RxnImage;
+        FunctionalGroup m_FunctionalGroup;
 
-        public NamedReaction(string name, string functGroup, string[] reactants, string product, string catalyst, string solvent, string byPrduct)
+        public NamedReaction(string name, FunctionalGroup functGroup, string[] reactants, string product, string catalyst, string solvent, string byPrduct)
         {
             Name = name;
+            m_FunctionalGroup = functGroup;
             m_refList = new References();
             m_RxnImage = new List<System.Drawing.Image>();
             string directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\" + functGroup;

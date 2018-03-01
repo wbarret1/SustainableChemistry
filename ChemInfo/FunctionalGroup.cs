@@ -9,7 +9,7 @@ namespace ChemInfo
     [Serializable]
     public class FunctionalGroup
     {
-        List<NamedReaction> m_Reactions;
+        NamedReactionCollection m_Reactions;
         List<Reference> m_refList;
         System.Drawing.Image m_FunctGroupImage;
 
@@ -26,8 +26,8 @@ namespace ChemInfo
             Solvent = parts[6];
             Product = parts[7];
             ByProduct = parts[8];
-            m_Reactions = new List<NamedReaction>();
-            m_Reactions.Add(new NamedReaction(parts[3], parts[0], reacts, parts[7], parts[5], parts[6], parts[8]));
+            m_Reactions = new NamedReactionCollection();
+            m_Reactions.Add(new NamedReaction(parts[3], this, reacts, parts[7], parts[5], parts[6], parts[8]));
         }
 
         public FunctionalGroup(string func, string directory)
@@ -39,7 +39,13 @@ namespace ChemInfo
                 m_FunctGroupImage = System.Drawing.Image.FromFile(imageFile[0]);
             string[] references = System.IO.Directory.GetFiles(directory, "*.ris");
             foreach (string file in references)
-                m_refList.Add(new Reference(func, "", System.IO.File.ReadAllText(file)));
+                m_refList.Add(new Reference(this, "", System.IO.File.ReadAllText(file)));
+            m_Reactions = new NamedReactionCollection();
+        }
+
+        public void AddNamedReaction(NamedReaction reaction)
+        {
+            m_Reactions.Add(reaction);
         }
 
         public string Name { get; set; }

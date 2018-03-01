@@ -10,14 +10,15 @@ namespace ChemInfo
     public class Reference
     {
         List<string> m_authors;
+        FunctionalGroup m_FunctionalGroup;
 
         //public Reference(string data)
         //{
         //}
 
-        public Reference(string functionalGroup, string reactionName, string data)
+        public Reference(FunctionalGroup functionalGroup, string reactionName, string data)
         {
-            FunctionalGroup = functionalGroup;
+            m_FunctionalGroup = functionalGroup;
             ReactionName = reactionName;
             m_authors = new List<string>();
             //var reader = new System.IO.StringReader(data);

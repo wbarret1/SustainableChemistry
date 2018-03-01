@@ -29,6 +29,7 @@ namespace SustainableChemistry
 
         private void button1_Click(object sender, EventArgs e)
         {
+            System.Windows.Forms.MessageBox.Show("THIS NEEDS FIXED", "THIS NEEDS FIXED", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             System.IO.Stream myStream = null;
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             openFileDialog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "\\Downloads";
@@ -46,8 +47,8 @@ namespace SustainableChemistry
                         {
                             System.IO.StreamReader reader = new System.IO.StreamReader(myStream);
                             Data = reader.ReadToEnd();
-                            ChemInfo.Reference reference = new ChemInfo.Reference(string.Empty, string.Empty, Data);
-                            textBox1.Text = reference.ToString();
+                            // ChemInfo.Reference reference = new ChemInfo.Reference(string.Empty, string.Empty, Data);
+                            //textBox1.Text = reference.ToString();
                             label5.Text = string.Empty;
                         }
                     }

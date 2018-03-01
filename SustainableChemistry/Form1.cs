@@ -34,27 +34,29 @@ namespace SustainableChemistry
 
         ChemInfo.Molecule molecule;
         //List<ChemInfo.FunctionalGroup> functionalGroups;
-        List<ChemInfo.FunctionalGroup> m_FGroups;
+        //List<ChemInfo.FunctionalGroup> m_FGroups;
         static Encoding enc8 = Encoding.UTF8;
         ChemInfo.References m_References;
         string documentPath;
         ChemInfo.FunctionalGroupCollection fGroups;
+        ChemInfo.NamedReactionCollection m_NamedReactions;
 
         public Form1()
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
+            fGroups = new ChemInfo.FunctionalGroupCollection();
+            m_NamedReactions = fGroups.NamedReactions;
             var json = new System.Web.Script.Serialization.JavaScriptSerializer();
             //functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             documentPath = documentPath + "\\USEPA\\SustainableChemistry";
             string[] directories = System.IO.Directory.GetDirectories(documentPath);
-            m_FGroups = new List<ChemInfo.FunctionalGroup>();
             foreach(string dir in directories)
             {
                 string groupName = dir.Remove(0, documentPath.Length + 1);
-                m_FGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
+                fGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
             }
 
             
@@ -76,14 +78,13 @@ namespace SustainableChemistry
                 fs.Close();
             }
 
-            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List_01042018.Split('\n');
-            fGroups = new ChemInfo.FunctionalGroupCollection();
+            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List_20180301.Split('\n');
             foreach (string line in functionalGroupStrs)
-            {
-                ChemInfo.FunctionalGroup temp = new ChemInfo.FunctionalGroup(line);
+            {                
+                ChemInfo.FunctionalGroup temp = fGroups.Add(line);
                 string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
                 if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
-                 fGroups.Add(temp);
+                // fGroups.Add(temp);
             }
 
             //m_References = new ChemInfo.References();
@@ -153,7 +154,7 @@ namespace SustainableChemistry
             List<ChemInfo.FunctionalGroup> groups = new List<ChemInfo.FunctionalGroup>();
             foreach (string p in phos)
             {
-                foreach (ChemInfo.FunctionalGroup group in m_FGroups)
+                foreach (ChemInfo.FunctionalGroup group in fGroups)
                 {
                     if (group.Name.ToLower() == p)
                     {
@@ -317,9 +318,10 @@ namespace SustainableChemistry
 
         private void importRISFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddNewReference form = new AddNewReference();
-            if (form.ShowDialog() == DialogResult.OK)
-                m_References.Add(new ChemInfo.Reference(form.FunctionalGroup, form.ReactionName, form.Data));
+            System.Windows.Forms.MessageBox.Show("THIS NEEDS FIXED", "THIS NEEDS FIXED", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //AddNewReference form = new AddNewReference();
+            //if (form.ShowDialog() == DialogResult.OK)
+            //    m_References.Add(new ChemInfo.Reference(form.FunctionalGroup, form.ReactionName, form.Data));
         }
 
         private void exportJSONToolStripMenuItem_Click(object sender, EventArgs e)
@@ -342,6 +344,12 @@ namespace SustainableChemistry
         {
             FunctionalGroupViewer viewer = new FunctionalGroupViewer(this.fGroups);
             viewer.ShowDialog();
+        }
+
+        private void reactionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReactionEditor editor = new ReactionEditor(fGroups);
+            editor.Show();
         }
     }
 }

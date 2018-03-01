@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
-    class FunctionalGroupCollectionTypeConverter : System.ComponentModel.ExpandableObjectConverter
+    class NamedReactionCollectionTypeConverter : System.ComponentModel.ExpandableObjectConverter
     {
         public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType)
         {
-            if ((typeof(FunctionalGroupCollection)).IsAssignableFrom(destinationType))
+            if ((typeof(NamedReactionCollection)).IsAssignableFrom(destinationType))
                 return true;
 
             return base.CanConvertTo(context, destinationType);
@@ -18,7 +18,7 @@ namespace ChemInfo
 
         public override Object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, Object value, System.Type destinationType)
         {
-            if ((typeof(System.String)).IsAssignableFrom(destinationType) && (typeof(FunctionalGroupCollection).IsAssignableFrom(value.GetType())))
+            if ((typeof(System.String)).IsAssignableFrom(destinationType) && (typeof(NamedReactionCollection).IsAssignableFrom(value.GetType())))
             {
                 return string.Empty;
                 //return ((FunctionalGroupCollection)value).AtomList;
@@ -28,17 +28,16 @@ namespace ChemInfo
         }
     };
 
-    [System.ComponentModel.TypeConverter(typeof(FunctionalGroupCollectionTypeConverter))]
-    public sealed class FunctionalGroupCollection : System.ComponentModel.BindingList<FunctionalGroup>,
+    [System.ComponentModel.TypeConverter(typeof(NamedReactionCollectionTypeConverter))]
+    public sealed class NamedReactionCollection : System.ComponentModel.BindingList<NamedReaction>,
         System.ComponentModel.ICustomTypeDescriptor
     {
-        NamedReactionCollection m_NamedReactions;
-        public FunctionalGroupCollection()
+        public NamedReactionCollection()
         {
-            m_NamedReactions = new NamedReactionCollection();
+
         }
 
-        public string[] FunctionalGroups
+        public string[] NamedReaction
         {
             get
             {
@@ -49,31 +48,23 @@ namespace ChemInfo
             }
         }
 
-        public NamedReactionCollection NamedReactions
+        //public System.Drawing.Image Image(string groupName)
+        //{
+        //    foreach (NamedReaction g in this)
+        //    {
+        //        if (g.Name == groupName)
+        //        {
+        //            return g.Image;
+        //        }
+        //    }
+        //    return null;
+        //}
+
+        public NamedReaction this[string name]
         {
             get
             {
-                return m_NamedReactions;
-            }
-        }
-
-        public System.Drawing.Image Image(string groupName)
-        {
-            foreach (FunctionalGroup g in this)
-            {
-                if (g.Name == groupName)
-                {
-                    return g.Image;
-                }
-            }
-            return null;
-        }
-
-        public FunctionalGroup this[string name]
-        {
-            get
-            {
-                foreach (FunctionalGroup g in this)
+                foreach (NamedReaction g in this)
                 {
                     if (g.Name.ToLower() == name.ToLower())
                     {
@@ -82,30 +73,6 @@ namespace ChemInfo
                 }
                 return null;
             }
-        }
-
-        public bool Contains(string name)
-        {
-            foreach (FunctionalGroup g in this)
-                if (g.Name == name) return true;
-            return false;
-        }
-
-        public FunctionalGroup Add(string line)
-        {
-            FunctionalGroup group = new FunctionalGroup(line);
-            if (!this.Contains(group.Name))
-            {
-                this.Add(group);
-            }
-            this.AddReactionToFunctionalGroup(group.Name, group.NamedReactions[0]);
-            return this[group.Name];
-        }
-
-        public void AddReactionToFunctionalGroup(string groupName, NamedReaction reaction)
-        {
-            this[groupName].AddNamedReaction(reaction);
-            m_NamedReactions.Add(reaction);
         }
 
         //[System.ComponentModel.Browsable(false)]
@@ -192,7 +159,7 @@ namespace ChemInfo
             {
                 // For each parameter create a property descriptor 
                 // and add it to the PropertyDescriptorCollection instance
-                FunctionalGroupCollectionPropertyDescriptor pd = new FunctionalGroupCollectionPropertyDescriptor(this, i);
+                NamedReactionCollectionPropertyDescriptor pd = new NamedReactionCollectionPropertyDescriptor(this, i);
                 pds.Add(pd);
             }
             return pds;
@@ -203,12 +170,12 @@ namespace ChemInfo
     /// Summary description for CollectionpublicDescriptor.
     /// </summary>
     [System.Runtime.InteropServices.ComVisibleAttribute(false)]
-    class FunctionalGroupCollectionPropertyDescriptor : System.ComponentModel.PropertyDescriptor
+    class NamedReactionCollectionPropertyDescriptor : System.ComponentModel.PropertyDescriptor
     {
-        private FunctionalGroupCollection collection;
+        private NamedReactionCollection collection;
         private int index;
 
-        public FunctionalGroupCollectionPropertyDescriptor(FunctionalGroupCollection coll, int idx) :
+        public NamedReactionCollectionPropertyDescriptor(NamedReactionCollection coll, int idx) :
             base("#" + idx.ToString(), null)
         {
             this.collection = coll;
@@ -240,7 +207,7 @@ namespace ChemInfo
         {
             get
             {
-                return ((FunctionalGroup)this.collection[index]).Name;
+                return ((NamedReaction)this.collection[index]).Name;
             }
         }
 
@@ -248,7 +215,7 @@ namespace ChemInfo
         {
             get
             {
-                return ((FunctionalGroup)this.collection[index]).Name;
+                return ((NamedReaction)this.collection[index]).Name;
             }
         }
 
