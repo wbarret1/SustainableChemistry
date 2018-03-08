@@ -47,19 +47,19 @@ namespace SustainableChemistry
             molecule = new ChemInfo.Molecule();
             fGroups = new ChemInfo.FunctionalGroupCollection();
             m_NamedReactions = fGroups.NamedReactions;
-            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            //var json = new System.Web.Script.Serialization.JavaScriptSerializer();
             //functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             documentPath = documentPath + "\\USEPA\\SustainableChemistry";
-            string[] directories = System.IO.Directory.GetDirectories(documentPath);
-            foreach(string dir in directories)
-            {
-                string groupName = dir.Remove(0, documentPath.Length + 1);
-                fGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
-            }
+            //string[] directories = System.IO.Directory.GetDirectories(documentPath);
+            //foreach(string dir in directories)
+            //{
+            //    string groupName = dir.Remove(0, documentPath.Length + 1);
+            //    fGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
+            //}
 
-            
+
             System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
 
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
@@ -84,20 +84,19 @@ namespace SustainableChemistry
                 ChemInfo.FunctionalGroup temp = fGroups.Add(line);
                 string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
                 if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
-                // fGroups.Add(temp);
             }
 
             //m_References = new ChemInfo.References();
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403901904617)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.achs_jacsat105_661)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphate", "No Name", enc8.GetString(Properties.Resources.S1001841712003142)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphate", "Catalyst", Properties.Resources._10_1002_2Fchin_199605199));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc1)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.achs_oprdfk4_175)));
-            //m_References.AddReference(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.BIB)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403901904617)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.achs_jacsat105_661)));
+            //m_References.Add(new ChemInfo.Reference("phosphate", "No Name", enc8.GetString(Properties.Resources.S1001841712003142)));
+            //m_References.Add(new ChemInfo.Reference("phosphate", "Catalyst", Properties.Resources._10_1002_2Fchin_199605199));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.europepmc1)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.achs_oprdfk4_175)));
+            //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.BIB)));
 
             //Results res = new Results("phosphoramidite", m_References);
             //string results = json.Serialize(res);
@@ -173,10 +172,10 @@ namespace SustainableChemistry
             if (i== 1)
             {
                 this.pictureBox1.Image = groups[0].ReactionImage;
-                foreach(ChemInfo.Reference r in groups[0].References)
-                {
-                    this.listBox1.Items.Add(r.ToString());
-                }
+                //foreach(ChemInfo.Reference r in groups[0].References)
+                //{
+                //    this.listBox1.Items.Add(r.ToString());
+                //}
             }
             //listBox1.Items.AddRange(phos);
         }
@@ -295,17 +294,22 @@ namespace SustainableChemistry
             {
                 fs.Close();
             }
+
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            System.IO.File.WriteAllText(documentPath + "\\FunctionalGroups.json", json.Serialize(fGroups));
+
+
         }
 
         private void showReferencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //List<string> references = new List<string>();
-            //string[] funcs = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
-            //foreach (string f in funcs)
-            //{
-            //    var refs = m_References.GetReferences(f);
-            //    foreach (Reference r in refs) references.Add(r.ToString());
-            //}
+            List<string> references = new List<string>();
+            string[] funcs = ChemInfo.Functionalities.PhosphorousFunctionality(molecule);
+            foreach (string f in funcs)
+            {
+                var refs = m_References.GetReferences(f);
+                foreach (ChemInfo.Reference r in refs) references.Add(r.ToString());
+            }
             ReferenceList form = new ReferenceList();
             form.References = m_References;
             form.ShowDialog();

@@ -27,6 +27,7 @@ namespace ChemInfo
         }
     };
 
+    [Serializable]
     [System.ComponentModel.TypeConverter(typeof(BondCollectionTypeConverter))]
     public sealed class BondCollection : System.ComponentModel.BindingList<Bond>,
         System.ComponentModel.ICustomTypeDescriptor

@@ -28,6 +28,7 @@ namespace ChemInfo
         }
     };
 
+    [Serializable]
     [System.ComponentModel.TypeConverter(typeof(FunctionalGroupCollectionTypeConverter))]
     public sealed class FunctionalGroupCollection : System.ComponentModel.BindingList<FunctionalGroup>,
         System.ComponentModel.ICustomTypeDescriptor
@@ -98,7 +99,7 @@ namespace ChemInfo
             {
                 this.Add(group);
             }
-            this.AddReactionToFunctionalGroup(group.Name, group.NamedReactions[0]);
+            else this.AddReactionToFunctionalGroup(group.Name, group.NamedReactions[0]);
             return this[group.Name];
         }
 

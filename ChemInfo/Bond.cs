@@ -67,7 +67,7 @@ namespace ChemInfo
         }
     };
 
-
+    [Serializable]
     [System.ComponentModel.TypeConverter(typeof(BondTypeConverter))]
     public class Bond
     {

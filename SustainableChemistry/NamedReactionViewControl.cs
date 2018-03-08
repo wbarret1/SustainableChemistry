@@ -20,9 +20,22 @@ namespace SustainableChemistry
             this.label3.Text = string.Empty;
             this.label4.Text = "+";
             this.label5.Text = "=>";
+            this.label6.Text = string.Empty;
             this.label8.Text = string.Empty;
             //this.label5.Text = string.Empty;
             this.Text = string.Empty;
+        }
+
+        public string ReactionName
+        {
+            get
+            {
+                return this.label6.Text;
+            }
+            set
+            {
+                this.label6.Text = value;
+            }
         }
 
         public Image Reactant1

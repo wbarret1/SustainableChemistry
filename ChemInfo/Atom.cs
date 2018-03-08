@@ -222,6 +222,7 @@ namespace ChemInfo
         }
     }
 
+    [Serializable]
     [System.ComponentModel.TypeConverter(typeof(AtomTypeConverter))]
     public class Atom
     {

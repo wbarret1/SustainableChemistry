@@ -28,6 +28,7 @@ namespace ChemInfo
         }
     };
 
+    [Serializable]
     [System.ComponentModel.TypeConverter(typeof(NamedReactionCollectionTypeConverter))]
     public sealed class NamedReactionCollection : System.ComponentModel.BindingList<NamedReaction>,
         System.ComponentModel.ICustomTypeDescriptor

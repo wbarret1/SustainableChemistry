@@ -21,7 +21,6 @@ namespace ChemInfo
     [Serializable]
     public class References : List<Reference>
     {
-        List<Reference> m_References;
         public event EventHandler ReferenceAdded;
 
         protected virtual void OnReferenceAdded(EventArgs e)
@@ -31,42 +30,11 @@ namespace ChemInfo
 
         public References()
         {
-            m_References = new List<Reference>();
         }
-
-        //public Reference this[int i]
-        //{
-        //    get { return m_References[i]; }
-        //    set { m_References[i] = value; }
-        //}
-
-        //public Reference[] Items
-        //{
-        //    get
-        //    {
-        //        return m_References.ToArray();
-        //    }
-        //    set
-        //    {
-        //        this.m_References.AddRange(Items);
-        //    }
-        //}
-
-        //public void AddReference(Reference newRef)
-        //{
-        //    this.m_References.Add(newRef);
-        //    OnReferenceAdded(new ReferenceAddedEventArgs(new Reference[] { newRef }));
-        //}
-
-        //public void AddReferences(Reference[] newRef)
-        //{
-        //    this.m_References.AddRange(newRef);
-        //    OnReferenceAdded(new ReferenceAddedEventArgs(newRef));
-        //}
 
         public Reference[] GetReferences(string functionalGroup)
         {
-            var results = from reference in m_References where reference.FunctionalGroup == functionalGroup select reference;
+            var results = from reference in this where reference.FunctionalGroup == functionalGroup select reference;
 
             List<Reference> retVal = new List<Reference>();
             foreach (Reference r in results)
@@ -82,7 +50,7 @@ namespace ChemInfo
             get
             {
                 List<string[]> retVal = new List<string[]>();
-                foreach (Reference r in m_References)
+                foreach (Reference r in this)
                 {
                     retVal.Add(new string[] { r.FunctionalGroup, r.ToString() });
                 }

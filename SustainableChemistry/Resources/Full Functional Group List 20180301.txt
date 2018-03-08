@@ -1,12 +1,11 @@
-ACETAL	CO C(C)(C )OC		Aldehyde	 Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA																																						
+ACETAL	COC(C)(C)OC		Aldehyde	 Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA																																						
 ACYLOIN	CC(=O)C(C)O	Acyloin condensation	carboxylic esters 		Base 		alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
 ALCOHOL	CO	Grignard	alkene	 water	Acid 		alcohol 		1	CH3  AA	1	OH    AA																																								
 ALCOHOL, ALLYLIC	C=CCO	Luche reduction/ Prins 	Keton 	 alkene 	Acid 	water	allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
 ALDEHYDE	[H]C(C)=O	Swern oxidation	Primary Alcohol		oxidant	DCM	aldehyde		1	R        AA	1	CH2   AA																																								
-ALDEHYDE	Swern oxidation																																																		
 ALKANE	CCC	Clemmensen reduction	Carbon monoxide	hydrogen 			Alkanes 		2	CH3     AA																																										
-ALKANE	Wolff-Kishner reduction																																																		
-ALKANE	Wurtz reaction																																																		
+ALKANE		Wolff-Kishner reduction																																																		
+ALKANE		Wurtz reaction																																																		
 ALKENE-ALCOHOL	CCCCO		alkene 	water	Acid		alkene alcohol		3	CH2   AA	1	CH3  AA	1	OH    AA																																						
 ALKENE-ALDEHYDE	[H]C(=O)CCC								2	CH2   AA	2	CH3  AA	1	C=O   AA																																						
 ALKENE-ALKYNE	C#CC=CC								1	#C   AA	1	#CH   AA	1	CH3  AA	2	C=CH  AA																																				
@@ -15,7 +14,7 @@ ALKENE-CARBOXYLIC ACID	CC=CC(=O)O								1	CH3  AA	1	COOH   AA	2	C=CH  AA
 ALKENE-KETONE	CC=CC=O								1	CH3  AA	1	CHO    AA	2	C=CH  AA																																						
 ALKENE-THIOETHER	CCC=C[S+](C)C								3	CH3  AA	2	C=CH  AA																																								
 ALKENE	CC=CCC	Hofmann elimination	alkanes		catalyst/heat 		alkane	alkene	2	CH3  AA	2	C=CH  AA																																								
-ALKENE	Wittig Reaction																																																		
+ALKENE		Wittig Reaction																																																		
 ALKYNE-ALCOHOL	[H]OCC#CC								2	#C    AA	1	CH2   AA	1	CH3  AA	1	OH    AA																																				
 ALKYNE	C#CCCC	Corey-Fuchs 	aldehyde		"Catalyst (Ph3P, CBr4) (BuLi)"	water	terminal alkyne		1	CH3  AA	1	CH2   AA	1	C=      AA	1	C=CH  AA  																																				
 ALLENE	C=C=C		alkyne		Base		allenes		1	C=C=C  AA	2	C=CH2 AA																																								
@@ -27,9 +26,9 @@ AMIDE	Schotten-Baumann Reaction
 AMIDINE	CN=C(C)N(C)C	Pinner Reaction	Nitrile	Azide	Acid             	methanol	amidines		4	CH3      AA	1	N<     AA	1	>C(=N)   NA																																						
 AMINE OXIDE	CN(C)(C)=O		Tertiary Amine 	Hydrogen Per-oxide			tertiary amine oxide		3	CH3      AA	1	[O-]	1	N+       4SB																																						
 AMINE	[H]N([H])C	schmidt	Carboxylic acid	Azide	Acid		amines		1	CH3      AA	1	NH2    AA																																								
-AMINE	Gabriel Syntheis 																																																		
-AMINE	Hofmann Rearrangement 																																																		
-AMINE	Staudinger Reaction																																																		
+AMINE		Gabriel Syntheis 																																																		
+AMINE		Hofmann Rearrangement 																																																		
+AMINE		Staudinger Reaction																																																		
 AMINO-ACID	[H]N([H])C(C)C(=O)O	Strecker amino acid synthesis	Alpha Ketoacid	 Glutamate			amino acid	alpha ketoglutarate	1	CH3      AA	1	CH<     AA	1	COOH  AA	1	NH2   AA																																				
 AMINO-ALCOHOL	[H]N([H])CCO		Epoxide 	 Primary amines		water	amino alcohols 		2	CH2   AA	1	NH2   AA	1	OH     AA																																						
 AMINO-ALDEHYDE	[H]C(=O)CN([H])[H]								1	CH2   AA	1	CHO    AA	1	NH2   AA																																						
@@ -97,9 +96,9 @@ EPOXY-NITRILE	N#CC1CO1								1	C#N    AA	1	CH2    AA	1	CH<     AA	1	O    epoxid
 ESTER-AMIDE	COC(=O)N(C)C								3	CH3       AA	1	N<     AA	1	O         AA	1	[=C]    AA	1	[=CH2]    AA																																		
 ESTER-SULFIDE																																																				
 ESTER	COC(C)=O	Baeyer-Villiger oxidation	carboxylic acid	 Alcohol	Acid		Ester 	Water	1	C(=O)O    AA	2	CH3       AA																																								
-ESTER	Yamaguchi Esterification																																																		
-ESTER	Schotten_Baumann																																																		
-ESTER	Fisher Esterification																																																		
+ESTER		Yamaguchi Esterification																																																		
+ESTER		Schotten_Baumann																																																		
+ESTER		Fisher Esterification																																																		
 ETHER-AMINE	CON								3	CH3       AA	1	N<     AA	1	O         NA																																						
 ETHER-ESTER	COCC(=O)OC								1	C(=O)O    AA	1	CH2    AA	2	CH3       AA	1	O         NA																																				
 ETHER-KETONE	COCC(C)=O								1	CH2    AA	2	CH3       AA	1	O         AA	1	C=O    AA																																				

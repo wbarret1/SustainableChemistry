@@ -23,43 +23,27 @@ namespace SustainableChemistry
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.tableLayoutPanel1.Controls.Clear();
             ChemInfo.FunctionalGroup g = this.m_FunctGroups[this.comboBox1.SelectedItem.ToString()];
             int i = 0;
             foreach (ChemInfo.NamedReaction r in g.NamedReactions)
             {
                 NamedReactionViewControl myControl = new NamedReactionViewControl();
+                myControl.ReactionName = r.Name;
                 this.tableLayoutPanel1.Controls.Add(myControl, 0 /* Column Index */, i++ /* Row index */);
-                string[] reactants = g.Reactants;
+                string[] reactants = { g.ReactantA, g.ReactantB };
                 if (reactants.Length == 2)
                 {
-                    ChemInfo.FunctionalGroup react0 = this.m_FunctGroups[reactants[0] + "s"];
-                    ChemInfo.FunctionalGroup react1 = this.m_FunctGroups[reactants[1] + "s"];
-                    myControl.Reactant1 = this.m_FunctGroups[reactants[0] + "s"].Image;
-                    myControl.Reactant2 = this.m_FunctGroups[reactants[1] + "s"].Image;
-                    myControl.Product = g.Image;
+                    ChemInfo.FunctionalGroup react0 = this.m_FunctGroups[reactants[0]];
+                    ChemInfo.FunctionalGroup react1 = this.m_FunctGroups[reactants[1]];
+                    myControl.Reactant1 = react0.Image;
+                    myControl.Reactant2 = react1.Image;
                     myControl.Reactant1Name = react0.Name;
                     myControl.Reactant2Name = react1.Name;
-                    myControl.FunctionalGroupName = g.Name;
-                    myControl.Catalyst = g.Catalyst;
                 }
-            }
-            foreach (ChemInfo.NamedReaction r in g.NamedReactions)
-            {
-                NamedReactionViewControl myControl = new NamedReactionViewControl();
-                this.tableLayoutPanel1.Controls.Add(myControl, 0 /* Column Index */, i++ /* Row index */);
-                string[] reactants = g.Reactants;
-                if (reactants.Length == 2)
-                {
-                    ChemInfo.FunctionalGroup react0 = this.m_FunctGroups[reactants[0] + "s"];
-                    ChemInfo.FunctionalGroup react1 = this.m_FunctGroups[reactants[1] + "s"];
-                    myControl.Reactant1 = this.m_FunctGroups[reactants[0] + "s"].Image;
-                    myControl.Reactant2 = this.m_FunctGroups[reactants[1] + "s"].Image;
-                    myControl.Product = g.Image;
-                    myControl.Reactant1Name = react0.Name;
-                    myControl.Reactant2Name = react1.Name;
-                    myControl.FunctionalGroupName = g.Name;
-                    myControl.Catalyst = g.Catalyst;
-                }
+                myControl.Product = g.Image;
+                myControl.FunctionalGroupName = g.Name;
+                myControl.Catalyst = g.Catalyst;
             }
         }
 

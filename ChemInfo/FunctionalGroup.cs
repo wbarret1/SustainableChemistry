@@ -14,20 +14,21 @@ namespace ChemInfo
         System.Drawing.Image m_FunctGroupImage;
 
         public FunctionalGroup(string str)
-        {
+        {   
             string[] parts = str.Split('\t');
-            Name = parts[0];
-            Smart = parts[2];
-            ReactionName = parts[3];
-            string[] reacts = parts[4].Split('+');
-            for (int i = 0; i < reacts.Length; i++) reacts[i] = reacts[i].Trim();
-            Reactants = reacts;
-            Catalyst = parts[5];
-            Solvent = parts[6];
-            Product = parts[7];
-            ByProduct = parts[8];
+            Name = parts[0].Trim();
+            Smart = parts[1].Trim();
+            ReactionName = parts[2].Trim();
+            ReactantA = parts[3].Trim();
+            ReactantB = parts[4].Trim();
+            Catalyst = parts[5].Trim();
+            Solvent = parts[6].Trim();
+            Product = parts[7].Trim();
+            ByProduct = parts[8].Trim();
             m_Reactions = new NamedReactionCollection();
-            m_Reactions.Add(new NamedReaction(parts[3], this, reacts, parts[7], parts[5], parts[6], parts[8]));
+            m_Reactions.Add(new NamedReaction(parts[2].Trim(), this, parts[3].Trim(), parts[4].Trim(), parts[7].Trim(), parts[5].Trim(), parts[6].Trim(), parts[8].Trim()));
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\Images\\" + Name + ".jpg";
+            if (System.IO.File.Exists(fileName)) m_FunctGroupImage = System.Drawing.Image.FromFile(fileName);
         }
 
         public FunctionalGroup(string func, string directory)
@@ -39,7 +40,7 @@ namespace ChemInfo
                 m_FunctGroupImage = System.Drawing.Image.FromFile(imageFile[0]);
             string[] references = System.IO.Directory.GetFiles(directory, "*.ris");
             foreach (string file in references)
-                m_refList.Add(new Reference(this, "", System.IO.File.ReadAllText(file)));
+                m_refList.Add(new Reference(this.Name, "", System.IO.File.ReadAllText(file)));
             m_Reactions = new NamedReactionCollection();
         }
 
@@ -52,7 +53,9 @@ namespace ChemInfo
         public System.Drawing.Image Image { get; set; }
         public string Smart { get; set; }
         public string ReactionName { get; set; }
-        public string[] Reactants { get; set; }
+//        public string[] Reactants { get; set; }
+        public string ReactantB { get; set; }
+        public string ReactantA { get; set; }
         public string Catalyst { get; set; }
         public string Solvent { get; set; }
         public string Product { get; set; }
@@ -66,20 +69,20 @@ namespace ChemInfo
             }
         }
 
-        public NamedReaction[] NamedReactions
+        public NamedReactionCollection NamedReactions
         {
             get
             {
-                return this.m_Reactions.ToArray<NamedReaction>();
+                return this.m_Reactions;
             }
         }
 
-        public Reference[] References
-        {
-            get
-            {
-                return m_refList.ToArray<Reference>();
-            }
-        }
+        //public Reference[] References
+        //{
+        //    get
+        //    {
+        //        return m_refList.ToArray<Reference>();
+        //    }
+        //}
     }
 }

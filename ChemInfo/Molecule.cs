@@ -16,7 +16,7 @@ namespace ChemInfo
     }
 
 
-
+    [Serializable]
     public class Molecule
     {
         List<Atom> m_Atoms;
