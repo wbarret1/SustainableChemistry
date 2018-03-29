@@ -18,16 +18,19 @@ branched_atom   : atom (bond? ringbond)* branch*;
 branch          : '(' chain ')' | '(' bond chain ')' | '(' dot chain ')' |  /* handle redundant parenthesis */ '(' branch ')';
 ringbond        : ('%' DIGIT DIGIT) | DIGIT;
 
-bond            : '-' | '=' | '#' | '$' | ':' | '/' | '\'';
+bond            : '-' | '=' | '#' | '$' | ':' | '\\' | '/';
 dot             : '.';
-
 
 atom            : ('[' isotope? symbol chiral? hcount? charge? atomclass? ']') | organic | aromatic;
 // Consider bracket atom as an inline option for atoms as this prevents problems with the bracket atom for organics.
 // bracket_atom    :  ('[' isotope? symbol chiral? hcount? charge? atomclass? ']');
-symbol          : ELEMENT | organic | aromatic | WILDCARD;
+symbol          : element /*| organic | aromatic */| WILDCARD;
 organic         : 'B' | 'C' | 'N' | 'O' | 'S' | 'P' | 'F' | 'Cl' | 'Br' | 'I';
 aromatic        : 'b' | 'c' | 'n'| 'o' | 'p' | 's'| 'se' | 'as';
+
+// Calling out Halogens Separately...
+halogen         : 'X';
+
 
 chiral          :  '@'
             |  '@@'
@@ -53,7 +56,7 @@ isotope         : DIGIT DIGIT? DIGIT?;
 /*
  * Lexer Rules
  */
-ELEMENT         : 'H' | 'He' | 'Li' | 'Be' | 'B' | 'C' | 'N' | 'O' | 'F' | 'Ne' 
+element         : 'H' | 'He' | 'Li' | 'Be' | 'B' | 'C' | 'N' | 'O' | 'F' | 'Ne' 
             | 'Na' | 'Mg' | 'Al' | 'Si' | 'P' | 'S' | 'Cl' | 'Ar' | 'K' 
             | 'Ca' | 'Sc' | 'Ti' | 'V' | 'Cr' | 'Mn' | 'Fe' | 'Co' | 'Ni' 
             | 'Cu' | 'Zn' | 'Ga' | 'Ge' | 'As' | 'Se' | 'Br' | 'Kr' | 'Rb' 

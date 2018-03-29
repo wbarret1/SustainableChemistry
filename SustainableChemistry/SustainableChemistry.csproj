@@ -57,6 +57,12 @@
     <Compile Include="AddNewReference.Designer.cs">
       <DependentUpon>AddNewReference.cs</DependentUpon>
     </Compile>
+    <Compile Include="FunctionalGroupEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionalGroupEditor.Designer.cs">
+      <DependentUpon>FunctionalGroupEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="FunctionalGroupViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FunctionalGroupEditor.resx">
+      <DependentUpon>FunctionalGroupEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FunctionalGroupViewer.resx">
       <DependentUpon>FunctionalGroupViewer.cs</DependentUpon>

@@ -167,6 +167,18 @@ public partial class smilesBaseListener : IsmilesListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAromatic([NotNull] smilesParser.AromaticContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.halogen"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterHalogen([NotNull] smilesParser.HalogenContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.halogen"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitHalogen([NotNull] smilesParser.HalogenContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -226,6 +238,18 @@ public partial class smilesBaseListener : IsmilesListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIsotope([NotNull] smilesParser.IsotopeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElement([NotNull] smilesParser.ElementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElement([NotNull] smilesParser.ElementContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

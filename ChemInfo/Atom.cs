@@ -58,7 +58,7 @@ namespace ChemInfo
             {
                 string retVal = string.Empty;
                 int[] v = (int[])value;
-                if (v != null)
+                if (v != null && v.Length != 0)
                 {
                     for (int i = 0; i < v.Length - 1; i++)
                     {

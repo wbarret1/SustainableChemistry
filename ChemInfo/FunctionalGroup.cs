@@ -19,14 +19,15 @@ namespace ChemInfo
             Name = parts[0].Trim();
             Smart = parts[1].Trim();
             ReactionName = parts[2].Trim();
-            ReactantA = parts[3].Trim();
-            ReactantB = parts[4].Trim();
-            Catalyst = parts[5].Trim();
-            Solvent = parts[6].Trim();
-            Product = parts[7].Trim();
-            ByProduct = parts[8].Trim();
+            URL = parts[3].Trim();
+            ReactantA = parts[4].Trim();
+            ReactantB = parts[5].Trim();
+            Catalyst = parts[6].Trim();
+            Solvent = parts[7].Trim();
+            Product = parts[8].Trim();
+            ByProduct = parts[9].Trim();
             m_Reactions = new NamedReactionCollection();
-            m_Reactions.Add(new NamedReaction(parts[2].Trim(), this, parts[3].Trim(), parts[4].Trim(), parts[7].Trim(), parts[5].Trim(), parts[6].Trim(), parts[8].Trim()));
+            m_Reactions.Add(new NamedReaction(this, parts[2].Trim(), parts[3].Trim(), parts[4].Trim(), parts[7].Trim(), parts[5].Trim(), parts[6].Trim(), parts[8].Trim(), parts[9].Trim()));
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\Images\\" + Name + ".jpg";
             if (System.IO.File.Exists(fileName)) m_FunctGroupImage = System.Drawing.Image.FromFile(fileName);
         }
@@ -51,6 +52,7 @@ namespace ChemInfo
 
         public string Name { get; set; }
         public System.Drawing.Image Image { get; set; }
+        public string URL { get; set; }
         public string Smart { get; set; }
         public string ReactionName { get; set; }
 //        public string[] Reactants { get; set; }

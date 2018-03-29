@@ -141,6 +141,16 @@ public interface IsmilesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAromatic([NotNull] smilesParser.AromaticContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.halogen"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterHalogen([NotNull] smilesParser.HalogenContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.halogen"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitHalogen([NotNull] smilesParser.HalogenContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -190,4 +200,14 @@ public interface IsmilesListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitIsotope([NotNull] smilesParser.IsotopeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterElement([NotNull] smilesParser.ElementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitElement([NotNull] smilesParser.ElementContext context);
 }

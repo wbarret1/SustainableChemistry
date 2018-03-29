@@ -98,6 +98,12 @@ public interface IsmilesVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAromatic([NotNull] smilesParser.AromaticContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="smilesParser.halogen"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHalogen([NotNull] smilesParser.HalogenContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -127,4 +133,10 @@ public interface IsmilesVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitIsotope([NotNull] smilesParser.IsotopeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="smilesParser.element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElement([NotNull] smilesParser.ElementContext context);
 }

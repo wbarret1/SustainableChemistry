@@ -56,6 +56,8 @@
     <Compile Include="Atom.cs" />
     <Compile Include="Bond.cs" />
     <Compile Include="BondCollection.cs" />
+    <Compile Include="Catalyst.cs" />
+    <Compile Include="CatalystCollection.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="FunctionalGroup.cs" />
     <Compile Include="FunctionalGroupCollection.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Reference.cs" />
     <Compile Include="References.cs" />
     <Compile Include="SmilesVisitor.cs" />
+    <Compile Include="Solvent.cs" />
+    <Compile Include="SolventCollection.cs" />
     <Compile Include="State.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -47,21 +47,12 @@ namespace SustainableChemistry
             molecule = new ChemInfo.Molecule();
             fGroups = new ChemInfo.FunctionalGroupCollection();
             m_NamedReactions = fGroups.NamedReactions;
-            //var json = new System.Web.Script.Serialization.JavaScriptSerializer();
-            //functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             documentPath = documentPath + "\\USEPA\\SustainableChemistry";
-            //string[] directories = System.IO.Directory.GetDirectories(documentPath);
-            //foreach(string dir in directories)
-            //{
-            //    string groupName = dir.Remove(0, documentPath.Length + 1);
-            //    fGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
-            //}
-
 
             System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
-
+            
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
             System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             try
@@ -78,14 +69,8 @@ namespace SustainableChemistry
                 fs.Close();
             }
 
-            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List_20180301.Split('\n');
-            foreach (string line in functionalGroupStrs)
-            {                
-                ChemInfo.FunctionalGroup temp = fGroups.Add(line);
-                string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
-                if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
-            }
-
+            // Initial code to load references from text RIS resource files. Can be deleted when done.
+            
             //m_References = new ChemInfo.References();
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
@@ -98,6 +83,70 @@ namespace SustainableChemistry
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.achs_oprdfk4_175)));
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.BIB)));
 
+
+            // Reads functional Groups from tab-delimited text file.
+            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List_20180301.Split('\n');
+
+            // This next line creates a list of strings that don't have images. Can be commented out!
+            List<string> missingImages = new List<string>();
+
+            // Creates the collection of functional groups.
+            foreach (string line in functionalGroupStrs)
+            {                
+                ChemInfo.FunctionalGroup temp = fGroups.Add(line);
+                string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
+                if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
+
+                //this line adds the missing image to the list of missing images. Can be commented out.
+                else missingImages.Add(temp.Name);
+            }
+
+            // Writes the missing images to a file.
+
+            // Write the string array to a new file named "WriteLines.txt".
+            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\MissingImages.txt"))
+            {
+                foreach (string line in missingImages)
+                    outputFile.WriteLine(line);
+            }
+
+            string[] imageFiles = System.IO.Directory.GetFiles(documentPath + "\\Images\\");
+            string[] groupNames = fGroups.FunctionalGroups;
+            List<string> extraImages = new List<string>();
+            foreach(string name in imageFiles)
+            {
+                string temp = name.Replace(documentPath + "\\Images\\", string.Empty);
+                temp = temp.Replace(".jpg", string.Empty);
+                bool add = true;
+                foreach (string gName in groupNames)
+                {
+                    if (temp.ToUpper() == gName.ToUpper()) add = false;
+                }
+                if (add) extraImages.Add(temp);
+            }
+
+            // Write the string array to a new file named "WriteLines.txt".
+            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\ExtraImages.txt"))
+            {
+                foreach (string line in extraImages)
+                    outputFile.WriteLine(line);
+            }
+
+
+            //Reads in phosphate groups from text file.
+
+            //string[] directories = System.IO.Directory.GetDirectories(documentPath);
+            //foreach(string dir in directories)
+            //{
+            //    string groupName = dir.Remove(0, documentPath.Length + 1);
+            //    fGroups.Add(new ChemInfo.FunctionalGroup(groupName, dir));
+            //}
+
+            //Reads in functional groups from JSON file. This should be used after Excel file is completed.
+            //var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            //functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
+
+            // Test code for generating a results file from a functional group name.
             //Results res = new Results("phosphoramidite", m_References);
             //string results = json.Serialize(res);
         }
@@ -133,14 +182,6 @@ namespace SustainableChemistry
             if (molecule == null) return;
             molecule.FindRings();
             molecule.FindAllPaths();
-            //TreeNodeCollection nodes = treeView1.Nodes;
-            //nodes.Clear();
-            //foreach (ChemInfo.Atom a in molecule.GetAtoms())
-            //{
-            //    TreeNode node = new TreeNode(a.AtomicSymbol);
-            //    node.Tag = a;
-            //    nodes.Add(node);
-            //}
             this.moleculeViewer1.Molecule = molecule;
             this.propertyGrid1.SelectedObject = molecule;
         }        
@@ -297,8 +338,6 @@ namespace SustainableChemistry
 
             var json = new System.Web.Script.Serialization.JavaScriptSerializer();
             System.IO.File.WriteAllText(documentPath + "\\FunctionalGroups.json", json.Serialize(fGroups));
-
-
         }
 
         private void showReferencesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -353,7 +392,20 @@ namespace SustainableChemistry
         private void reactionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ReactionEditor editor = new ReactionEditor(fGroups);
-            editor.Show();
+            System.Windows.Forms.DialogResult result = editor.ShowDialog();
+            ChemInfo.NamedReaction rxn = editor.SelectedNamedReaction;
+            if (rxn != null)
+            {
+                rxn.Solvent = editor.Solvent;
+                rxn.AcidBase = editor.AcidBase;
+                rxn.Catalyst = editor.Catalyst;
+            }
+        }
+
+        private void functionalGroupsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FunctionalGroupEditor editor = new FunctionalGroupEditor(fGroups);
+            editor.ShowDialog();
         }
     }
 }

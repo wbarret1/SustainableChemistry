@@ -15,14 +15,17 @@ namespace SustainableChemistry
 
         ChemInfo.FunctionalGroupCollection m_FunctionalGroups;
         ChemInfo.FunctionalGroup m_FunctionalGroup;
+        ChemInfo.Molecule molecule;
 
         public ReactionEditor(ChemInfo.FunctionalGroupCollection fGroups)
         {
             InitializeComponent();
+            molecule = null;
             this.m_FunctionalGroups = fGroups;
             this.productComboBox.Items.AddRange(m_FunctionalGroups.FunctionalGroups);
-            this.reactantAComboBox.Items.AddRange(m_FunctionalGroups.FunctionalGroups);
-            this.reactantBComboBox.Items.AddRange(m_FunctionalGroups.FunctionalGroups);
+            reactantAComboBox.Items.AddRange(ChemInfo.Reactants.ReactantList);
+            reactantBComboBox.Items.AddRange(ChemInfo.Reactants.ReactantList);
+            this.linkLabel1.Text = string.Empty;
         }
 
         private void ReactionEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -37,6 +40,10 @@ namespace SustainableChemistry
             reactantBComboBox.SelectedItem = r.ReactantB.ToUpper();
             this.Solvent = r.Solvent;
             this.AcidBase = r.AcidBase;
+            this.HeatButton.Checked = false;
+            if (r.Catalyst.ToLower().Contains("heat")) this.HeatButton.Checked = true;
+            this.SmartsLabel.Text = "SMARTS: " + m_FunctionalGroup.Smart;
+            this.linkLabel1.Text = r.URL;
         }
 
         private void productComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -51,51 +58,80 @@ namespace SustainableChemistry
             reactantBComboBox.Text = string.Empty;
             pictureBox1.Image = m_FunctionalGroup.Image;
             ReactionNameComboBox.SelectedIndex = 0;
-        } 
+        }
 
-        public ChemInfo.Solvent Solvent
+        public ChemInfo.FunctionalGroup SelectedFunctionalGroup
         {
             get
             {
-                if (this.acetoneButton.Checked == true) return ChemInfo.Solvent.ACETONE;
-                if (this.AcetonitrileButton.Checked == true) return ChemInfo.Solvent.ACETONITRILE;
-                if (this.AmmoniaButton.Checked == true) return ChemInfo.Solvent.AQUEOUS_AMMONIA;
-                if (this.BenzoicAcidButton.Checked == true) return ChemInfo.Solvent.BENZOIC_ACID_TOLUENE;
-                if (this.DichloromethaneButton.Checked == true) return ChemInfo.Solvent.DCM;
-                if (this.DimethylCarbonateButton.Checked == true) return ChemInfo.Solvent.DMC;
-                if (this.DimethylformamideButton.Checked == true) return ChemInfo.Solvent.DMF;
-                if (this.DimethylSulfoxideSolventButton.Checked == true) return ChemInfo.Solvent.DMSO;
-                if (this.EthanolSolventButton.Checked == true) return ChemInfo.Solvent.ETHANOL;
-                if (this.HaloKetoneSolventButton.Checked == true) return ChemInfo.Solvent.HALO_KETONE;
-                if (this.MethanolSolventButton.Checked == true) return ChemInfo.Solvent.METHANOL;
-                if (this.TriethylamineSolventButton.Checked == true) return ChemInfo.Solvent.METHANOL_TRIETHYLAMINE;
-                if (this.NitreneSolventButton.Checked == true) return ChemInfo.Solvent.NITRENE;
-                if (this.NitritesSolventButton.Checked == true) return ChemInfo.Solvent.NITRITES;
-                if (this.TetrahydrofuranSolventButton.Checked == true) return ChemInfo.Solvent.THF;
-                if (this.TolueneSolventButton.Checked == true) return ChemInfo.Solvent.TOLUENE;
-                if (this.WaterSolventButton.Checked == true) return ChemInfo.Solvent.WATER;
-                return ChemInfo.Solvent.NONE;
+                return this.m_FunctionalGroup;
+            }
+        }
+
+        public ChemInfo.NamedReaction SelectedNamedReaction
+        {
+            get
+            {
+                if (this.m_FunctionalGroup == null) return null;
+                return m_FunctionalGroup.NamedReactions[this.ReactionNameComboBox.Text];
+            }
+        }
+
+        public bool Heat
+        {
+            get
+            {
+                return this.HeatButton.Checked;
+            }
+            set
+            {
+                this.HeatButton.Checked = value;
+            }
+        }
+
+        public ChemInfo.SOLVENT Solvent
+        {
+            get
+            {
+                if (this.acetoneButton.Checked == true) return ChemInfo.SOLVENT.ACETONE;
+                if (this.AcetonitrileButton.Checked == true) return ChemInfo.SOLVENT.ACETONITRILE;
+                if (this.AmmoniaButton.Checked == true) return ChemInfo.SOLVENT.AQUEOUS_AMMONIA;
+                if (this.BenzoicAcidButton.Checked == true) return ChemInfo.SOLVENT.BENZOIC_ACID_TOLUENE;
+                if (this.DichloromethaneButton.Checked == true) return ChemInfo.SOLVENT.DCM;
+                if (this.DimethylCarbonateButton.Checked == true) return ChemInfo.SOLVENT.DMC;
+                if (this.DimethylformamideButton.Checked == true) return ChemInfo.SOLVENT.DMF;
+                if (this.DimethylSulfoxideSolventButton.Checked == true) return ChemInfo.SOLVENT.DMSO;
+                if (this.EthanolSolventButton.Checked == true) return ChemInfo.SOLVENT.ETHANOL;
+                if (this.HaloKetoneSolventButton.Checked == true) return ChemInfo.SOLVENT.HALO_KETONE;
+                if (this.MethanolSolventButton.Checked == true) return ChemInfo.SOLVENT.METHANOL;
+                if (this.TriethylamineSolventButton.Checked == true) return ChemInfo.SOLVENT.METHANOL_TRIETHYLAMINE;
+                if (this.NitreneSolventButton.Checked == true) return ChemInfo.SOLVENT.NITRENE;
+                if (this.NitritesSolventButton.Checked == true) return ChemInfo.SOLVENT.NITRITES;
+                if (this.TetrahydrofuranSolventButton.Checked == true) return ChemInfo.SOLVENT.THF;
+                if (this.TolueneSolventButton.Checked == true) return ChemInfo.SOLVENT.TOLUENE;
+                if (this.WaterSolventButton.Checked == true) return ChemInfo.SOLVENT.WATER;
+                return ChemInfo.SOLVENT.NONE;
             }
             set
             {
                 this.NoSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.ACETONE) this.acetoneButton.Checked = true;
-                if (value == ChemInfo.Solvent.ACETONITRILE) this.AcetonitrileButton.Checked = true;
-                if (value == ChemInfo.Solvent.AQUEOUS_AMMONIA) this.AmmoniaButton.Checked = true;
-                if (value == ChemInfo.Solvent.BENZOIC_ACID_TOLUENE) this.BenzoicAcidButton.Checked = true;
-                if (value == ChemInfo.Solvent.DCM) this.DichloromethaneButton.Checked = true;
-                if (value == ChemInfo.Solvent.DMC) this.DimethylCarbonateButton.Checked = true;
-                if (value == ChemInfo.Solvent.DMF) this.DimethylformamideButton.Checked = true;
-                if (value == ChemInfo.Solvent.DMSO) this.DimethylSulfoxideSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.ETHANOL) this.EthanolSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.HALO_KETONE) this.HaloKetoneSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.METHANOL) this.MethanolSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.METHANOL_TRIETHYLAMINE) this.TriethylamineSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.NITRENE) this.NitreneSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.NITRITES) this.NitritesSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.THF) this.TetrahydrofuranSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.TOLUENE) this.TolueneSolventButton.Checked = true;
-                if (value == ChemInfo.Solvent.WATER) this.WaterSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.ACETONE) this.acetoneButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.ACETONITRILE) this.AcetonitrileButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.AQUEOUS_AMMONIA) this.AmmoniaButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.BENZOIC_ACID_TOLUENE) this.BenzoicAcidButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.DCM) this.DichloromethaneButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.DMC) this.DimethylCarbonateButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.DMF) this.DimethylformamideButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.DMSO) this.DimethylSulfoxideSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.ETHANOL) this.EthanolSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.HALO_KETONE) this.HaloKetoneSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.METHANOL) this.MethanolSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.METHANOL_TRIETHYLAMINE) this.TriethylamineSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.NITRENE) this.NitreneSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.NITRITES) this.NitritesSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.THF) this.TetrahydrofuranSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.TOLUENE) this.TolueneSolventButton.Checked = true;
+                if (value == ChemInfo.SOLVENT.WATER) this.WaterSolventButton.Checked = true;
             }
         }
         public string Catalyst { get; set; }
@@ -117,23 +153,29 @@ namespace SustainableChemistry
             }
         }
 
-        ChemInfo.AcidBase CheckAcidBase(string acidBase)
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (acidBase.ToLower() == "acid") return ChemInfo.AcidBase.ACID;
-            if (acidBase.ToLower() == "base") return ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/heat") return ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/acid") return ChemInfo.AcidBase.ACID_BASE;
-            return ChemInfo.AcidBase.NONE;
+            System.Diagnostics.Process.Start(this.linkLabel1.Text);
         }
 
-        void SetAcidBase(string acidBase)
-        {
-            if (acidBase.ToLower() == "acid") this.AcidBase = ChemInfo.AcidBase.ACID;
-            if (acidBase.ToLower() == "base") this.AcidBase = ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/heat") this.AcidBase = ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/acid") this.AcidBase = ChemInfo.AcidBase.ACID_BASE;
-            if (acidBase.ToLower() == string.Empty) this.AcidBase = ChemInfo.AcidBase.NONE;
-        }
+
+        //ChemInfo.AcidBase CheckAcidBase(string acidBase)
+        //{
+        //    if (acidBase.ToLower() == "acid") return ChemInfo.AcidBase.ACID;
+        //    if (acidBase.ToLower() == "base") return ChemInfo.AcidBase.BASE;
+        //    if (acidBase.ToLower() == "base/heat") return ChemInfo.AcidBase.BASE;
+        //    if (acidBase.ToLower() == "base/acid") return ChemInfo.AcidBase.ACID_BASE;
+        //    return ChemInfo.AcidBase.NONE;
+        //}
+
+        //void SetAcidBase(string acidBase)
+        //{
+        //    if (acidBase.ToLower() == "acid") this.AcidBase = ChemInfo.AcidBase.ACID;
+        //    if (acidBase.ToLower() == "base") this.AcidBase = ChemInfo.AcidBase.BASE;
+        //    if (acidBase.ToLower() == "base/heat") this.AcidBase = ChemInfo.AcidBase.BASE;
+        //    if (acidBase.ToLower() == "base/acid") this.AcidBase = ChemInfo.AcidBase.ACID_BASE;
+        //    if (acidBase.ToLower() == string.Empty) this.AcidBase = ChemInfo.AcidBase.NONE;
+        //}
 
         //void SetSolvent(String solvent)
         //{
