@@ -329,6 +329,57 @@ namespace ChemInfo
             m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
+        // Operator Overloads
+
+        //public override bool Equals(System.Object obj)
+        //{
+        //    // If parameter cannot be cast to ThreeDPoint return false:
+        //    Atom p = obj as Atom;
+        //    if ((object)p == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    // Return true if the fields match:
+        //    return base.Equals(obj) && this.Element == p.Element && this.Degree == p.Degree;
+        //}
+
+        //public bool Equals(Atom p)
+        //{
+        //    // Return true if the fields match:
+        //    return base.Equals((Atom)p) && this.Element == p.Element && this.Degree == p.Degree;
+        //}
+
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode() ^ this.GetHashCode();
+        //}
+
+        //public static bool operator ==(Atom a, Atom b)
+        //{
+        //    // If both are null, or both are same instance, return true.
+        //    if (System.Object.ReferenceEquals(a, b))
+        //    {
+        //        return true;
+        //    }
+
+        //    // If one is null, but not both, return false.
+        //    if (((object)a == null) || ((object)b == null))
+        //    {
+        //        return false;
+        //    }
+
+        //    // Return true if the fields match:
+        //    return a.Element == b.Element && a.Degree == b.Degree;
+        //}
+
+        //public static bool operator !=(Atom a, Atom b)
+        //{
+        //    return !(a == b);
+        //}
+
+
+
         public ELEMENTS Element { get { return e; } }
 
         public int AtomicNumber
@@ -348,6 +399,18 @@ namespace ChemInfo
             set
             {
                 m_Isotope = (byte)value;
+            }
+        }
+
+        public int ExplicitHydrogens
+        {
+            get
+            {
+                return m_ExplicitHydrogens;
+            }
+            set
+            {
+               m_ExplicitHydrogens = value;
             }
         }
 
@@ -640,6 +703,10 @@ namespace ChemInfo
         {
             get
             {
+                if(this.ExplicitHydrogens > 0)
+                {
+
+                }
                 return this.ConnectedAtoms.Length;
             }
         }
@@ -720,7 +787,7 @@ namespace ChemInfo
             get
             {
                 if (hydrogenCount != 0) return hydrogenCount;
-                if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
+                //if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
                 if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
                 {
                     return this.Valence - this.numberOfBonds;

@@ -11,6 +11,7 @@ namespace ChemInfo
     {
         NamedReactionCollection m_Reactions;
         List<Reference> m_refList;
+        [NonSerialized]
         System.Drawing.Image m_FunctGroupImage;
 
         public FunctionalGroup(string str)

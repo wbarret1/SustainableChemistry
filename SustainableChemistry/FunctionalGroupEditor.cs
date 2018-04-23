@@ -23,7 +23,7 @@ namespace SustainableChemistry
             fGroupColl = groups;
             fGroupEnum = groups.GetEnumerator();
             fGroupEnum.MoveNext();
-            while (fGroupEnum.Current.Name != "TRIAZOLE") fGroupEnum.MoveNext();
+            //while (fGroupEnum.Current.Name != "TRIAZOLE") fGroupEnum.MoveNext();
         }
 
         private void button1_Click(object sender, EventArgs e)

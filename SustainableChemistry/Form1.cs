@@ -184,6 +184,7 @@ namespace SustainableChemistry
             molecule.FindAllPaths();
             this.moleculeViewer1.Molecule = molecule;
             this.propertyGrid1.SelectedObject = molecule;
+            this.findSmarts();
         }        
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -237,14 +238,27 @@ namespace SustainableChemistry
             this.phosphorousToolStripMenuItem_Click(sender, e);
         }
 
+        private void findSmarts()
+        {
+            if (this.molecule == null) return;
+            int[] atoms = null;
+            ChemInfo.FunctionalGroupCollection groups = new ChemInfo.FunctionalGroupCollection();
+            System.Collections.Generic.List<string> foundGroups = new List<string>();
+            foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+            {
+                if (this.molecule.FindSmarts(f.Smart, ref atoms))
+                {
+                    foundGroups.Add(f.Name);
+                    groups.Add(f);
+                }
+            }
+            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            this.webBrowser1.DocumentText = json.Serialize(groups);
+        }
+
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            smilesInput smiles = new smilesInput();
-            smiles.Text = "Enter SMARTS String";
-            smiles.ShowDialog();
-            if (string.IsNullOrEmpty(smiles.SMILES)) return;
-            int[] atoms = null;
-            if (!this.molecule.FindSmarts(smiles.SMILES, ref atoms)) MessageBox.Show("SMARTS not found in molecule.");
+            this.findSmarts();
         }
 
         private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
@@ -301,7 +315,7 @@ namespace SustainableChemistry
                 int numFound = 0;
                 foreach (string smart in groups)
                 {
-                    if (m.FindFunctionalGroup(smart, ref indices))
+                    if (m.FindSmarts(smart, ref indices))
                     {
                         found = true;
                         numFound++;

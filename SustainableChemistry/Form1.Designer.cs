@@ -47,6 +47,7 @@
             this.exportJSONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reactionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.functionalGroupsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -58,7 +59,8 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.functionalGroupsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -77,6 +79,7 @@
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -226,14 +229,22 @@
             // reactionsToolStripMenuItem
             // 
             this.reactionsToolStripMenuItem.Name = "reactionsToolStripMenuItem";
-            this.reactionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reactionsToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.reactionsToolStripMenuItem.Text = "Reactions";
             this.reactionsToolStripMenuItem.Click += new System.EventHandler(this.reactionsToolStripMenuItem_Click);
+            // 
+            // functionalGroupsToolStripMenuItem1
+            // 
+            this.functionalGroupsToolStripMenuItem1.Name = "functionalGroupsToolStripMenuItem1";
+            this.functionalGroupsToolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
+            this.functionalGroupsToolStripMenuItem1.Text = "Functional Groups";
+            this.functionalGroupsToolStripMenuItem1.Click += new System.EventHandler(this.functionalGroupsToolStripMenuItem1_Click);
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
@@ -400,12 +411,24 @@
             this.listBox1.Size = new System.Drawing.Size(810, 274);
             this.listBox1.TabIndex = 0;
             // 
-            // functionalGroupsToolStripMenuItem1
+            // tabPage3
             // 
-            this.functionalGroupsToolStripMenuItem1.Name = "functionalGroupsToolStripMenuItem1";
-            this.functionalGroupsToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.functionalGroupsToolStripMenuItem1.Text = "Functional Groups";
-            this.functionalGroupsToolStripMenuItem1.Click += new System.EventHandler(this.functionalGroupsToolStripMenuItem1_Click);
+            this.tabPage3.Controls.Add(this.webBrowser1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(816, 491);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "JSON Output";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(816, 491);
+            this.webBrowser1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -439,6 +462,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -477,6 +501,8 @@
         private System.Windows.Forms.ToolStripMenuItem dataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reactionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem functionalGroupsToolStripMenuItem1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 

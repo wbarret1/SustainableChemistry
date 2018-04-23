@@ -1,37 +1,36 @@
 ACETAL	COC(C)(C)OC	Acetalisation	https://en.wikipedia.org/wiki/Acetylation	ALDEHYDE	ALCOHOL	None	Acid				Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA																																						
-ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
-ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	alkene	 water		Acid				alcohol 		1	CH3  AA	1	OH    AA																																								
-ALCOHOL, ALLYLIC	C=CCO	Luche reduction/ Prins 		KETONE	ALKENE		Acid			water	allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
-ALDEHYDE	[H]C(C)=O	Swern oxidation		Primary Alcohol					oxidant	DCM	aldehyde		1	R        AA	1	CH2   AA																																								
-ALDEHYDE		Swern oxidation																																																						
-ALKANE	CCC	Clemmensen reduction		Carbon monoxide	hydrogen 						Alkanes 		2	CH3     AA																																										
-ALKANE		Wolff-Kishner reduction																																																						
-ALKANE		Wurtz reaction		alkyl halide					Sodium Metal 		alkane 																																													
-ALKENE-ALCOHOL	C=CCO			ALKENE	water		Acid				alkene alcohol		3	CH2   AA	1	CH3  AA	1	OH    AA																																						
+ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				Alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
+ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		1	CH3  AA	1	OH    AA																																								
+ALCOHOL, ALLYLIC	C=CCO	Luche reduction/ Prins 	https://www.name-reaction.com/luche-reduction	KETONE	ALKENE		Acid			Water	Allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
+ALDEHYDE	[H]C(C)=O	Swern oxidation	https://www.name-reaction.com/swern-oxidation	PRIMARY ALCOHOL					oxidant	DCM	Aldehyde		1	R        AA	1	CH2   AA																																								
+ALKANE	CC	Clemmensen reduction	https://www.name-reaction.com/clemmensen-reduction	CARBON MONOXIDE	HYDROGEN						Alkanes 		2	CH3     AA																																										
+ALKANE		Wolff-Kishner reduction	https://www.name-reaction.com/wolff-kishner-reduction																																																					
+ALKANE		Wurtz reaction	https://www.name-reaction.com/wurtz-reaction	ALKYL HALIDE					Sodium Metal 		Alkane 																																													
+ALKENE-ALCOHOL	C=CCO			ALKENE	WATER		Acid				Alkene alcohol		3	CH2   AA	1	CH3  AA	1	OH    AA																																						
 ALKENE-ALDEHYDE	[H]C(=O)CC=C												2	CH2   AA	2	CH3  AA	1	C=O   AA																																						
 ALKENE-ALKYNE	C#CC=CC												1	#C   AA	1	#CH   AA	1	CH3  AA	2	C=CH  AA																																				
 ALKENE-AMINE	[H][N+](C)(C)C=CC												3	CH3  AA	1	N<    AA	2	C=CH  AA																																						
 ALKENE-CARBOXYLIC ACID	CC=CC(=O)O												1	CH3  AA	1	COOH   AA	2	C=CH  AA																																						
 ALKENE-KETONE	CC=CC=O												1	CH3  AA	1	CHO    AA	2	C=CH  AA																																						
 ALKENE-THIOETHER	CCC=C[S+](C)C												3	CH3  AA	2	C=CH  AA																																								
-ALKENE	CC=CCC	Hofmann elimination		ALKANE				Heat	catalyst/heat 		alkane	alkene	2	CH3  AA	2	C=CH  AA																																								
-ALKENE		Wittig Reaction		ketone	triphenyl phosphonium 						alkene 																																													
-ALKYNE-ALCOHOL	[H]OCC#CC			Formaldehyde	Acetylene 				Cu		Alkyne-alcohol		2	#C    AA	1	CH2   AA	1	CH3  AA	1	OH    AA																																				
-ALKYNE	C#CCCC	Corey-Fuchs 		ALDEHYDE					"Catalyst (Ph3P, CBr4) (BuLi)"	water	terminal alkyne		1	CH3  AA	1	CH2   AA	1	C=      AA	1	C=CH  AA  																																				
-ALLENE	C=C=C	Skattebol Rearrangment 		ALKYNE			Base				allenes		1	C=C=C  AA	2	C=CH2 AA																																								
-ALLOPHANATE	[H]N(C)C(=O)N(C)C(=O)OCC			ISOCYANATE	urethane			Heat			allophanate		1	C(=O)   2 NA	1	C(=O)O  NA	1	CH2   AA	3	CH3   AA	1	N<    AA	1	NH     AA																																
+ALKENE	C=C	Hofmann elimination	https://www.name-reaction.com/hofmann-elimination	ALKANE				Heat	catalyst/heat 		Alkane	Alkene	2	CH3  AA	2	C=CH  AA																																								
+ALKENE		Wittig Reaction	https://www.name-reaction.com/wittig-reaction	KETONE	TRIPHENYL PHOSPHONIUM						Alkene 																																													
+ALKYNE-ALCOHOL	[H]OCC#CC			FORMALDEHYDE	ACETYLENE				Cu		Alkyne-alcohol		2	#C    AA	1	CH2   AA	1	CH3  AA	1	OH    AA																																				
+ALKYNE	C#C	Corey-Fuchs 	http://www.organic-chemistry.org/namedreactions/corey-fuchs-reaction.shtm	ALDEHYDE					"Catalyst (Ph3P, CBr4) (BuLi)"	Water	Terminal alkyne		1	CH3  AA	1	CH2   AA	1	C=      AA	1	C=CH  AA  																																				
+ALLENE	C=C=C	Skattebol Rearrangment 	https://en.wikipedia.org/wiki/Skatteb%C3%B8l_rearrangement	ALKYNE			Base				Allenes		1	C=C=C  AA	2	C=CH2 AA																																								
+ALLOPHANATE	[H]N(C)C(=O)N(C)C(=O)OCC			ISOCYANATE	URETHANE			Heat			Allophanate		1	C(=O)   2 NA	1	C(=O)O  NA	1	CH2   AA	3	CH3   AA	1	N<    AA	1	NH     AA																																
 AMIDE-ESTER	CCOC(=O)N(C)C												1	C(=O)O  NA	1	CH2   AA	3	CH3   AA	1	N<     AA																																				
-AMIDE	CC(=O)N(C)C	Beckmann rearrangement		CARBOXYLIC ACID	AMINE						amides		1	C(=O)    NA	3	CH3   AA	1	N<     AA																																						
-AMIDE		Ritter Reaction																																																						
-AMIDE		Schotten-Baumann Reaction																																																						
-AMIDINE	CN=C(C)N(C)C	Pinner Reaction		NITRILE	AZIDE		Acid			methanol	amidines		4	CH3      AA	1	N<     AA	1	>C(=N)   NA																																						
-AMINE OXIDE	CN(C)(C)=O			Tertiary Amine	Hydrogen Peroxide						tertiary amine oxide		3	CH3      AA	1	[O-]	1	N+       4SB																																						
-AMINE	[H]N(C)[H]	schmidt		CARBOXYLIC ACID	AZIDE		Acid				amines		1	CH3      AA	1	NH2    AA																																								
-AMINE		Gabriel Syntheis 																																																						
-AMINE		Hofmann Rearrangement 																																																						
-AMINE		Staudinger Reaction																																																						
-AMINO-ACID	[H]N(C(C)C(=O)O)[H]	Strecker amino acid synthesis		Alpha Ketoacid	Glutamate						amino acid	alpha ketoglutarate	1	CH3      AA	1	CH<     AA	1	COOH  AA	1	NH2   AA																																				
-AMINO-ALCOHOL	[H]N(CCO)[H]			Epoxide	Primary amines					water	amino alcohols 		2	CH2   AA	1	NH2   AA	1	OH     AA																																						
+AMIDE	CC(=O)N(C)C	Beckmann rearrangement	https://www.name-reaction.com/beckmann-rearrangement	CARBOXYLIC ACID	AMINE						Amides		1	C(=O)    NA	3	CH3   AA	1	N<     AA																																						
+AMIDE		Ritter Reaction	https://www.name-reaction.com/ritter-reaction																																																					
+AMIDE		Schotten-Baumann Reaction	https://www.name-reaction.com/schotten-baumann-reaction																																																					
+AMIDINE	CN=C(C)N(C)C	Pinner Reaction	http://www.organic-chemistry.org/namedreactions/pinner-reaction.shtm	NITRILE	AZIDE		Acid			Methanol	Amidines		4	CH3      AA	1	N<     AA	1	>C(=N)   NA																																						
+AMINE OXIDE	CN(C)(C)=O			TERTIARY AMINE	HYDROGEN PEROXIDE						Tertiary amine oxide		3	CH3      AA	1	[O-]	1	N+       4SB																																						
+AMINE	[H]N(C)[H]	Schmidt	https://www.name-reaction.com/schmidt-reaction	CARBOXYLIC ACID	AZIDE		Acid				Amines		1	CH3      AA	1	NH2    AA																																								
+AMINE		Gabriel Syntheis 	https://www.name-reaction.com/gabriel-synthesis																																																					
+AMINE		Hofmann Rearrangement 	https://www.name-reaction.com/hofmann-rearrangement																																																					
+AMINE		Staudinger Reaction	https://www.name-reaction.com/staudinger-reaction																																																					
+AMINO-ACID	[H]N(C(C)C(=O)O)[H]	Strecker amino acid synthesis	https://www.name-reaction.com/strecker-amino-acid-synthesis	ALPHA KETOACID	GLUTAMATE						Amino acid	Alpha ketoglutarate	1	CH3      AA	1	CH<     AA	1	COOH  AA	1	NH2   AA																																				
+AMINO-ALCOHOL	[H]N(CCO)[H]			EPOXIDE	PRIMARY AMINES					Water	Amino alcohols 		2	CH2   AA	1	NH2   AA	1	OH     AA																																						
 AMINO-ALDEHYDE	[H]C(=O)CN([H])[H]												1	CH2   AA	1	CHO    AA	1	NH2   AA																																						
 AMINO-ESTER	[H]N([H])CCOC												2	CH2   AA	1	CH3      AA	1	NH2   AA	1	O      AA																																				
 AMINO-ETHER	C[O+](C)CCN												2	CH2   AA	2	CH3      AA	1	NH2   AA																																						
@@ -39,86 +38,86 @@ AMINO-KETONE	[H]N([H])CC=O												1	CH2   AA	1	CHO    AA	1	NH2   AA
 AMINO-NITRILE	CN(C)CCC#N												1	C#N  AA	2	CH2   AA	1	NH2   AA																																						
 AMINO-THIOETHER	CSCCN(C)C												2	CH2   AA	1	CH3      AA	1	NH2   AA	1	S      AA																																				
 AMINO-THIOL	CN(C)CCS												2	CH2   AA	1	NH2   AA	1	SH     AA																																						
-ANHYDRIDES	CC(=O)OC(C)=O			CARBOXYLIC ACID	CARBOXYLIC ACID				condensed 		anhydrides		1	C(=O)OC(C=O)	2	CH3      AA																																								
-ARENES	Cc1ccccc1			Toulene	Hydrogen						arenes 	methane	1	CH3      AA	1	AC	5	ACH																																						
-AROMATIC 	c1ccccc1	Cyclo Trimerisation											6	ACH																																										
-AZIDE	N#N=[N-]	Wislicenus Process		Sodium	AZIDE						Sodium Azide 	Hydrogen	1	N=[N+]=[N-]																																										
-AZIDO-ALCOHOL	OCCC[N3]			3-bromo-1-propanol	Sodium Azide					aceton 	Azido Alcohol 		1	N3   AA	1	CH2      AA	1	OH     AA																																						
+ANHYDRIDES	CC(=O)OC(C)=O			CARBOXYLIC ACID	CARBOXYLIC ACID				condensed 		Anhydrides		1	C(=O)OC(C=O)	2	CH3      AA																																								
+ARENES	Cc1ccccc1			TOULENE	HYDROGEN						Arenes 	Methane	1	CH3      AA	1	AC	5	ACH																																						
+AROMATIC 	c1ccccc1	Cyclo Trimerisation	https://en.wikipedia.org/wiki/Alkyne_trimerisation										6	ACH																																										
+AZIDE	N#N=[N-]	Wislicenus Process		SODIUM	AZIDE						Sodium Azide 	Hydrogen	1	N=[N+]=[N-]																																										
+AZIDO-ALCOHOL	OCCC[N3]			3-BROMO-1-PROPANOL	SODIUM AZIDE					Acetone	Azido Alcohol 		1	N3   AA	1	CH2      AA	1	OH     AA																																						
 AZIDO-AMINE	C[N+](C)(C)CC[N3]												1	N3   AA	1	CH2      AA	1	NH2   AA																																						
-AZIRIDINE	[H]N1CC1	Corey-chykovsky 		sulfur	ALKENE				KETONE	DMSO	Aziridines		2	CH2      AA	1	NH      3MR																																								
-AZIRINE	C1=NC1			vinyl azides					N2	Nitrene	Azirine		1	CH2      AA	1	CH=N																																								
-AZO COMPOUND	CN=NC			aromatic diazonium	Phenol						Azo		2	CH3      AA	1	N=N																																								
-AZOXY COMPOUND	CN=N(C)=O			Nitrobenzene					Arsenous oxide		azoxy 	Water	2	CH3      AA	1	N=[N+][O-]																																								
-BIARYL	c2ccc(c1ccccc1)cc2	Ullmann 		Aryl halides				Heat	Copper/heat		Symmetric Biaryls	Copper Iodine	1	ArCArC	10	ArCH																																								
-BISAMIDE	CN(C)C(=O)CC(=O)N(C)C			Aromatic Amine					Acetylacetone		Bisamides		1	CH2      AA	4	CH3      AA	2	N<      AA	2	C=C    AA	2	C=CH2   AA	BISULFITE	O=S(O)[O-]		Sulfur dioxide		Base		Bisulfite		1	OH        SA	1	S(=O)     AA	1	[O-] 																			
+AZIRIDINE	[H]N1CC1	Corey-chykovsky 	http://www.organic-chemistry.org/namedreactions/corey-chaykovsky-reaction.shtm	SULFUR	ALKENE				KETONE	Dimethyl sulfoxide	Aziridines		2	CH2      AA	1	NH      3MR																																								
+AZIRINE	C1=NC1			VINYL AZIDES					N2	Nitrene	Azirine		1	CH2      AA	1	CH=N																																								
+AZO COMPOUND	CN=NC			AROMATIC DIAZONIUM	PHENOL						Azo		2	CH3      AA	1	N=N																																								
+AZOXY COMPOUND	CN=N(C)=O			NITROBENZENE					Arsenous oxide		Azoxy 	Water	2	CH3      AA	1	N=[N+][O-]																																								
+BIARYL	c2ccc(c1ccccc1)cc2	Ullmann 	https://pubs.acs.org/doi/abs/10.1021/cr60119a004	ARYL HALIDE				Heat	Copper/heat		Symmetric Biaryls	Copper Iodine	1	ArCArC	10	ArCH																																								
+BISAMIDE	CN(C)C(=O)CC(=O)N(C)C			AROMATIC AMINE					Acetylacetone		Bisamides		1	CH2      AA	4	CH3      AA	2	N<      AA	2	C=C    AA	2	C=CH2   AA	BISULFITE	O=S(O)[O-]		Sulfur dioxide		Base		Bisulfite		1	OH        SA	1	S(=O)     AA	1	[O-] 																			
 BORANE	B												2	CH        AA	3	>C<      AA																																								
-BORONIC ACID	CB(O)O	Grignards		Phenylboronic acid 	Water						Boronic Acid	Methanol	1	CH3      AA	2	OH       AA																																								
-BUNTE SALT	CSS(=O)(=O)[O-]			RX	Sodium thiosulfate						Bunte		1	CH3      AA	1	S(=O)(=O)   AA	1	S       SA	1	O																																				
-CARBAMATES	COC(=O)N(C)C	Curtius Rearrangemnet 		ammonia	Carbon dioxide						ammonium carbamate		1	C(=O)O-  AA	3	CH3      AA	1	N<   AA																																						
+BORONIC ACID	CB(O)O	Grignards	http://www.organic-chemistry.org/synthesis/C1B/boronicacids/arylboronicacids.shtm	PHENYLBORONIC ACID	WATER						Boronic Acid	Methanol	1	CH3      AA	2	OH       AA																																								
+BUNTE SALT	CSS(=O)(=O)[O-]			RX	SODIUM THIOSULFATE						Bunte		1	CH3      AA	1	S(=O)(=O)   AA	1	S       SA	1	O																																				
+CARBAMATES	COC(=O)N(C)C	Curtius Rearrangemnet 	https://www.name-reaction.com/curtius-rearrangement	AMMONIA	CARBON DIOXIDE						Ammonium carbamate		1	C(=O)O-  AA	3	CH3      AA	1	N<   AA																																						
 CARBONATE	O=C([O-])[O-]			ALCOHOL	ESTER				Oxidizer		Carbonates		1	OC(=O)O																																										
-CARBOXYLIC ACID	CC(=O)O	Jones oxidation		ALCOHOL	ALCOHOL				Oxidizer 		Carboxylic acid		1	CH3      AA	1	COOH    AA																																								
-CARBOXYLIC ESTER	COC(C)=O	Fisher Esterfication		Carboxyl	ALCOHOL		Acid				Carboxylic Ester 	Water	1	C(=O)O   AA	1	CH2       AA	2	CH3    AA				CONJUGATED ALDEHYDE			Propene	 H2 + CO			Aldehyde																											
-COUMARIN	O=c2ccc1ccccc1o2	Pechmann Courmarins 		Phenol	B-Keto ester				Aluminum trichloride 		Coumarin		1	C(=O)O  CY	1	CH         ArA	1	[=CH]     AA	2	AC	4	ACH																																		
-CUMULENE	C=C=C=C	Dimerization		Carbenes 					metal Catalyst 		Cumulenes		2	[=C=]	2	[=CH2]   AA																																								
-CYANAMIDE	[H]N([H])C#N	Hydrolysis 		Calcium Cyanamide	water + CO2						Cyanamide	Calcium carbonate	1	C#N     ANA	1	NH2       AA						"CYANATES, ARYL"	N#C[O-]		Phenol 	Cyanogen chloride	Base		Aryl Cyanates		1	C#N      AA	1	[O-]																						
-CYANIDES, ACYL	CC(=O)C#N			KETENE	Hydrogen cyanide			Heat			Acyl cyanides 		1	C#N     AA	1	CH3       AA	1	C=O      AA																																						
+CARBOXYLIC ACID	CC(=O)O	Jones oxidation	https://www.name-reaction.com/jones-oxidation	ALCOHOL	ALCOHOL				Oxidizer 		Carboxylic acid		1	CH3      AA	1	COOH    AA																																								
+CARBOXYLIC ESTER	COC(C)=O	Fisher Esterfication	https://www.name-reaction.com/fischer-esterification	CARBOXYL	ALCOHOL		Acid				Carboxylic Ester 	Water	1	C(=O)O   AA	1	CH2       AA	2	CH3    AA				CONJUGATED ALDEHYDE			Propene	 H2 + CO			Aldehyde																											
+COUMARIN	O=c2ccc1ccccc1o2	Pechmann Courmarins 	http://www.organic-chemistry.org/namedreactions/pechmann-condensation.shtm	PHENOL	B-KETO ESTER				Aluminum trichloride 		Coumarin		1	C(=O)O  CY	1	CH         ArA	1	[=CH]     AA	2	AC	4	ACH																																		
+CUMULENE	C=C=C=C	Dimerization	https://chem.libretexts.org/Reference/Organic_Chemistry_Glossary/Dimerization	CARBENES					metal Catalyst 		Cumulenes		2	[=C=]	2	[=CH2]   AA																																								
+CYANAMIDE	[H]N([H])C#N	Hydrolysis 	https://pubs.acs.org/doi/abs/10.1021/ja01193a010	CALCIUM CYANAMIDE	WATER + CO2						Cyanamide	Calcium carbonate	1	C#N     ANA	1	NH2       AA						"CYANATES, ARYL"	N#C[O-]		Phenol 	Cyanogen chloride	Base		Aryl Cyanates		1	C#N      AA	1	[O-]																						
+CYANIDES, ACYL	CC(=O)C#N			KETENE	HYDROGEN CYANIDE			Heat			Acyl cyanides 		1	C#N     AA	1	CH3       AA	1	C=O      AA																																						
 CYANO IMINE	CN=C(C)C#N												1	C#N     AA	2	CH3       AA	1	>C=N																																						
-CYANOHYDRIN	CC(C)(O)C#N	Cyanohydrin Reaction		KETONE	Hydrogen Cyanide				Sodium cyanide		Cyanohydrins		1	#C        AA	1	#CH      AA	2	CH3       AA	1	OH    AA	1	>C<      AA																																		
-CYCLOBUTANE	C1CCC1	Alkene dimerize		2 Alkenes					Uv Light		Cyclobutanes		1	CH2     AA																																										
-CYCLOBUTENE	C1=CCC1			Cyclobutanol					dehydration		Cyclobutnes		2	CH2     AA	2	[=CH]    AA																																								
-CYCLOPROPANE	C1CC1	Wurtz Coupling		"1,3-dibromopropane "					Na		Cyclopropanes	Sodium Bromide	3	CH2     AA																																										
-DIALDEHYDE	[H]C(=O)CC([H])=O	Diels-Alder 		Cyclopentene					Oxidizer		Dialdehyde		3	CH2     AA	2	CHO     AA																																								
-DIAMINE	CC(N)CN			ALKENE	2 Azides						Diamines		1	CH2     AA	1	CH3       AA	1	CH<     AA	2	NH2   AA																																				
-DIAZO COMPOUND	CC(C)=N#N			aliphatic amines	nitrous acid						Diazo 		2	CH3       AA	1	[N+]#N																																								
-DIAZONIUM COMPOUND	N#[N+]c1ccccc1	Diazoniation		Aromatic Amine					Nitrous Acid + Acid 		Diazonium 	Water	1	[N+]#N	1	AC	5	ACH																																						
-DICARBOXYLIC ACID	O=C(O)CCCC(=O)O			Alkyl Diaol					KmNO4/Acid		Dicarboxylic Acid	Water 	3	CH2     AA	2	COOH     AA																																								
-DIENE	C=CC=C	Cope rearrangement		3-Bromo-1-butene			Base	Heat			Dienes		2	[=CH]   AA	2	[=CH2]    AA																																								
+CYANOHYDRIN	CC(C)(O)C#N	Cyanohydrin Reaction	https://en.wikipedia.org/wiki/Cyanohydrin_reaction	KETONE	HYDROGEN CYANIDE				Sodium cyanide		Cyanohydrins		1	#C        AA	1	#CH      AA	2	CH3       AA	1	OH    AA	1	>C<      AA																																		
+CYCLOBUTANE	C1CCC1	Alkene dimerize		2 ALKENES					Uv Light		Cyclobutanes		1	CH2     AA																																										
+CYCLOBUTENE	C1=CCC1			CYCLOBUTANOL					dehydration		Cyclobutnes		2	CH2     AA	2	[=CH]    AA																																								
+CYCLOPROPANE	C1CC1	Wurtz Coupling		"1,3-DIBROMOPROPANE"					Na		Cyclopropanes	Sodium Bromide	3	CH2     AA																																										
+DIALDEHYDE	[H]C(=O)CC([H])=O	Diels-Alder 	https://www.name-reaction.com/diels-alder-reaction	CYCLOPENTENE					Oxidizer		Dialdehyde		3	CH2     AA	2	CHO     AA																																								
+DIAMINE	CC(N)CN			ALKENE	2 AZIDES						Diamines		1	CH2     AA	1	CH3       AA	1	CH<     AA	2	NH2   AA																																				
+DIAZO COMPOUND	CC(C)=N#N			ALIPHATIC AMINES	NITROUS ACID						Diazo 		2	CH3       AA	1	[N+]#N																																								
+DIAZONIUM COMPOUND	N#[N+]c1ccccc1	Diazoniation	http://www.organic-chemistry.org/namedreactions/diazotisation.shtm	AROMATIC AMINE					Nitrous Acid + Acid 		Diazonium 	Water	1	[N+]#N	1	AC	5	ACH																																						
+DICARBOXYLIC ACID	O=C(O)CCCC(=O)O			ALKYL DIAOL					KmNO4/Acid		Dicarboxylic Acid	Water 	3	CH2     AA	2	COOH     AA																																								
+DIENE	C=CC=C	Cope rearrangement	https://www.name-reaction.com/cope-rearrangement	3-BROMO-1-BUTENE			Base	Heat			Dienes		2	[=CH]   AA	2	[=CH2]    AA																																								
 DIESTER	COC(=O)OC			DICARBOXYLIC ACID	 ROH		Acid				Diesters		2	CH3       AA	1	OC(=O)O																																								
-DIHALIDES (GEMINAL)	[H]C(Cl)(Cl)CCC	Addition Reaction 		ALKYNE					H-Br		Dihalides		2	CH2     AA	1	CH3       AA	1	CH<     AA	2	Cl      AA																																				
+DIHALIDES (GEMINAL)	[H]C(Cl)(Cl)CCC	Addition Reaction 	https://en.wikipedia.org/wiki/Geminal	ALKYNE					H-Br		Dihalides		2	CH2     AA	1	CH3       AA	1	CH<     AA	2	Cl      AA																																				
 DIHALIDE	BrCCBr			ALKENE					H-Br		Dihalides 		2	CH2     AA	2	Cl      AA																																								
-DIKETONE	CC(=O)CC(C)=O	Nucleophilic Addition		Enolates	CARBOXYLIC ACID						Diketones		1	CH2     AA	2	CH3       AA	2	C=O     AA					DINITRILE	N#CCCCC#N	Schmidt	Dialdehyde	 HN3 	Acid		Dinitriles		2	C#N    AA	3	CH2     AA																					
+DIKETONE	CC(=O)CC(C)=O	Nucleophilic Addition		ENOLATES	CARBOXYLIC ACID						Diketones		1	CH2     AA	2	CH3       AA	2	C=O     AA					DINITRILE	N#CCCCC#N	Schmidt	Dialdehyde	 HN3 	Acid		Dinitriles		2	C#N    AA	3	CH2     AA																					
 DIOL	OC1CCCCC1O			ALKENE					KMnO4 / H2O		Diols  		4	CH2     AA	2	CH<     AA	2	OH     AA																																						
-DISULFIDE	CSSC			2 Sulfhydryl groups					Oxidation		Disulfides	H+ + 2e-	2	CH3       AA	2	S         SA																																								
-DITHIOACETAL	CSC(C)SC			Formaldhyde	"1,3 Propanedithiol"		Acid				Dithioacetals 	Water	3	CH3       AA	1	CH<     AA	2	S         AA																																						
-DITHIOCARBAMATE	CSC(=O)N(C)C			Primary amines	carbon disulfide 		Base				Dithiocarbamate 	Water	1	C(=O)S   NA	3	CH3       AA	1	N<     AA																																						
-DITHIOKETAL	[H]C(C)(SC)SC			"N,N-dialkylhydrazones"	"1,2-ethanedithiol"		acid			DCM	Dithioketal 		4	CH3       AA	2	S           AA	1	>C<     AA																																						
-DITHIOL	SCCS			"1,3-dichloropropane"	THIOUREA			Heat	Sodium Carbonate		Dithiols		2	CH2     AA	2	SH        AA																																								
-DIYNE	C#CCCCC#C	cadiot-Chodkiewicz 		Propyne	Propynyl bromide				Copper Chloride/Base		Diynes		2	#C        AA	2	#CH     AA	1	CH2    AA																																						
-ENAMIDE	C=CN(C)[NO2]	Blaise		Nitrile	Alpha Haloester				Zinc/Reflux ------> Potassium Carbonate	THF 	Enamides		1	CH3       AA	1	[O-]	1	[=CH]   AA	1	[CH2]   AA	1	>NN=O																																		
+DISULFIDE	CSSC			2 SULFHYDRYL GROUPS					Oxidation		Disulfides	H+ + 2e-	2	CH3       AA	2	S         SA																																								
+DITHIOACETAL	CSC(C)SC			FORMALDHYDE	"1,3 PROPANEDITHIOL"		Acid				Dithioacetals 	Water	3	CH3       AA	1	CH<     AA	2	S         AA																																						
+DITHIOCARBAMATE	CSC(=O)N(C)C			PRIMARY AMINES	CARBON DISULFIDE		Base				Dithiocarbamate 	Water	1	C(=O)S   NA	3	CH3       AA	1	N<     AA																																						
+DITHIOKETAL	[H]C(C)(SC)SC			"N,N-DIALKYLHYDRAZONES"	"1,2-ETHANEDITHIOL"		Acid			Dichloromethane	Dithioketal 		4	CH3       AA	2	S           AA	1	>C<     AA																																						
+DITHIOL	SCCS			"1,3-DICHLOROPROPANE"	THIOUREA			Heat	Sodium Carbonate		Dithiols		2	CH2     AA	2	SH        AA																																								
+DIYNE	C#CCCCC#C	Cadiot-Chodkiewicz 	http://www.organic-chemistry.org/namedreactions/cadiot-chodkiewicz-coupling.shtm	PROPYNE	PROPYNYL BROMIDE				Copper Chloride/Base		Diynes		2	#C        AA	2	#CH     AA	1	CH2    AA																																						
+ENAMIDE	C=CN(C)[NO2]	Blaise	http://www.organic-chemistry.org/synthesis/C2C/unsaturated-compounds/enamines.shtm	NITRILE	ALPHA HALOESTER				Zinc/Reflux ------> Potassium Carbonate	Tetrahydrofuran	Enamides		1	CH3       AA	1	[O-]	1	[=CH]   AA	1	[CH2]   AA	1	>NN=O																																		
 ENAMINE	CC(C)=C(C)N(C)C	Condensation		ALDEHYDE	AMINE					Water	Enamine		5	CH3       AA	1	N<     AA	2	[=C]   AA																																						
 ENOL ETHER	COC(C)=C(C)C			ACETAL					Catalytic Acid		Enol Ether		4	CH3       AA	1	O     AA	2	[=C]   AA																																						
-ENOL	CC=C(O)CC			Acetone					Sodium Hydride		Enols		1	CH2    AA	2	CH3       AA	1	OH     AA	1	[=C]   AA	1	[=CH]   AA																																		
-EPISULFIDE	CC1(C)SC1(C)C			Epoxide	THIOUREA						episulfides 	Ammonium Cyanate	4	CH3       AA	1	S            3MR	2	>C<     AA					EPOXIDE	CC1(C)OC1(C)C		Alkene 		MCPBA 		Epoxides		4	CH3       AA	1	O     epoxide	2	>C<     AA																			
-EPOXY-ALCOHOL	CC1CO1	Sharpless epoxidation		Ethenol					MCPBA 		Epoxy Alcohol		1	CH2    AA	1	CH<     AA	1	O    epoxide	1	OH       AA																																				
+ENOL	CC=C(O)CC			ACETONE					Sodium Hydride		Enols		1	CH2    AA	2	CH3       AA	1	OH     AA	1	[=C]   AA	1	[=CH]   AA																																		
+EPISULFIDE	CC1(C)SC1(C)C			EPOXIDE	THIOUREA						episulfides 	Ammonium Cyanate	4	CH3       AA	1	S            3MR	2	>C<     AA					EPOXIDE	CC1(C)OC1(C)C		Alkene 		MCPBA 		Epoxides		4	CH3       AA	1	O     epoxide	2	>C<     AA																			
+EPOXY-ALCOHOL	CC1CO1	Sharpless epoxidation	http://www.organic-chemistry.org/namedreactions/sharpless-epoxidation.shtm	ETHENOL					MCPBA 		Epoxy Alcohol		1	CH2    AA	1	CH<     AA	1	O    epoxide	1	OH       AA																																				
 EPOXY-AMIDE	CN(C)C(=O)C1CO1												1	C(=O)    N-AA	1	CH2    AA	2	CH3       AA	1	CH<     AA	1	N<     AA	1	O    epoxide																																
-EPOXY-CARBOXYLIC ACID	O=C(O)C1CO1			KETONE	Alpha Haloester		Base				epoxy carboxylic acid		1	CH2    AA	1	CH<     AA	1	COOH    AA	1	O    epoxide			EPOXY-ESTER	COC1CO1								1	CH2    AA	1	CH3       AA	1	CH<     AA	1	O    epoxide	1	O         AA															
-EPOXY-KETONE	CC(=O)C1CO1			Vinyl Ketone					Epoxidation 		Epoxy-Ketone		1	CH2    AA	1	CH3       AA	1	CH<     AA	1	O    epoxide																																				
+EPOXY-CARBOXYLIC ACID	O=C(O)C1CO1			KETONE	ALPHA HALOESTER		Base				epoxy carboxylic acid		1	CH2    AA	1	CH<     AA	1	COOH    AA	1	O    epoxide			EPOXY-ESTER	COC1CO1								1	CH2    AA	1	CH3       AA	1	CH<     AA	1	O    epoxide	1	O         AA															
+EPOXY-KETONE	CC(=O)C1CO1			VINYL KETONE					Epoxidation 		Epoxy-Ketone		1	CH2    AA	1	CH3       AA	1	CH<     AA	1	O    epoxide																																				
 EPOXY-NITRILE	N#CC1CO1												1	C#N    AA	1	CH2    AA	1	CH<     AA	1	O    epoxide																																				
 ESTER-AMIDE	COC(=O)N(C)C												3	CH3       AA	1	N<     AA	1	O         AA	1	[=C]    AA	1	[=CH2]    AA																																		
-ESTER-SULFIDE																																																								
-ESTER	COC(C)=O	Baeyer-Villiger oxidation		CARBOXYLIC ACID	ALCOHOL		Acid				Ester 	Water	1	C(=O)O    AA	2	CH3       AA																																								
-ESTER		Yamaguchi Esterification		CARBOXYLIC ACID	ALCOHOL				Yamaguchi Reagent		Ester 																																													
-ESTER		Schotten_Baumann		acyl halide	ALCOHOL		Base				Ester 																																													
-ESTER		Fisher Esterification		CARBOXYLIC ACID	ALCOHOL		Acid				Ester 																																													
+ESTER-SULFIDE	CSC																																																							
+ESTER	COC(C)=O	Baeyer-Villiger oxidation	https://www.name-reaction.com/baeyer-villiger-oxidation	CARBOXYLIC ACID	ALCOHOL		Acid				Ester 	Water	1	C(=O)O    AA	2	CH3       AA																																								
+ESTER		Yamaguchi Esterification	https://www.name-reaction.com/yamaguchi-esterification	CARBOXYLIC ACID	ALCOHOL				Yamaguchi Reagent		Ester 																																													
+ESTER		Schotten_Baumann	https://www.name-reaction.com/schotten-baumann-reaction	ACYL HALIDE	ALCOHOL		Base				Ester 																																													
+ESTER		Fisher Esterification	https://www.name-reaction.com/fischer-esterification	CARBOXYLIC ACID	ALCOHOL		Acid				Ester 																																													
 ETHER-AMINE	CON												3	CH3       AA	1	N<     AA	1	O         NA																																						
 ETHER-ESTER	COCC(=O)OC												1	C(=O)O    AA	1	CH2    AA	2	CH3       AA	1	O         NA																																				
 ETHER-KETONE	COCC(C)=O												1	CH2    AA	2	CH3       AA	1	O         AA	1	C=O    AA																																				
-ETHER	COC	Williamson ether synthesis		2 Alcohol			Acid				Ether		2	CH3       AA	1	O         AA																																								
-ETHER, SILYL	CO[Si](C)(C)C	Silylation 		ALCOHOL	Silyl chloride 				amine base 		silyl ethers 		4	CH3       AA	1	O         AA	1	Si       OA																																						
-FORMAMIDE	CC(N)=O			Ethyl formate					ammonia		Formamides	ethylalcohol	1	CHO     NA	1	NH2    AA																																								
-GLYCIDIC ESTER	CCOC(=O)C1(C)OC1(C)C	Darzens 		KETONE	Alpha Haloester		Base				Glycidic ester		1	C(=O)O    AA	1	CH2    AA	4	CH3       AA	1	O    epoxide	2	>C<        AA																																		
+ETHER	COC	Williamson ether synthesis	https://www.name-reaction.com/williamson-ether-synthesis	2 ALCOHOL			Acid				Ether		2	CH3       AA	1	O         AA																																								
+ETHER, SILYL	CO[Si](C)(C)C	Silylation 	https://en.wikipedia.org/wiki/Silylation	ALCOHOL	SILYL CHLORIDE				amine base 		Silyl ethers 		4	CH3       AA	1	O         AA	1	Si       OA																																						
+FORMAMIDE	CC(N)=O			ETHYL FORMATE					ammonia		Formamides	Ethylalcohol	1	CHO     NA	1	NH2    AA																																								
+GLYCIDIC ESTER	CCOC(=O)C1(C)OC1(C)C	Darzens 	https://en.wikipedia.org/wiki/Darzens_reaction	KETONE	ALPHA HALOESTER		Base				Glycidic ester		1	C(=O)O    AA	1	CH2    AA	4	CH3       AA	1	O    epoxide	2	>C<        AA																																		
 HALIDE, ACYL	CC(=O)Cl			CARBOXYLIC ACID					thionyl chloride		Acyl Halides		1	C(=O)    HaA	1	CH3       AA	1	Cl        AA																																						
 HALIDE, ALKYL	[H]C([H])([H])C([H])([H])Cl			ALCOHOL					HCl		Alkyl Halide		1	CH2    AA	1	CH3       AA	1	Cl        AA																																						
-HALIDE, ALLYLIC	[H]C([H])([H])C([H])(Cl)I	Moffatt-Swern		Allyl Acetate					Acetyl chloride 	ethanol	allylic halides		1	CH3       AA	1	CH<       AA	1	Cl        AA	1	I        AA	"HALIDE, ARYL"	IC1CCC(I)CC1	Sandmeyer 	Anilines 		Acid		Aryl Halides		4	CH2    AA	2	CH<       AA	2	I        AA																					
-HALIDE, SULFONYL	C[C+2](=O)(=O)Cl			Thiol					Peroxide/SOCl2/amines		Sulfonyl Halides		1	CH3       AA	1	Cl        AA	1	s(=O)(=O)     AA				"HALIDE, VINYL"	CC(C)=C(C)[X]		"1,2 Dichloroethane"		Dehydrochlorination		Vinyl Halides		1	Cl    olefinicA	1	[=CH]         AA	1	[=CH2]         AA				HALO-ALCOHOL	CC(O)C(C)[X]		Alkene	X2 + Water			Halo alcohols		2	CH3       AA	1	Cl    olefinicA	1	OH       AA	2	[=C]         AA
+HALIDE, ALLYLIC	[H]C([H])([H])C([H])(Cl)I	Moffatt-Swern	http://www.chem.wisc.edu/areas/reich/chem842/_chem842-08-sulfur%7B08%7D.htm	ALLYL ACETATE					Acetyl chloride 	Ethanol	allylic halides		1	CH3       AA	1	CH<       AA	1	Cl        AA	1	I        AA	"HALIDE, ARYL"	IC1CCC(I)CC1	Sandmeyer 	Anilines 		Acid		Aryl Halides		4	CH2    AA	2	CH<       AA	2	I        AA																					
+HALIDE, SULFONYL	C[C+2](=O)(=O)Cl			THIOL					Peroxide/SOCl2/amines		Sulfonyl Halides		1	CH3       AA	1	Cl        AA	1	s(=O)(=O)     AA				"HALIDE, VINYL"	CC(C)=C(C)[X]		"1,2 Dichloroethane"		Dehydrochlorination		Vinyl Halides		1	Cl    olefinicA	1	[=CH]         AA	1	[=CH2]         AA				HALO-ALCOHOL	CC(O)C(C)[X]		Alkene	X2 + Water			Halo alcohols		2	CH3       AA	1	Cl    olefinicA	1	OH       AA	2	[=C]         AA
 HALO-ALDEHYDE	[H]C(=O)C([H])([H])Cl												1	CH2    AA	1	CHO    AA	1	Cl         AA																																						
 HALO-ALKYNE	C#CCCl			ALKYNE	CBr4		Base				Halo alkynes 		1	#C       AA	1	#CH      AA	1	CH2    AA	1	Cl         AA																																				
 HALO-AMIDE	NC(=O)CCl												1	C(=O)     NAA	1	CH2    AA	1	Cl         AA	1	NH2    AA																																				
 HALO-AMINE	NCCl												1	CH2    AA	1	Cl         AA	1	NH2    AA																																						
 HALO-AZIDE	N=[N+]=NCCl												1	CH2    AA	1	Cl         AA	1	N=[N+]=[N-]																																						
-HALO-CARBOXYLIC ACID	O=C(O)CCl	Hell-Volhard-Zelinsky reaction		CARBOXYLIC ACID	Br2				Phosphorus 		Halo carboxylic Acid 		1	CH2    AA	1	COOH   AA	1	Cl         AA		HALO-ESTER	COC(=O)CCl								1	C(=O)O     AA	1	CH2    AA	1	CH3       AA	1	Cl       AA																				
-HALO-ETHER	COCCl			ACETAL	Acid Halides 				Metal Salt		Halo Ethers		1	CH2    AA	1	CH3       AA	1	Cl         AA	1	O        AA																																				
-HALO-KETONE	CC(=O)CCCl			Acetone	X2					Halo Ketones	Hydrochloric Acid		2	CH2    AA	1	CH3       AA	1	Cl         AA	1	C=O   AA																																				
+HALO-CARBOXYLIC ACID	O=C(O)CCl	Hell-Volhard-Zelinsky reaction	https://www.name-reaction.com/hell-volhard-zelinsky-reaction	CARBOXYLIC ACID	Br2				Phosphorus 		Halo carboxylic Acid 		1	CH2    AA	1	COOH   AA	1	Cl         AA		HALO-ESTER	COC(=O)CCl								1	C(=O)O     AA	1	CH2    AA	1	CH3       AA	1	Cl       AA																				
+HALO-ETHER	COCCl			ACETAL	ACID HALIDES				Metal Salt		Halo Ethers		1	CH2    AA	1	CH3       AA	1	Cl         AA	1	O        AA																																				
+HALO-KETONE	CC(=O)CCCl			ACETONE	X2					Halo Ketones	Hydrochloric Acid		2	CH2    AA	1	CH3       AA	1	Cl         AA	1	C=O   AA																																				
 HALO-LACTAM	O=C1NCC1Cl												1	C(=O)     NAA	1	CH2    AA	1	CH<    AA	1	Cl       AA	1	NH       AA																																		
 HALO-LACTONE	CC1OC1=O												1	C(=O)O  cyclic	1	CH<    AA	1	Cl       AA																																						
 HALO-NITRO 	ClCC[NO2]												2	CH2    AA	1	Cl       AA	1	[O-]	1	[=O]																																				
@@ -126,88 +125,88 @@ HALO-NITROSO 	O=NCCl												1	CH2    AA	1	Cl       AA	1	N(=O)
 HALO-SILANE	[H]C([H])(Cl)Cl												1	Cl       AA	2	H   siliconA	1	Si																																						
 HALO-SULFONE	CS(=O)(=O)Cl												1	CH3       AA	1	Cl       AA	1	S(=O)(=O)    AA																																						
 HALO-SULFOXIDE	CS(=O)Cl												1	CH3       AA	1	Cl       AA	1	S(=O)          AA																																						
-HALOHYDRIN	CC(O)C(C)Cl			ALKENE	X					water	Halohydrins		2	CH3       AA	2	CH<       AA	1	Cl            AA	1	OH      AA																																				
+HALOHYDRIN	CC(O)C(C)Cl			ALKENE	X					Water	Halohydrins		2	CH3       AA	2	CH<       AA	1	Cl            AA	1	OH      AA																																				
 HETEROCYCLE	C2=Cc1ccccc1C2												1	CH2    ArA	1	CH=      ArA	1	[=CH]      AA	2	AC	4	ACH																																		
 HYDRAZIDE	CC(=O)N(C)N(C)C												1	C(=O)     NAA	4	CH3       AA	2	N<       NA																																						
-HYDRAZINE	NN			Chloramine	ammonia						Hydrazine	Hydrochloric Acid	2	NH2       NA																																										
-HYDRAZONE	CC(C)=NN			Acetone					Hydrazine	Water	Hydrazone		2	CH3       AA	1	NH2       NA	1	>C=N  																																						
-HYDROXAMIC ACID	CC(=O)N(C)O	Angeli-Rimini 		ALDEHYDE	Sulfonamide		Base			Methanol	Hydroxamic Acid	Sulfinic Acid	1	C(=O)     NAA	2	CH3       AA	1	N<       AA	1	OH      NA		HYDROXY-ALDEHYDE	[H]C(=O)C(C)C(C)O								2	CH3       AA	2	CH<       AA	1	CHO    AA	1	OH      AA																		
+HYDRAZINE	NN			CHLORAMINE	AMMONIA						Hydrazine	Hydrochloric Acid	2	NH2       NA																																										
+HYDRAZONE	CC(C)=NN			ACETONE					Hydrazine	Water	Hydrazone		2	CH3       AA	1	NH2       NA	1	>C=N  																																						
+HYDROXAMIC ACID	CC(=O)N(C)O	Angeli-Rimini 	https://en.wikipedia.org/wiki/Angeli%E2%80%93Rimini_reaction	ALDEHYDE	SULFONAMIDE		Base			Methanol	Hydroxamic Acid	Sulfinic Acid	1	C(=O)     NAA	2	CH3       AA	1	N<       AA	1	OH      NA		HYDROXY-ALDEHYDE	[H]C(=O)C(C)C(C)O								2	CH3       AA	2	CH<       AA	1	CHO    AA	1	OH      AA																		
 HYDROXY-AMIDE	CC(O)C(C)C(N)=O												1	C(=O)     NAA	2	CH3       AA	2	CH<       AA	1	NH2    AA	1	OH       AA																																		
 HYDROXY-AMINE	CC(O)C(C)CN												1	CH2    AA	2	CH3       AA	2	CH<       AA	1	NH2    AA	1	OH       AA																																		
 HYDROXY-AZIRIDINE	OC1CN1												1	CH2    AA	1	CH<       AA	1	NH    3MemberR	1	OH     AA																																				
 HYDROXY-CARBOXYLIC ACID	O=C(O)CO												1	CH2    AA	1	COOH   AA	1	OH       AA																																						
-HYDROXY-ESTER	CC(=O)COCO	Reformatsky reaction		KETONE	Alpha Haloester				Metallic Zinc	Water	Hydroxy Esters		1	C(=O)O    AA	1	CH2    AA	1	CH3       AA	1	OH      AA		HYDROXY-ETHER	COO		Epoxide 	Alcohol	erbium(III) triflate		Hydroxy Ethers		1	CH3       AA	1	O      OA	1	OH       OA																				
-HYDROXY-KETONE	CC(=O)CO	Rubottom Oxidation		Silyl Enol Ethers					mCPBA 	Water	Hydroxy Ketones		1	CH2    AA	1	CH3       AA	1	OH       AA	1	C=O     AA			HYDROXY-NITRILE	N#CCO		Aldehyde 	Trimethylsilylacetonitrile	Acid	THF	Hydroxynitriles		1	C#N    AA	1	CH2    AA	1	OH       AA																			
+HYDROXY-ESTER	CC(=O)COCO	Reformatsky reaction	https://en.wikipedia.org/wiki/Reformatsky_reaction	KETONE	ALPHA HALOESTER				Metallic Zinc	Water	Hydroxy Esters		1	C(=O)O    AA	1	CH2    AA	1	CH3       AA	1	OH      AA		HYDROXY-ETHER	COO		Epoxide 	Alcohol	erbium(III) triflate		Hydroxy Ethers		1	CH3       AA	1	O      OA	1	OH       OA																				
+HYDROXY-KETONE	CC(=O)CO	Rubottom Oxidation	http://www.organic-chemistry.org/namedreactions/rubottom-oxidation.shtm	SILYL ENOL ETHERS					meta-Chloroperoxybenzoic acid	Water	Hydroxy Ketones		1	CH2    AA	1	CH3       AA	1	OH       AA	1	C=O     AA			HYDROXY-NITRILE	N#CCO		Aldehyde 	Trimethylsilylacetonitrile	Acid	THF	Hydroxynitriles		1	C#N    AA	1	CH2    AA	1	OH       AA																			
 HYDROXY-NITRO 	O=NOCO												1	CH2    AA	1	N(=O)  	1	O          NA	1	OH     AA																																				
 HYDROXY-PHOSPHONATE	COP(=O)(CO)OC												1	CH2    AA	2	CH3       AA	2	O          PA	1	OH    AA																																				
 HYDROXY-THIOCYANATE	N#CSCO												1	C#N    ASA	1	CH2     AA	1	OH       AA	1	S       AA																																				
 HYDROXY-THIOETHER	CSCO												1	CH2    AA	1	CH3     AA	1	OH       AA	1	S       AA																																				
-HYDROXYLAMINE	[H]ON	Raschig Process		Nitrous Acid					Bisulfite		Hydroxylamine		1	CH3       AA	1	NH2    AA	1	O         NA																																						
-IMIDE	CC(=O)N(C)C(C)=O			DICARBOXYLIC ACID	ammonia				Heat		Imides	Water	2	C(=O)    NAA	3	CH3     AA	1	N<       AA																																						
-AMIDINE	CC(=N)N			NITRILE	Trihaloethanol				HCl		Amidines		1	CH3       AA	1	NH2    NA	1	H         NA																																						
-IMINE	CN=C(C)C	Schmidt reaction		Aromatic aldehyde	Alkyl bromide				aqueous ammonia 		Imines		3	CH3       AA	1	>C=N																																								
-IMINO ESTER	COC(=O)C1CCC=N1			?-oxoesters	Amine		acid		dehydrating agent		Imino ester		1	C(=O)O  AA	2	CH2    AA	1	CH3       AA	1	CH<       AA	1	CH=N																																		
-ISOCYANATE	CNC=O	Lossen rearrangement		AMINE					Phosgene		Isocyanates	Hydrochloric acid	1	CH3       AA	1	N=C=O    AA																																								
-ISONITRILE	C#[N+]C			FORMAMIDE	chlorophosphate				triethylamine	DMC	Isonitriles		1	#CH       AA	1	CH3      AA																																								
-ISOTHIOCYANATE	CN=C=S			Aniline	carbon disulfide 					aqueous ammonia/ the treated with lead nitrate	isothiocyanates 		1	CH3       AA	1	N=C=S							KETAL	COC(C)(C)OC		Hemiketals 		Acid		Ketal		4	CH3       AA	2	O        AA	1	>C<       AA																			
-KETENE	CC(C)=C=O	Schmidlin ketene synthesis		Acetone					Pyrolysis 		Ketene	Methane 	2	CH3       AA	1	C=C=O																																								
-KETENIMINE				(N-tert-alkylimino)acylpalladim			base				Ketenimine		3	CH3       AA	1	[=C]      AA	1	[=C=]																																						
-KETO-ALDEHYDE	[H]C(=O)CC(C)=O			Acetone	Methylfomate 				Sodium Carbonate	Water	Ketone Aldehyde 		1	CH2    AA	1	CH3     AA	1	CHO       AA	1	C=O    AA			KETO-ALKYNE	C#CCC(C)=O								1	#C       AA	1	#CH     AA	1	CH3       AA	1	C=O    AA																	
-KETO-AMIDE	CC(=O)CC(N)=O			benzylimidates					Oxygen/Copper Salt	DMF	Ketoamides		1	C(=O)   NAA	1	CH2      AA	1	CH3       AA	1	NH2    AA	1	C=O        AA																																		
-KETO-CARBOXYLIC ACID	CC(=O)CC(=O)O			ALDEHYDE	Alkenoic acid				Rhodium(I) comples and 2-amino-3-picoline	benzoic acid /toluene	Keto carboxylic acids		1	CH2    AA	1	CH3     AA	1	COOH    AA	1	C=O    AA																																				
-KETO-ESTER	COCC(C)=O	Claisen condensation		2 Esters			acid				Keto Ester		1	CH2    AA	2	CH3     AA	1	O          AA	1	C=O    AA			KETO-NITRILE	CC(=O)CCC#N								1	C#N    AA	2	CH2    AA	1	CH3     AA	1	C=O    AA																	
+HYDROXYLAMINE	[H]ON	Raschig Process	http://www.lookchem.com/Chempedia/Chemical-Technology/Inorganic-Chemical-Technology/2899.html	NITROUS ACID					Bisulfite		Hydroxylamine		1	CH3       AA	1	NH2    AA	1	O         NA																																						
+IMIDE	CC(=O)N(C)C(C)=O			DICARBOXYLIC ACID	AMMONIA				Heat		Imides	Water	2	C(=O)    NAA	3	CH3     AA	1	N<       AA																																						
+AMIDINE	CC(=N)N			NITRILE	TRIHALOETHANOL				HCl		Amidines		1	CH3       AA	1	NH2    NA	1	H         NA																																						
+IMINE	CN=C(C)C	Schmidt reaction	https://www.name-reaction.com/schmidt-reaction	AROMATIC ALDEHYDE	ALKYL BROMIDE				Aqueous Ammonia		Imines		3	CH3       AA	1	>C=N																																								
+IMINO ESTER	COC(=O)C1CCC=N1			?-OXOESTERS	AMINE		Acid		Dehydrating agent		Imino ester		1	C(=O)O  AA	2	CH2    AA	1	CH3       AA	1	CH<       AA	1	CH=N																																		
+ISOCYANATE	CNC=O	Lossen rearrangement	https://en.wikipedia.org/wiki/Lossen_rearrangement	AMINE					Phosgene		Isocyanates	Hydrochloric acid	1	CH3       AA	1	N=C=O    AA																																								
+ISONITRILE	C#[N+]C			FORMAMIDE	CHLOROPHOSPHATE				Triethylamine	Dimethyl carbonate	Isonitriles		1	#CH       AA	1	CH3      AA																																								
+ISOTHIOCYANATE	CN=C=S			ANILINE	CARBON DISULFIDE					aqueous ammonia/ the treated with lead nitrate	isothiocyanates 		1	CH3       AA	1	N=C=S							KETAL	COC(C)(C)OC		Hemiketals 		Acid		Ketal		4	CH3       AA	2	O        AA	1	>C<       AA																			
+KETENE	CC(C)=C=O	Schmidlin ketene synthesis	https://onlinelibrary.wiley.com/doi/pdf/10.1002/9780470638859.conrr564	ACETONE					Pyrolysis 		Ketene	Methane 	2	CH3       AA	1	C=C=O																																								
+KETENIMINE	CN=C=C(C)C			(N-TERT-ALKYLIMINO)ACYLPALLADIM			Base				Ketenimine		3	CH3       AA	1	[=C]      AA	1	[=C=]																																						
+KETO-ALDEHYDE	[H]C(=O)CC(C)=O			ACETONE	METHYLFOMATE				Sodium Carbonate	Water	Ketone Aldehyde 		1	CH2    AA	1	CH3     AA	1	CHO       AA	1	C=O    AA			KETO-ALKYNE	C#CCC(C)=O								1	#C       AA	1	#CH     AA	1	CH3       AA	1	C=O    AA																	
+KETO-AMIDE	CC(=O)CC(N)=O			BENZYLIMIDATES					Oxygen/Copper Salt	Dimethylformamide	Ketoamides		1	C(=O)   NAA	1	CH2      AA	1	CH3       AA	1	NH2    AA	1	C=O        AA																																		
+KETO-CARBOXYLIC ACID	CC(=O)CC(=O)O			ALDEHYDE	ALKENOIC ACID				Rhodium(I) comples and 2-amino-3-picoline	benzoic acid /toluene	Keto carboxylic acids		1	CH2    AA	1	CH3     AA	1	COOH    AA	1	C=O    AA																																				
+KETO-ESTER	COCC(C)=O	Claisen condensation	https://www.name-reaction.com/claisen-condensation	2 ESTERS			Acid				Keto Ester		1	CH2    AA	2	CH3     AA	1	O          AA	1	C=O    AA			KETO-NITRILE	CC(=O)CCC#N								1	C#N    AA	2	CH2    AA	1	CH3     AA	1	C=O    AA																	
 KETO-SULFONE	CC(=O)CS(C)(=O)=O			ALDEHYDE	RSO2I					Methanol/ Triethylamine	Keto Sulfones		1	CH2    AA	2	CH3     AA	1	S(=O)(=O)  AA	1	C=O        AA			KETO-SULFONIC ACID	CC(=O)CS(=O)(=O)O								1	CH2    AA	1	CH3     AA	1	OH       SA	1	S(=O)(=O)  AA	1	C=O        AA															
-KETONE	CCC(C)=O	Oppenauer oxidation		ALCOHOL					Oxidizer		Ketone 		1	CH2    AA	2	CH3     AA	1	C=O        AA																																						
-KETONE		Swern Oxidation		Secondary alcohol 	Oxalyl chloride		base			DMSO	Ketone																																													
-LACTAM	O=C1CCN1	Beckmann rearrangement		Oxime			acid				Lactam		1	C=O     NAA	2	CH2    AA	1	NH    AA																																						
-LACTONE	O=C1CO1	Baeyer-Villiger Oxidation		Cyclic Ketone					Peroxide		Lactone		1	C(=O)O cyclic	1	CH2    AA																																								
+KETONE	CCC(C)=O	Oppenauer oxidation	https://www.name-reaction.com/oppenauer-oxidation	ALCOHOL					Oxidizer		Ketone 		1	CH2    AA	2	CH3     AA	1	C=O        AA																																						
+KETONE		Swern Oxidation	https://www.name-reaction.com/swern-oxidation	SECONDARY ALCOHOL	OXALYL CHLORIDE		Base			Dimethyl sulfoxide	Ketone																																													
+LACTAM	O=C1CCN1	Beckmann rearrangement	https://www.name-reaction.com/beckmann-rearrangement	OXIME			Acid				Lactam		1	C=O     NAA	2	CH2    AA	1	NH    AA																																						
+LACTONE	O=C1CO1	Baeyer-Villiger Oxidation	https://www.name-reaction.com/baeyer-villiger-oxidation	CYCLIC KETONE					Peroxide		Lactone		1	C(=O)O cyclic	1	CH2    AA																																								
 NITRATE	O=N(=O)[O-]												1	ONO2																																										
-NITRILE	CC#N	Letts 		CARBOXYLIC ACID					Methal thiocyanate		Nitrile	SO2 + Hydrochloric Acid	1	C#N    AA	1	CH3     AA																																								
-NITRITE	O=N[O-]	Meyer		Alkyl Halide					Metalic nitrites + nitroalkanes + nitrites	Nitrites			1	N(=O)	1	O																																								
-NITRO 	CN(=O)=O			sodium chloroacetate					sodium nitrite		Aliphatic Nitro		1	CH3     AA	1	NO2    AA																																								
-NITRO-ALCOHOL	O[NH+](O)O	Henry reaction		Nitroalkanes	ALDEHYDE		Base				Nitro Compound 		1	ONO2	1	H    other																																								
-NITRONE	CC(C)=N(C)=O			KETONE	HYDROXYLAMINE				light Base		Nitrone 		3	CH3     AA	1	C=[N+][O-]																																								
-NITROSO-AMINE	CN(C)N=O			Nitrous Acid	Secondary Amine						Nitrosoamine 	Water	2	CH3     AA	1	>NN=O																																								
-ORTHO ESTER	COC(C)(OC)OC	Pinner reaction		Cyanide	ALCOHOL						Orthoesters 	ammonium 	4	CH3     AA	3	O      AA	1	>C<        AA																																						
-OSAZONE				sugar	phenylhydrazine						Osazone		2	CH2    AA	4	CH<        AA	4	NH         NA	4	OH         AA	2	AC	10	ACH																																
+NITRILE	CC#N	Letts 	https://en.wikipedia.org/wiki/Letts_nitrile_synthesis	CARBOXYLIC ACID					Methal thiocyanate		Nitrile	SO2 + Hydrochloric Acid	1	C#N    AA	1	CH3     AA																																								
+NITRITE	O=N[O-]	Meyer	https://en.wikipedia.org/wiki/Nitrite	ALKYL HALIDE					Metalic nitrites + nitroalkanes + nitrites	Nitrites			1	N(=O)	1	O																																								
+NITRO 	CN(=O)=O			SODIUM CHLOROACETATE					Sodium nitrite		Aliphatic Nitro		1	CH3     AA	1	NO2    AA																																								
+NITRO-ALCOHOL	O[NH+](O)O	Henry reaction	http://www.organic-chemistry.org/namedreactions/henry-reaction.shtm	NITROALKANES	ALDEHYDE		Base				Nitro Compound 		1	ONO2	1	H    other																																								
+NITRONE	CC(C)=N(C)=O			KETONE	HYDROXYLAMINE				Light Base		Nitrone 		3	CH3     AA	1	C=[N+][O-]																																								
+NITROSO-AMINE	CN(C)N=O			NITROUS ACID	SECONDARY AMINE						Nitrosoamine 	Water	2	CH3     AA	1	>NN=O																																								
+ORTHO ESTER	COC(C)(OC)OC	Pinner reaction	http://www.organic-chemistry.org/namedreactions/pinner-reaction.shtm	CYANIDE	ALCOHOL						Orthoesters 	ammonium 	4	CH3     AA	3	O      AA	1	>C<        AA																																						
+OSAZONE	OCC(O)C(O)C(O)C(=NN)C=NN			SUGAR	PHENYLHYDRAZINE						Osazone		2	CH2    AA	4	CH<        AA	4	NH         NA	4	OH         AA	2	AC	10	ACH																																
 OXIME	CC(C)=NO			ALDEHYDE	HYDROXYLAMINE						Oximes		2	CH3     AA	1	>C=NOH																																								
-PEROXIDE	COOC	Griesbaum Coozonolysis 		Dialkylsulfates	Alkaline hydrogen peroxide						Hydrogen Peroxide		2	CH3    AA	2	O         OA							PHENOL	Oc1ccccc1		Chlorobenzene 		Base		Phenol 		1	OH      ArA	1	ArC	5	ArCH																			
-PHOSPHINE	[H]P([H])[H]			Phosphine Oxide					Silanes	toluene	Phosphines		1	P																																										
-PHOSPHONATE ESTER	COP(C)(=O)OC			Phosphonic Acid	ALCOHOL						Phosphonate Esters 		3	CH3     AA	2	O         PA	1	P(=O)																																						
+PEROXIDE	COOC	Griesbaum Coozonolysis 	http://www.organic-chemistry.org/namedreactions/griesbaum-coozonolysis.shtm	DIALKYLSULFATES	ALKALINE HYDROGEN PEROXIDE						Hydrogen Peroxide		2	CH3    AA	2	O         OA							PHENOL	Oc1ccccc1		Chlorobenzene 		Base		Phenol 		1	OH      ArA	1	ArC	5	ArCH																			
+PHOSPHINE	[H]P([H])[H]			PHOSPHINE OXIDE					Silanes	Toluene	Phosphines		1	P																																										
+PHOSPHONATE ESTER	COP(C)(=O)OC			PHOSPHONIC ACID	ALCOHOL						Phosphonate Esters 		3	CH3     AA	2	O         PA	1	P(=O)																																						
 PHOSPHORANE	CP(C)(C)(C)C												5	CH3     AA	1	P   [+5 V all S]																																								
-QUINONE	O=c1ccccc1=O			AROMATIC 	Phenol						Quinones		2	C(=O)    OA	4	[=CH]   AA																																								
-SELENIDE													1	Se																																										
+QUINONE	O=c1ccccc1=O			AROMATIC	PHENOL						Quinones		2	C(=O)    OA	4	[=CH]   AA																																								
+SELENIDE	[Se]												1	Se																																										
 SELENOCARBONATE	O=C([O-])[Se-]												1	C(=O)[O-]																																										
 SELENOETHER-ALDEHYDE	[H]C(=O)[Se-]												1	CHO    AA																																										
 SELENOETHER-KETONE	O=C[Se-]												1	C(=O)   SeA	1	CH3     AA																																								
 SELENOXIDE	OC[Se-]												1	CH2     AA	1	OH      AA																																								
-SILANE	[H][Si]([H])([H])[H]			Hydrogen chloride					Magnesium Silicide		Silane 	Magnesium Chloride	1	Si																																										
+SILANE	[H][Si]([H])([H])[H]			HYDROGEN CHLORIDE					Magnesium Silicide		Silane 	Magnesium Chloride	1	Si																																										
 SULFINIC ACID	CS(=O)O			THIOUREA					Hydrogen Peroxide		Thiourea Dioxide 	Water	1	CH3     AA	1	OH      SA	1	S(=O)       AA																																						
-SULFONAMIDE	CN(C)S(C)(=O)=O			Sulfonyl chloride	ammonia						Sulfonamides		3	CH3     AA	1	N<      AA	1	S(=O) (=O)    NAA																																						
-SULFONATE ESTER	COS(C)(=O)=O			1-decanol	tosyl chloride		base				Sulfonate Esters		2	CH3     AA	1	O         SA	1	S(=O) (=O)    AA																																						
-SULFONE	CS(C)(=O)=O			Sulfides					Hydrogen Peroxide/ Tantalum Carbide		Sulfones		2	CH3     AA	1	S(=O) (=O)    AA																																								
-SULFONYL IMINE	[H]C(C)=NS(C)=O			Emamtopure 1 sulfinamides	ALDEHYDE						Sulfinyl Imines		2	CH3     AA	1	CH=N	1	S(=O)    NAA																																						
-SULFOXIDE	CS(C)=O	Friedel Crafts		Sulfides					Hydrogen Peroxide		Sulfoxides		2	CH3     AA	1	S(=O)    AA																																								
-TELLURIDE													1	Te																																										
-THIIRANE (EPISULFIDE)	C1CS1			Ethylene Carbonate	Potassium Thiocyanate						Thiirane	CO2 + Potassium cyanate	2	CH2     AA	1	S      3memberR							THIOAMIDE	CC(=S)N(C)C		Amides		Phosphorus sulfides 		Thioamide		1	C(=S)    NAA	3	CH3      AA	1	N<        AA																			
-THIOCARBAMATE	COC(=S)N(C)C			Thiocyanate					water		Thiocarbamate		1	C(=S)O   NA	3	CH3      AA	1	N<        AA																																						
-THIOCARBOXYLIC ACID	CC(O)=S			Acid Chloride					Potassium Hydrosulfide		Thiocarboxylic Acid	Potassium Chloride	1	C(=S)OH   AA	1	CH3      AA							THIOCYANATE	N#C[S-]		lkyl Halides 	AAlkali thiocyanate 		Aqueous media 	Thiocyanates 		1	C#N     ASA																							
-THIOESTER	CSC(C)=O			Acid Chloride	alkali Metal salt thiol 						Thioester	Sodium Chloride	1	C(=O)S   AA	2	CH3      AA																																								
+SULFONAMIDE	CN(C)S(C)(=O)=O			SULFONYL CHLORIDE	AMMONIA						Sulfonamides		3	CH3     AA	1	N<      AA	1	S(=O) (=O)    NAA																																						
+SULFONATE ESTER	COS(C)(=O)=O			1-DECANOL	TOSYL CHLORIDE		Base				Sulfonate Esters		2	CH3     AA	1	O         SA	1	S(=O) (=O)    AA																																						
+SULFONE	CS(C)(=O)=O			SULFIDES					Hydrogen Peroxide/ Tantalum Carbide		Sulfones		2	CH3     AA	1	S(=O) (=O)    AA																																								
+SULFONYL IMINE	[H]C(C)=NS(C)=O			EMAMTOPURE 1 SULFINAMIDES	ALDEHYDE						Sulfinyl Imines		2	CH3     AA	1	CH=N	1	S(=O)    NAA																																						
+SULFOXIDE	CS(C)=O	Friedel Crafts	https://pubs.acs.org/doi/abs/10.1021/jo2006335	SULFIDES					Hydrogen Peroxide		Sulfoxides		2	CH3     AA	1	S(=O)    AA																																								
+TELLURIDE	[Te]												1	Te																																										
+THIIRANE (EPISULFIDE)	C1CS1			ETHYLENE CARBONATE	POTASSIUM THIOCYANATE						Thiirane	CO2 + Potassium cyanate	2	CH2     AA	1	S      3memberR							THIOAMIDE	CC(=S)N(C)C		Amides		Phosphorus sulfides 		Thioamide		1	C(=S)    NAA	3	CH3      AA	1	N<        AA																			
+THIOCARBAMATE	COC(=S)N(C)C			THIOCYANATE					water		Thiocarbamate		1	C(=S)O   NA	3	CH3      AA	1	N<        AA																																						
+THIOCARBOXYLIC ACID	CC(O)=S			ACID CHLORIDE					Potassium Hydrosulfide		Thiocarboxylic Acid	Potassium Chloride	1	C(=S)OH   AA	1	CH3      AA							THIOCYANATE	N#C[S-]		lkyl Halides 	AAlkali thiocyanate 		Aqueous media 	Thiocyanates 		1	C#N     ASA																							
+THIOESTER	CSC(C)=O			ACID CHLORIDE	alkali Metal salt thiol 						Thioester	Sodium Chloride	1	C(=O)S   AA	2	CH3      AA																																								
 THIOETHER-ALDEHYDE	[H]C(=O)SC												1	C(=O)S   AA	1	CH3      AA	1	H            CA																																						
 THIOETHER-KETONE	CSC(C)=O												1	C(=O)S   AA	2	CH3      AA																																								
 THIOETHER (SULFIDE)	CSC												2	CH3      AA																																										
-THIOKETONE	CCC(C)=O			KETONE					Lawessons's Reagent		Thioketones		2	CH3      AA	1	C=O        AA																																								
-THIOLACTAM	S=C1CCN1			KETONE	Thiophosphoryl chloride		base			water	Thiolactams		1	C(=S)    NAA	2	CH2      AA	1	NH      AA																																						
-THIOL	[H]SC			Hydrogen Sulfide	Methanol						Thiol 	Water	1	CH3      AA	1	SH         AA																																								
-THIOUREA	NC(N)=S			Hydrogen Sulfide	Calcium Cyanamide				Carbon dioxide 		Thiourea		1	C(=S)    2NA	2	NH2      AA																																								
-TRIAZOLE	c1cscn1	Huisgen Azide-Alkyne		AZIDE	ALKYNE			Heat			Triazoles		3	ArCH	1	ArN	1	ArS																																						
-TRIAZOLINE	c1ncnn1			Oxazolones	azodicarboxylate 				Sodium hydroxide 	Acetonitrile 	Triazolines		2	ArCH	2	ArN attacheed to AN in same ring	1	ArNH			TRIENE	C=CC(=C)C=C	Heck-Mizoroki	Vinyliodide	 Terminal Alkenes 	Vinylboronates esters 		Trienes		1	[=C]    AA	2	[=CH]    AA	3	[=CH2]    AA																					
+THIOKETONE	CC(=S)C			KETONE					Lawessons's Reagent		Thioketones		2	CH3      AA	1	C=O        AA																																								
+THIOLACTAM	S=C1CCN1			KETONE	THIOPHOSPHORYL CHLORIDE		Base			Water	Thiolactams		1	C(=S)    NAA	2	CH2      AA	1	NH      AA																																						
+THIOL	[H]SC			HYDROGEN SULFIDE	METHANOL						Thiol 	Water	1	CH3      AA	1	SH         AA																																								
+THIOUREA	NC(N)=S			HYDROGEN SULFIDE	CALCIUM CYANAMIDE				Carbon dioxide 		Thiourea		1	C(=S)    2NA	2	NH2      AA																																								
+TRIAZOLE	c1cscn1	Huisgen Azide-Alkyne	https://en.wikipedia.org/wiki/Azide-alkyne_Huisgen_cycloaddition	AZIDE	ALKYNE			Heat			Triazoles		3	ArCH	1	ArN	1	ArS																																						
+TRIAZOLINE	c1ncn[H]n1			OXAZOLONES	AZODICARBOXYLATE				Sodium hydroxide 	Acetonitrile 	Triazolines		2	ArCH	2	ArN attacheed to AN in same ring	1	ArNH			TRIENE	C=CC(=C)C=C	Heck-Mizoroki	Vinyliodide	 Terminal Alkenes 	Vinylboronates esters 		Trienes		1	[=C]    AA	2	[=CH]    AA	3	[=CH2]    AA																					
 TRIHALIDE	[H]C(Cl)(Cl)Cl												1	CH<     AA	3	Cl       AA																																								
-TRIOXANE	C1COOOC1			3 Formaldehyde 					3 Water		Trioxane	Water	3	CH2     AA	3	O       OA																																								
-UREA	NC(N)=O			Ammonium carbamate 					Decomposition		Urea 	Water	1	C(=O)    2NA	2	NH2     AA																																								
-VINYL ETHER	C=COC=C			Alcohol	vinyl acetate				iridium complex		Vinyl Ethers		1	O     AA	2	[=CH]   AA	2	[=CH2]    AA																																						
-VINYL PHOSPHINE	[H]P([H])C=C			KETONE	Vinyl triflates 				Plladium-Catalyzed		Vinyl Phosphines		1	[=CH]   AA	1	[=CH2]    AA	2	H           PH	1	P    +3 valence all single bonds																																				
+TRIOXANE	C1COOOC1			3 FORMALDEHYDE					3 Water		Trioxane	Water	3	CH2     AA	3	O       OA																																								
+UREA	NC(N)=O			AMMONIUM CARBAMATE					Decomposition		Urea 	Water	1	C(=O)    2NA	2	NH2     AA																																								
+VINYL ETHER	C=COC=C			ALCOHOL	VINYL ACETATE				iridium complex		Vinyl Ethers		1	O     AA	2	[=CH]   AA	2	[=CH2]    AA																																						
+VINYL PHOSPHINE	[H]P([H])C=C			KETONE	VINYL TRIFLATES				Plladium-Catalyzed		Vinyl Phosphines		1	[=CH]   AA	1	[=CH2]    AA	2	H           PH	1	P    +3 valence all single bonds																																				
 VINYL SILANE	[H][SiH2]C=C												1	[=CH]   AA	1	[=CH2]    AA	3	H           SiA	1	Si																																				
-VINYL SULFIDE	C=CSC=C			Vinyl Halides 	THIOL				CuO	DMSO	Vinyl Sulfides		2	[=CH]   AA	2	[=CH2]    AA	2	H           SiA	1	SI																																				
-VINYL SULFONE	C=CS(=O)(=O)C=C			Alkene	sodium sulfinate				Cul-bpy	DMSO	Vinyl Sulfones		2	[=CH]   AA	2	[=CH2]    AA	2	[=O]     others	1	Si        OA																																				
-XANTHATE	O=C([O-])c3cccc2Oc1ccccc1Cc23			ALCOHOL	carbon disulfide 		base				Xanthate	water	1	C(=O)[O-]	1	CH2     ArA	1	O     2ArA	2	ArC	7	ArCH																																		
+VINYL SULFIDE	C=CSC=C			VINYL HALIDES	THIOL				CuO	Dimethyl sulfoxide	Vinyl Sulfides		2	[=CH]   AA	2	[=CH2]    AA	2	H           SiA	1	SI																																				
+VINYL SULFONE	C=CS(=O)(=O)C=C			ALKENE	SODIUM SULFINATE				Cul-bpy	Dimethyl sulfoxide	Vinyl Sulfones		2	[=CH]   AA	2	[=CH2]    AA	2	[=O]     others	1	Si        OA																																				
+XANTHATE	O=C([O-])c3cccc2Oc1ccccc1Cc23			ALCOHOL	CARBON DISULFIDE		Base				Xanthate	water	1	C(=O)[O-]	1	CH2     ArA	1	O     2ArA	2	ArC	7	ArCH																																		

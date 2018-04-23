@@ -684,9 +684,15 @@ namespace ChemInfo
             return (attr1 == attr2);
         }
 
-        internal bool CompatibleAtom(Atom atom1, Atom atom2)
+        internal bool CompatibleNode(Atom atom1, Atom atom2)
         {
-            return (atom1.Element == atom2.Element);
+            if (atom1.Element != atom2.Element) return false;
+            if (atom1.ExplicitHydrogens > atom2.NumHydrogens)
+            {
+                return false;
+            }
+            if (atom1.Degree > 1 && atom1.Degree != atom2.Degree) return false;
+            return true;
         }
 
         internal bool CompatibleEdge(Bond attr1, Bond attr2)
@@ -696,9 +702,9 @@ namespace ChemInfo
             return true;
         }
 
-        internal ELEMENTS GetNodeAttr(int i)
+        internal Atom GetNodeAttr(int i)
         {
-            return m_Atoms[i].Element;
+            return m_Atoms[i];
         }
 
         internal int GetNodeDegree(int i)

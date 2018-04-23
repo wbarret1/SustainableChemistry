@@ -19,6 +19,7 @@ namespace ChemInfo
         System.Collections.Hashtable ringAtoms;
         System.Collections.Hashtable ringbonds;
         string cisTrans;
+        bool addExplicitHToNext;
 
         System.Collections.Generic.List<Bond> doubleBonds;
 
@@ -29,6 +30,7 @@ namespace ChemInfo
             ringbonds = new System.Collections.Hashtable();
             cisTrans = string.Empty;
             doubleBonds = new List<Bond>();
+            addExplicitHToNext = false;
         }
 
 
@@ -95,6 +97,11 @@ namespace ChemInfo
                         atomClass = (int)VisitAtomclass((smilesParser.AtomclassContext)tree);
                     }
                 }
+            }
+            if (addExplicitHToNext)
+            {
+                hCount++;
+                this.addExplicitHToNext = false;
             }
             string[] organics = { "B", "C", "N", "O", "S", "P", "F", "Cl", "Br", "I" };
             string[] aromatics = { "b", "c", "n", "o", "p", "s", "se", "as" };
@@ -268,15 +275,24 @@ namespace ChemInfo
                 if (typeof(smilesParser.AtomContext).IsAssignableFrom(tree.GetType()))
                 {
                     Atom current = (Atom)VisitAtom((smilesParser.AtomContext)tree);
-                    retVal.AddAtom(current);
-                    if (last != null)
+                    if (current.Element != ELEMENTS.H)
                     {
-                        if (last.AtomType == AtomType.AROMATIC && current.AtomType == AtomType.AROMATIC) nextBond = BondType.Aromatic;
+                        retVal.AddAtom(current);
+                        if (addExplicitHToNext) current.ExplicitHydrogens++;
+                        if (last != null)
+                        {
+                            if (last.AtomType == AtomType.AROMATIC && current.AtomType == AtomType.AROMATIC) nextBond = BondType.Aromatic;
+                        }
+                        Bond b = retVal.AddBond(last, current, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
+                        if (!string.IsNullOrEmpty(cisTrans) && nextBond == BondType.Double) doubleBonds.Add(b);
+                        nextBond = BondType.Single;
+                        last = current;
                     }
-                    Bond b = retVal.AddBond(last, current, nextBond, BondStereo.NotStereoOrUseXYZ, BondTopology.Either, BondReactingCenterStatus.Unmarked);
-                    if (!string.IsNullOrEmpty(cisTrans) && nextBond == BondType.Double) doubleBonds.Add(b);
-                    nextBond = BondType.Single;
-                    last = current;
+                    else
+                    {
+                        if (last != null) last.ExplicitHydrogens++;
+                        else addExplicitHToNext = true;
+                    }
                 }
                 else if (typeof(smilesParser.RingbondContext).IsAssignableFrom(tree.GetType()))
                 {
