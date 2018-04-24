@@ -151,6 +151,16 @@ public interface IsmilesListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitHalogen([NotNull] smilesParser.HalogenContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterWildcard([NotNull] smilesParser.WildcardContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitWildcard([NotNull] smilesParser.WildcardContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

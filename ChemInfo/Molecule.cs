@@ -695,6 +695,7 @@ namespace ChemInfo
                 if (atom2.Element == ELEMENTS.Br) return true;
                 if (atom2.Element == ELEMENTS.I) return true;
                 if (atom2.Element == ELEMENTS.At) return true;
+                return false;
             }
             if (atom1.Element != atom2.Element) return false;
             if (atom1.ExplicitHydrogens > atom2.NumHydrogens) return false;

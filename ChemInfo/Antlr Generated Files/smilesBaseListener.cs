@@ -179,6 +179,18 @@ public partial class smilesBaseListener : IsmilesListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitHalogen([NotNull] smilesParser.HalogenContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="smilesParser.wildcard"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterWildcard([NotNull] smilesParser.WildcardContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="smilesParser.wildcard"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitWildcard([NotNull] smilesParser.WildcardContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

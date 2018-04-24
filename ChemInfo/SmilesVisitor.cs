@@ -70,6 +70,11 @@ namespace ChemInfo
                     Atom a = (Atom)VisitOrganic((smilesParser.OrganicContext)tree);
                     return a;
                 }
+                else if (typeof(smilesParser.HalogenContext).IsAssignableFrom(tree.GetType()))
+                {
+                    Atom a = (Atom)VisitHalogen((smilesParser.HalogenContext)tree);
+                    return a;
+                }
                 else
                 {
                     if (typeof(smilesParser.SymbolContext).IsAssignableFrom(tree.GetType()))

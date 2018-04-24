@@ -31,7 +31,11 @@ namespace SustainableChemistry
                 NamedReactionViewControl myControl = new NamedReactionViewControl();
                 myControl.ReactionName = r.Name;
                 this.tableLayoutPanel1.Controls.Add(myControl, 0 /* Column Index */, i++ /* Row index */);
-                string[] reactants = { g.ReactantA, g.ReactantB };
+                List<string> temp = new List<string>();
+                if (!string.IsNullOrEmpty(r.ReactantA)) temp.Add(r.ReactantA);
+                if (!string.IsNullOrEmpty(r.ReactantB)) temp.Add(r.ReactantB);
+                if (!string.IsNullOrEmpty(r.ReactantC)) temp.Add(r.ReactantC);
+                string[] reactants = temp.ToArray<string>(); ;
                 if (reactants.Length == 2)
                 {
                     ChemInfo.FunctionalGroup react0 = this.m_FunctGroups[reactants[0]];
@@ -43,7 +47,7 @@ namespace SustainableChemistry
                 }
                 myControl.Product = g.Image;
                 myControl.FunctionalGroupName = g.Name;
-                myControl.Catalyst = g.Catalyst;
+                myControl.Catalyst = r.Catalyst;
             }
         }
 

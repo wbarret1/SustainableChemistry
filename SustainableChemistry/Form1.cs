@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SustainableChemistry
 {
- 
+
     //public struct Descriptor
     //{
     //    public string name;
@@ -48,7 +48,7 @@ namespace SustainableChemistry
             documentPath = documentPath + "\\USEPA\\SustainableChemistry";
 
             System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
-            
+
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
             System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             try
@@ -66,7 +66,7 @@ namespace SustainableChemistry
             }
 
             // Initial code to load references from text RIS resource files. Can be deleted when done.
-            
+
             //m_References = new ChemInfo.References();
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900813763)));
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Diisoproprylethyamine Solvent", enc8.GetString(Properties.Resources.S0040403900942163)));
@@ -88,7 +88,7 @@ namespace SustainableChemistry
 
             // Creates the collection of functional groups.
             foreach (string line in functionalGroupStrs)
-            {                
+            {
                 ChemInfo.FunctionalGroup temp = fGroups.Add(line);
                 string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
                 if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
@@ -109,7 +109,7 @@ namespace SustainableChemistry
             string[] imageFiles = System.IO.Directory.GetFiles(documentPath + "\\Images\\");
             string[] groupNames = fGroups.FunctionalGroups;
             List<string> extraImages = new List<string>();
-            foreach(string name in imageFiles)
+            foreach (string name in imageFiles)
             {
                 string temp = name.Replace(documentPath + "\\Images\\", string.Empty);
                 temp = temp.Replace(".jpg", string.Empty);
@@ -181,7 +181,7 @@ namespace SustainableChemistry
             this.moleculeViewer1.Molecule = molecule;
             this.propertyGrid1.SelectedObject = molecule;
             this.findSmarts();
-        }        
+        }
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -207,9 +207,9 @@ namespace SustainableChemistry
                 //listBox1.Items.Add(string.Empty);
 
             }
-            if (i== 1)
+            if (i == 1)
             {
-                this.pictureBox1.Image = groups[0].ReactionImage;
+                //this.pictureBox1.Image = groups[0].ReactionImage;
                 //foreach(ChemInfo.Reference r in groups[0].References)
                 //{
                 //    this.listBox1.Items.Add(r.ToString());
@@ -238,14 +238,14 @@ namespace SustainableChemistry
         {
             if (this.molecule == null) return;
             int[] atoms = null;
-            ChemInfo.FunctionalGroupCollection groups = new ChemInfo.FunctionalGroupCollection();
+            List<FunctionalGroupOutput> groups = new List<FunctionalGroupOutput>(); ;
             System.Collections.Generic.List<string> foundGroups = new List<string>();
             foreach (ChemInfo.FunctionalGroup f in this.fGroups)
             {
                 if (this.molecule.FindSmarts(f.Smart, ref atoms))
                 {
                     foundGroups.Add(f.Name);
-                    groups.Add(f);
+                    groups.Add(new FunctionalGroupOutput(f));
                 }
             }
             var json = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -318,7 +318,7 @@ namespace SustainableChemistry
                     }
                     //if (m.FindSmarts2(smart, ref temp)) found = true;
                 }
-                if (!found || numFound >1)
+                if (!found || numFound > 1)
                 {
                     MessageBox.Show(molecule);
                 }
@@ -390,7 +390,7 @@ namespace SustainableChemistry
             System.IO.StreamWriter writer = new System.IO.StreamWriter(documentPath + "\\output.json");
             writer.Write(serializer.Serialize(refs));
             writer.Close();
-          //  System.Diagnostics.Process.Start(documentPath + "\\output.json");
+            //  System.Diagnostics.Process.Start(documentPath + "\\output.json");
         }
 
         private void functionalGroupsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -406,7 +406,7 @@ namespace SustainableChemistry
             ChemInfo.NamedReaction rxn = editor.SelectedNamedReaction;
             if (rxn != null)
             {
-                rxn.Solvent = editor.Solvent;
+                rxn.Solvent = editor.Solvent.ToString();
                 rxn.AcidBase = editor.AcidBase;
                 rxn.Catalyst = editor.Catalyst;
             }

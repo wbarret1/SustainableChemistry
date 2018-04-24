@@ -333,8 +333,10 @@ namespace ChemInfo
         References m_refList;
         List<System.Drawing.Image> m_RxnImage;
         FunctionalGroup m_FunctionalGroup;
+        [NonSerialized] List<string> m_ByProducts;
+        SOLVENT m_Solvent;
 
-        public NamedReaction(FunctionalGroup functGroup, string name, string url, string reactA, string reactB, string product, string catalyst, string solvent, string byPrduct)
+        public NamedReaction(FunctionalGroup functGroup, string name, string url, string reactA, string reactB, string reactC, string product, string catalyst, string solvent, string[] byPrduct)
         {
             Name = name;
             m_FunctionalGroup = functGroup;
@@ -354,11 +356,12 @@ namespace ChemInfo
             URL = url;
             ReactantA = reactA;
             ReactantB = reactB;
+            ReactantC = reactC;
             Product = product;
             Catalyst = catalyst;
             this.SetAcidBase(catalyst);
             this.SetSolvent(solvent);
-            ByProduct = byPrduct;
+            m_ByProducts = new List<string>();
         }
 
         public string Name { get; set; }
@@ -366,10 +369,51 @@ namespace ChemInfo
         //public string[] Reactants { get; set; }
         public string ReactantA { get; set; }
         public string ReactantB { get; set; }
+        public string ReactantC { get; set; }
+        public string[] Reactants
+        {
+            get
+            {
+                List<string> temp = new List<string>();
+                if (!string.IsNullOrEmpty(ReactantA)) temp.Add(ReactantA);
+                if (!string.IsNullOrEmpty(ReactantB)) temp.Add(ReactantB);
+                if (!string.IsNullOrEmpty(ReactantC)) temp.Add(ReactantC);
+                return temp.ToArray<string>();
+            }
+            set
+            {
+                ReactantA = string.Empty;
+                ReactantB = string.Empty;
+                ReactantC = string.Empty;
+                if (value.Length > 1) ReactantA = value[0];
+                if (value.Length > 2) ReactantB = value[1];
+                if (value.Length > 3) ReactantC = value[2];
+            }
+        }
         public string Catalyst { get; set; }
-        public SOLVENT Solvent { get; set; }
+        public string Solvent {
+            get
+            {
+                return m_Solvent.ToString();
+            }
+            set
+            {
+                m_Solvent = (SOLVENT)Enum.Parse(typeof(SOLVENT), value);
+            }
+        }
         public string Product { get; set; }
-        public string ByProduct { get; set; }
+        public string[] ByProducts
+        {
+            get
+            {
+                return m_ByProducts.ToArray<string>();
+            }
+            set
+            {
+                m_ByProducts.Clear();
+                m_ByProducts.AddRange(value);
+            }
+        }
         public AcidBase AcidBase { get; set; }
 
         public System.Drawing.Image[] ReactionImage
@@ -399,24 +443,24 @@ namespace ChemInfo
 
         void SetSolvent(String solvent)
         {
-            this.Solvent = SOLVENT.NONE;
-            if (solvent.ToLower() == "aceton") this.Solvent = SOLVENT.ACETONE;
-            if (solvent.ToLower() == "acetonitrile ") this.Solvent = SOLVENT.ACETONITRILE;
-            if (solvent.ToLower() == "aqueous ammonia/ the treated with lead nitrate") this.Solvent = SOLVENT.AQUEOUS_AMMONIA;
-            if (solvent.ToLower() == "benzoic acid /toluene") this.Solvent = SOLVENT.BENZOIC_ACID_TOLUENE;
-            if (solvent.ToLower() == "dcm") this.Solvent = SOLVENT.DCM;
-            if (solvent.ToLower() == "dmc") this.Solvent = SOLVENT.DMC;
-            if (solvent.ToLower() == "dmf") this.Solvent = SOLVENT.DMF;
-            if (solvent.ToLower() == "dmso") this.Solvent = SOLVENT.DMSO;
-            if (solvent.ToLower() == "ethanol") this.Solvent = SOLVENT.ETHANOL;
-            if (solvent.ToLower() == "halo ketones") this.Solvent = SOLVENT.HALO_KETONE;
-            if (solvent.ToLower() == "methanol") this.Solvent = SOLVENT.METHANOL;
-            if (solvent.ToLower() == "methanol/ triethylamine") this.Solvent = SOLVENT.METHANOL_TRIETHYLAMINE;
-            if (solvent.ToLower() == "nitrene") this.Solvent = SOLVENT.NITRENE;
-            if (solvent.ToLower() == "nitrites") this.Solvent = SOLVENT.NITRITES;
-            if (solvent.ToLower() == "thf") this.Solvent = SOLVENT.THF;
-            if (solvent.ToLower() == "toluene") this.Solvent = SOLVENT.TOLUENE;
-            if (solvent.ToLower() == "water") this.Solvent = SOLVENT.WATER;
+            m_Solvent = SOLVENT.NONE;
+            if (solvent.ToLower() == "aceton") m_Solvent = SOLVENT.ACETONE;
+            if (solvent.ToLower() == "acetonitrile ") m_Solvent = SOLVENT.ACETONITRILE;
+            if (solvent.ToLower() == "aqueous ammonia/ the treated with lead nitrate") m_Solvent = SOLVENT.AQUEOUS_AMMONIA;
+            if (solvent.ToLower() == "benzoic acid /toluene") m_Solvent = SOLVENT.BENZOIC_ACID_TOLUENE;
+            if (solvent.ToLower() == "dcm") m_Solvent = SOLVENT.DCM;
+            if (solvent.ToLower() == "dmc") m_Solvent = SOLVENT.DMC;
+            if (solvent.ToLower() == "dmf") m_Solvent = SOLVENT.DMF;
+            if (solvent.ToLower() == "dmso") m_Solvent = SOLVENT.DMSO;
+            if (solvent.ToLower() == "ethanol") m_Solvent = SOLVENT.ETHANOL;
+            if (solvent.ToLower() == "halo ketones") m_Solvent = SOLVENT.HALO_KETONE;
+            if (solvent.ToLower() == "methanol") m_Solvent = SOLVENT.METHANOL;
+            if (solvent.ToLower() == "methanol/ triethylamine") m_Solvent = SOLVENT.METHANOL_TRIETHYLAMINE;
+            if (solvent.ToLower() == "nitrene") m_Solvent = SOLVENT.NITRENE;
+            if (solvent.ToLower() == "nitrites") m_Solvent = SOLVENT.NITRITES;
+            if (solvent.ToLower() == "thf") m_Solvent = SOLVENT.THF;
+            if (solvent.ToLower() == "toluene") m_Solvent = SOLVENT.TOLUENE;
+            if (solvent.ToLower() == "water") m_Solvent = SOLVENT.WATER;
         }
     }
 }

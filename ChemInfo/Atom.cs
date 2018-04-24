@@ -274,7 +274,8 @@ namespace ChemInfo
             m_Chiral = Chirality.UNSPECIFIED;
             atomType = type;
             m_Chiral = Chirality.UNSPECIFIED;
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            if (this.Element != ELEMENTS.Halogen) this.SetColor(ChemInfo.Element.ElementColor(e));
+            else this.SetColor(System.Drawing.Color.FromName("olivedrab"));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             m_WeiningerInvariant = new WeiningerInvariant(this);
@@ -477,6 +478,11 @@ namespace ChemInfo
             if (argb.Length == 3) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]).ToArgb();
             else if (argb.Length == 4) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]).ToArgb();
             else color = System.Drawing.Color.Black.ToArgb();
+        }
+
+        void SetColor(System.Drawing.Color color)
+        {
+            this.color = color.ToArgb();
         }
 
         public System.Drawing.Color Color
@@ -736,7 +742,7 @@ namespace ChemInfo
         {
             get
             {
-                if (HydrogenCount != 0) return HydrogenCount;
+                //if (HydrogenCount != 0) return HydrogenCount;
                 //if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
                 if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
                 {

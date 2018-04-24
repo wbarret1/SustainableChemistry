@@ -104,6 +104,12 @@ public interface IsmilesVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitHalogen([NotNull] smilesParser.HalogenContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="smilesParser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitWildcard([NotNull] smilesParser.WildcardContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="smilesParser.chiral"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -38,7 +38,7 @@ namespace SustainableChemistry
             ChemInfo.NamedReaction r = m_FunctionalGroup.NamedReactions[ReactionNameComboBox.SelectedItem.ToString()];
             reactantAComboBox.SelectedItem = r.ReactantA.ToUpper();
             reactantBComboBox.SelectedItem = r.ReactantB.ToUpper();
-            this.Solvent = r.Solvent;
+            this.Solvent = (ChemInfo.SOLVENT)Enum.Parse(typeof(ChemInfo.SOLVENT), r.Solvent);
             this.AcidBase = r.AcidBase;
             this.HeatButton.Checked = false;
             if (r.Catalyst.ToLower().Contains("heat")) this.HeatButton.Checked = true;
