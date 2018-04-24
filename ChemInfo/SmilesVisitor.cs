@@ -397,6 +397,11 @@ namespace ChemInfo
             return new Atom(context.GetChild(0).GetText(), AtomType.ORGANIC);
         }
 
+        public override object VisitHalogen([NotNull] smilesParser.HalogenContext context)
+        {
+            return new Atom(context.GetChild(0).GetText(), AtomType.ORGANIC);
+        }
+
         public override object VisitRingbond([NotNull] smilesParser.RingbondContext context)
         {
             int.TryParse(context.GetText(), out int retVal);

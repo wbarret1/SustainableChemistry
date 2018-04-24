@@ -34,7 +34,7 @@ namespace ChemInfo
             retval[1] = 0;
             retval[2] = 0;
             retval[3] = BitConverter.GetBytes(a.Degree)[3];
-            retval[4] = BitConverter.GetBytes(a.numberOfBonds)[3];
+            retval[4] = BitConverter.GetBytes(a.NumberOfBonds)[3];
             retval[5] = BitConverter.GetBytes(a.AtomicNumber)[3];
             retval[6] = BitConverter.GetBytes(a.Charge)[3];
             retval[7] = BitConverter.GetBytes(a.NumHydrogens)[3];
@@ -266,6 +266,7 @@ namespace ChemInfo
         public Atom(string element, AtomType type)
         {
             if (element == "*") e = ELEMENTS.WILD_CARD;
+            else if (element == "X") e = ELEMENTS.Halogen;
             else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = 0;
             m_Isotope = 0;
@@ -329,58 +330,7 @@ namespace ChemInfo
             m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
-        // Operator Overloads
-
-        //public override bool Equals(System.Object obj)
-        //{
-        //    // If parameter cannot be cast to ThreeDPoint return false:
-        //    Atom p = obj as Atom;
-        //    if ((object)p == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    // Return true if the fields match:
-        //    return base.Equals(obj) && this.Element == p.Element && this.Degree == p.Degree;
-        //}
-
-        //public bool Equals(Atom p)
-        //{
-        //    // Return true if the fields match:
-        //    return base.Equals((Atom)p) && this.Element == p.Element && this.Degree == p.Degree;
-        //}
-
-        //public override int GetHashCode()
-        //{
-        //    return base.GetHashCode() ^ this.GetHashCode();
-        //}
-
-        //public static bool operator ==(Atom a, Atom b)
-        //{
-        //    // If both are null, or both are same instance, return true.
-        //    if (System.Object.ReferenceEquals(a, b))
-        //    {
-        //        return true;
-        //    }
-
-        //    // If one is null, but not both, return false.
-        //    if (((object)a == null) || ((object)b == null))
-        //    {
-        //        return false;
-        //    }
-
-        //    // Return true if the fields match:
-        //    return a.Element == b.Element && a.Degree == b.Degree;
-        //}
-
-        //public static bool operator !=(Atom a, Atom b)
-        //{
-        //    return !(a == b);
-        //}
-
-
-
-        public ELEMENTS Element { get { return e; } }
+         public ELEMENTS Element { get { return e; } }
 
         public int AtomicNumber
         {
@@ -452,7 +402,7 @@ namespace ChemInfo
                 retval[0] = 0;
                 retval[1] = 0;
                 retval[2] = BitConverter.GetBytes(this.Degree)[0];
-                retval[3] = BitConverter.GetBytes(this.numberOfBonds)[0];
+                retval[3] = BitConverter.GetBytes(this.NumberOfBonds)[0];
                 retval[4] = BitConverter.GetBytes(this.AtomicNumber)[0];
                 retval[5] = this.m_Charge > 0 ? (byte)1 : (byte)0;
                 retval[6] = BitConverter.GetBytes(this.Charge)[0];
@@ -466,7 +416,7 @@ namespace ChemInfo
         public Atom[] SetHydrogens()
         {
             List<Atom> hydrogens = new List<Atom>();
-            for (int i = this.numberOfBonds; i < this.Valence; i++)
+            for (int i = this.NumberOfBonds; i < this.Valence; i++)
             {
                 Atom h = new Atom("H");
                 this.AddBond(h, BondType.Single, BondStereo.NotStereoOrUseXYZ, BondTopology.Chain, BondReactingCenterStatus.notACenter);
@@ -558,8 +508,8 @@ namespace ChemInfo
             }
         }
 
-        public double deltaX { get; set; } = 0;
-        public double deltaY { get; set; } = 0;
+        public double DeltaX { get; set; } = 0;
+        public double DeltaY { get; set; } = 0;
 
         double m_AtomicMass;
         public double AtomicMass
@@ -711,7 +661,7 @@ namespace ChemInfo
             }
         }
 
-        public int numberOfBonds
+        public int NumberOfBonds
         {
             get
             {
@@ -739,7 +689,7 @@ namespace ChemInfo
         }
 
         [System.ComponentModel.TypeConverter(typeof(IntArrayTypeConverter))]
-        public int[] possibleValences
+        public int[] PossibleValences
         {
             get
             {
@@ -786,11 +736,11 @@ namespace ChemInfo
         {
             get
             {
-                if (hydrogenCount != 0) return hydrogenCount;
+                if (HydrogenCount != 0) return HydrogenCount;
                 //if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
                 if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
                 {
-                    return this.Valence - this.numberOfBonds;
+                    return this.Valence - this.NumberOfBonds;
                 }
                 if (this.atomType == AtomType.AROMATIC)
                 {
@@ -832,11 +782,11 @@ namespace ChemInfo
         {
             get
             {
-                int[] possible = this.possibleValences;
+                int[] possible = this.PossibleValences;
                 if (possible.Length == 1) return possible[0];
                 foreach (int i in possible)
                 {
-                    if (this.numberOfBonds <= i) return i;
+                    if (this.NumberOfBonds <= i) return i;
                 }
                 return 0;
             }
@@ -885,23 +835,23 @@ namespace ChemInfo
         //[System.ComponentModel.BrowsableAttribute(false)]
         //public double z { get; set; } = 0.0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int massDiff { get; set; } = 0;
+        internal int MassDiff { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int stereoParity { get; set; } = 0;
+        internal int StereoParity { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int hydrogenCount { get; set; } = 0;
+        internal int HydrogenCount { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int stereoCareBox { get; set; } = 0;
+        internal int StereoCareBox { get; set; } = 0;
         //public int HO;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal string rNotUsed { get; set; } = string.Empty;
+        internal string RNotUsed { get; set; } = string.Empty;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal string iNotUsed { get; set; } = string.Empty;
+        internal string INotUsed { get; set; } = string.Empty;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int atomMapping { get; set; } = 0;
+        internal int AtomMapping { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int inversionRetension { get; set; } = 0;
+        internal int InversionRetension { get; set; } = 0;
         [System.ComponentModel.BrowsableAttribute(false)]
-        internal int exactChange { get; set; } = 0;
+        internal int ExactChange { get; set; } = 0;
     }
 }

@@ -10,23 +10,19 @@ using System.Windows.Forms;
 
 namespace SustainableChemistry
 {
-    // CCOP(=O)(N(C)C)N(C)C
-    // CCN(CC)P(OC)OC
-    // COP(=O)(OC)OC
+ 
+    //public struct Descriptor
+    //{
+    //    public string name;
+    //    public double value;
+    //}
 
-
-    public struct descriptor
-    {
-        public string name;
-        public double value;
-    }
-
-    public struct Fragment
-    {
-        public int atomNumber;
-        public string element;
-        public string fragment;
-    }
+    //public struct Fragment
+    //{
+    //    public int atomNumber;
+    //    public string element;
+    //    public string fragment;
+    //}
 
 
     public partial class Form1 : Form
@@ -85,7 +81,7 @@ namespace SustainableChemistry
 
 
             // Reads functional Groups from tab-delimited text file.
-            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Full_Functional_Group_List_20180301.Split('\n');
+            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Functional_Group_List.Split('\n');
 
             // This next line creates a list of strings that don't have images. Can be commented out!
             List<string> missingImages = new List<string>();

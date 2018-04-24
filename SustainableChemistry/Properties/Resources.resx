@@ -157,7 +157,7 @@
   <data name="_10_1002_2Fchin_199605199" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\10.1002%2Fchin.199605199.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Full_Functional_Group_List_20180301" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Full Functional Group List 20180301.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="Functional_Group_List" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Functional Group List.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

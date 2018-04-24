@@ -1358,13 +1358,13 @@ namespace ChemInfo
             {
                 prevAtom2 = m2.GetAtoms()[0];
             }
-            else prevAtom2 = m2.getNextAtom(prevAtom2);
+            else prevAtom2 = m2.GetNextAtom(prevAtom2);
 
             if (terminal_1.Count > core_1.Count)
             {
                 while (prevAtom1 != null && (core_1.Contains(prevAtom1) || !terminal_1.Contains(prevAtom1)))
                 {
-                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom1 = m1.GetNextAtom(prevAtom1);
                     prevAtom2 = m2.GetAtoms()[0];
                 }
             }
@@ -1372,7 +1372,7 @@ namespace ChemInfo
             {
                 while (prevAtom1 != null && core_1.Contains(prevAtom1))
                 {
-                    prevAtom1 = m1.getNextAtom(prevAtom1);
+                    prevAtom1 = m1.GetNextAtom(prevAtom1);
                     prevAtom2 = m2.GetAtoms()[0];
                 }
             }
@@ -1381,13 +1381,13 @@ namespace ChemInfo
             {
                 while (prevAtom2 != null && (core_2.Contains(prevAtom2) || !terminal_2.Contains(prevAtom2)))
                 {
-                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                    prevAtom2 = m2.GetNextAtom(prevAtom2);
                 }
             }
             else
             {
                 while (prevAtom2 != null && core_2.Contains(prevAtom1))
-                    prevAtom2 = m2.getNextAtom(prevAtom2);
+                    prevAtom2 = m2.GetNextAtom(prevAtom2);
             }
 
             if (prevAtom1 != null && prevAtom2 != null)

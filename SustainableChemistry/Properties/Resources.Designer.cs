@@ -140,14 +140,13 @@ namespace SustainableChemistry.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 	Smiles	Name Reaction	Reactant A	Reactant B	Catalyst	Solvent	Product	By Product	Count	Fragment	Count	Fragment	Count	Fragment	Count	Fragment	Count	Fragment																																		
-        ///ACETAL	CO C(C)(C )OC		Aldehyde	 Alcohol 	Acid		Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	&gt;C&lt;    AA																																						
-        ///ACYLOIN	CC(=O)C(C)O	Acyloin condensation	carboxylic esters 		Base 		alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
-        ///ALCOHOL	CO	Grignard [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to ACETAL	COC(C)(C)OC	Acetalisation	https://en.wikipedia.org/wiki/Acetylation	ALDEHYDE	ALCOHOL	None	Acid				Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	&gt;C&lt;    AA																																						
+        ///ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				Alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
+        ///ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Full_Functional_Group_List_20180301 {
+        internal static string Functional_Group_List {
             get {
-                return ResourceManager.GetString("Full_Functional_Group_List_20180301", resourceCulture);
+                return ResourceManager.GetString("Functional_Group_List", resourceCulture);
             }
         }
         

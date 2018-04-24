@@ -197,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\10.1002%252Fchin.199605199.txt" />
+    <None Include="Resources\Functional Group List.txt" />
     <None Include="Resources\Full Functional Group List 20180301.txt" />
     <None Include="Resources\HarvardCiteThemRight.txt" />
     <None Include="Resources\harvard.txt.txt" />

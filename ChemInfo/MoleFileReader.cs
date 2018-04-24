@@ -141,19 +141,19 @@ namespace ChemInfo
                 //a.y = Convert.ToDouble(lines[4 + i].Substring(10, 10));
                 //a.z = Convert.ToDouble(lines[4 + i].Substring(20, 10));
                 string text = lines[4 + i].Substring(34, 2);
-                a.massDiff = Convert.ToInt32(lines[4 + i].Substring(34, 2));
+                a.MassDiff = Convert.ToInt32(lines[4 + i].Substring(34, 2));
                 a.Charge = Convert.ToInt32(lines[4 + i].Substring(36, 3));
-                a.stereoParity = Convert.ToInt32(lines[4 + i].Substring(39, 3));
-                a.hydrogenCount = Convert.ToInt32(lines[4 + i].Substring(42, 3));
-                a.stereoCareBox = Convert.ToInt32(lines[4 + i].Substring(45, 3));
+                a.StereoParity = Convert.ToInt32(lines[4 + i].Substring(39, 3));
+                a.HydrogenCount = Convert.ToInt32(lines[4 + i].Substring(42, 3));
+                a.StereoCareBox = Convert.ToInt32(lines[4 + i].Substring(45, 3));
                 //a.Valence = Convert.ToInt32(lines[4 + i].Substring(48, 3));
                 // string H0 = lines[4 + i].Substring(51, 3);
                 // a.HO = Convert.ToInt32(lines[4 + i].Substring(51, 3));
-                a.rNotUsed = lines[4 + i].Substring(54, 3);
-                a.iNotUsed = lines[4 + i].Substring(57, 3);
-                a.atomMapping = Convert.ToInt32(lines[4 + i].Substring(60, 3));
-                a.inversionRetension = Convert.ToInt32(lines[4 + i].Substring(63, 3));
-                a.exactChange = Convert.ToInt32(lines[4 + i].Substring(66, 3));
+                a.RNotUsed = lines[4 + i].Substring(54, 3);
+                a.INotUsed = lines[4 + i].Substring(57, 3);
+                a.AtomMapping = Convert.ToInt32(lines[4 + i].Substring(60, 3));
+                a.InversionRetension = Convert.ToInt32(lines[4 + i].Substring(63, 3));
+                a.ExactChange = Convert.ToInt32(lines[4 + i].Substring(66, 3));
             }
             for (int i = 0; i < numBonds; i++)
             {

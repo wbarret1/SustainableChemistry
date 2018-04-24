@@ -129,7 +129,8 @@ namespace ChemInfo
         Mc = 0x73,
         Lv = 0x74,
         Ts = 0x75,
-        Og = 0x76
+        Og = 0x76,
+        Halogen = 0xFF
     };
 
     public static class Element

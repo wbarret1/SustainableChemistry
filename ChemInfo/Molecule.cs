@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ChemInfo
 {
 
-    public struct group
+    public struct Group
     {
         public string name;
         public string[] fragments;
@@ -53,7 +53,7 @@ namespace ChemInfo
             return m_Atoms.ToArray<Atom>();
         }
 
-        public Atom getNextAtom(Atom a)
+        public Atom GetNextAtom(Atom a)
         {
             if (a == m_Atoms[m_Atoms.Count - 1]) return null;
             return m_Atoms[m_Atoms.IndexOf(a) + 1];
@@ -172,7 +172,7 @@ namespace ChemInfo
         /// <returns></returns>
         public Atom[][] FindRings()
         {
-            if (ringsFound) return convertToArrayArray(cycles);
+            if (ringsFound) return ConvertToArrayArray(cycles);
             Stack<Atom> myStack = new Stack<Atom>();
             foreach (Atom a in m_Atoms) a.Visited = false;
             cycles = new List<List<Atom>>();
@@ -183,7 +183,7 @@ namespace ChemInfo
             ExtractRings();
             FusedRings();
             ringsFound = true;
-            return convertToArrayArray(cycles);
+            return ConvertToArrayArray(cycles);
         }
 
         public void FindAllPaths()
@@ -275,7 +275,7 @@ namespace ChemInfo
             current.Visited = true;
         }
 
-        void breadthFirstSearch(Atom current, Atom parent, Queue<Atom> queue)
+        void BreadthFirstSearch(Atom current, Atom parent, Queue<Atom> queue)
         {
             //current.Visited = true;
             queue.Enqueue(current);
@@ -296,7 +296,7 @@ namespace ChemInfo
             current.Visited = true;
         }
 
-        Atom[] depthFirstSearch(Atom current, Atom parent, Stack<Atom> stack)
+        Atom[] DepthFirstSearch(Atom current, Atom parent, Stack<Atom> stack)
         {
             current.Visited = true;
             stack.Push(current);
@@ -312,7 +312,7 @@ namespace ChemInfo
                 {
                     if (next != parent)
                     {
-                        if (!next.Visited) depthFirstSearch(next, current, stack);
+                        if (!next.Visited) DepthFirstSearch(next, current, stack);
                         //
                     }
                 }
@@ -321,7 +321,7 @@ namespace ChemInfo
             return null;
         }
 
-        T[][] convertToArrayArray<T>(List<List<T>> lists)
+        T[][] ConvertToArrayArray<T>(List<List<T>> lists)
         {
             T[][] retVal = new T[lists.Count][];
             for (int i = 0; i < lists.Count; i++)
@@ -331,7 +331,7 @@ namespace ChemInfo
             return retVal;
         }
 
-        List<T> matches<T>(List<T> list1, List<T> list2)
+        List<T> Matches<T>(List<T> list1, List<T> list2)
         {
             List<T> retVal = new List<T>();
             foreach (T val in list1)
@@ -352,7 +352,7 @@ namespace ChemInfo
             {
                 for (int j = i + 1; j < cycles.Count; j++)
                 {
-                    List<Atom> m = matches(cycles[j], cycles[i]);
+                    List<Atom> m = Matches(cycles[j], cycles[i]);
                     if (m.Count > 2)
                     {
                         if (m.Count == cycles[i].Count)
@@ -518,7 +518,7 @@ namespace ChemInfo
             }
 
             Atom currentGroupParent = currentInGroup;
-            currentInGroup = groupToMatch.getNextAtom(currentInGroup);
+            currentInGroup = groupToMatch.GetNextAtom(currentInGroup);
             Atom currentMoleculeParent = currentInMolecule;
             while (currentInGroup != null)
             {
@@ -551,11 +551,11 @@ namespace ChemInfo
                         }
                     }
                     currentMoleculeParent = currentInMolecule;
-                    currentInMolecule = this.getNextAtom(currentInMolecule);
+                    currentInMolecule = this.GetNextAtom(currentInMolecule);
                 }
                 currentMoleculeParent = null;
                 currentGroupParent = currentInGroup;
-                currentInGroup = groupToMatch.getNextAtom(currentInGroup);
+                currentInGroup = groupToMatch.GetNextAtom(currentInGroup);
             }
             return false;
         }
@@ -686,11 +686,18 @@ namespace ChemInfo
 
         internal bool CompatibleNode(Atom atom1, Atom atom2)
         {
-            if (atom1.Element != atom2.Element) return false;
-            if (atom1.ExplicitHydrogens > atom2.NumHydrogens)
+            if (atom1.Element == ELEMENTS.WILD_CARD) return true;
+            if (atom2.Element == ELEMENTS.WILD_CARD) return true;
+            if (atom1.Element == ELEMENTS.Halogen)
             {
-                return false;
+                if (atom2.Element == ELEMENTS.F) return true;
+                if (atom2.Element == ELEMENTS.Cl) return true;
+                if (atom2.Element == ELEMENTS.Br) return true;
+                if (atom2.Element == ELEMENTS.I) return true;
+                if (atom2.Element == ELEMENTS.At) return true;
             }
+            if (atom1.Element != atom2.Element) return false;
+            if (atom1.ExplicitHydrogens > atom2.NumHydrogens) return false;
             if (atom1.Degree > 1 && atom1.Degree != atom2.Degree) return false;
             return true;
         }
@@ -723,7 +730,7 @@ namespace ChemInfo
             return list1.Count - list2.Count;
         }
 
-        void canonizerWeinginger()
+        void CanonizerWeinginger()
         {
             // Step 1. Set Initial Invariants and go to Step 3.
             // The initial invariants are handled by the comparer.
@@ -945,12 +952,12 @@ namespace ChemInfo
         double AttractiveMultiplier { get; set; } = 15;
 
         // Fruchterman and Reingold (1991) Force Calculations
-        double frAttractiveForce(double distance)
+        double AttractiveForce(double distance)
         {
             return this.AttractiveMultiplier * Math.Pow(distance, 2) / m_OptimalDistance;
         }
 
-        double frRepulsiveForce(double distance)
+        double RepulsiveForce(double distance)
         {
             return this.RepulsiveMiutiplier * Math.Pow(m_OptimalDistance, 2) / distance;
         }
@@ -1042,8 +1049,8 @@ namespace ChemInfo
             CalculateOptimalDistanceBetweenVertices();
             foreach (Atom v in m_Atoms)
             {
-                v.deltaX = 0.0;
-                v.deltaY = 0.0;
+                v.DeltaX = 0.0;
+                v.DeltaY = 0.0;
             }
             foreach (Atom v in m_Atoms)
             {
@@ -1056,8 +1063,8 @@ namespace ChemInfo
                         if (distance < 1) distance = 1;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
-                        v.deltaX = v.deltaX + ((delX / distance) * this.frRepulsiveForce(distance));
-                        v.deltaY = v.deltaY + ((delY / distance) * this.frRepulsiveForce(distance));
+                        v.DeltaX = v.DeltaX + ((delX / distance) * this.RepulsiveForce(distance));
+                        v.DeltaY = v.DeltaY + ((delY / distance) * this.RepulsiveForce(distance));
                     }
                 }
             }
@@ -1073,12 +1080,12 @@ namespace ChemInfo
                         if (distance < 10) distance = 10;
                         double delX = v.Location2D.X - u.Location2D.X;
                         double delY = v.Location2D.Y - u.Location2D.Y;
-                        double deltaX = ((double)delX / (double)distance) * this.frAttractiveForce(distance);
-                        double deltaY = ((double)delY / (double)distance) * this.frAttractiveForce(distance);
-                        v.deltaX = v.deltaX - deltaX;
-                        v.deltaY = v.deltaY - deltaY;
-                        u.deltaX = u.deltaX + deltaX;
-                        u.deltaY = u.deltaY + deltaY;
+                        double deltaX = ((double)delX / (double)distance) * this.AttractiveForce(distance);
+                        double deltaY = ((double)delY / (double)distance) * this.AttractiveForce(distance);
+                        v.DeltaX = v.DeltaX - deltaX;
+                        v.DeltaY = v.DeltaY - deltaY;
+                        u.DeltaX = u.DeltaX + deltaX;
+                        u.DeltaY = u.DeltaY + deltaY;
                     }
                 }
             }
@@ -1100,12 +1107,12 @@ namespace ChemInfo
                                     if (distance < 10) distance = 10;
                                     double delX = v.Location2D.X - a.Location2D.X;
                                     double delY = v.Location2D.Y - a.Location2D.Y;
-                                    double deltaX = 0.5 * (delX / distance) * frAttractiveForce(distance);
-                                    double deltaY = 0.5 * (delY / distance) * frAttractiveForce(distance);
-                                    v.deltaX = v.deltaX - deltaX;
-                                    v.deltaY = v.deltaY - deltaY;
-                                    a.deltaX = a.deltaX + deltaX;
-                                    a.deltaY = a.deltaY + deltaY;
+                                    double deltaX = 0.5 * (delX / distance) * AttractiveForce(distance);
+                                    double deltaY = 0.5 * (delY / distance) * AttractiveForce(distance);
+                                    v.DeltaX = v.DeltaX - deltaX;
+                                    v.DeltaY = v.DeltaY - deltaY;
+                                    a.DeltaX = a.DeltaX + deltaX;
+                                    a.DeltaY = a.DeltaY + deltaY;
                                 }
                             }
                         }
@@ -1120,12 +1127,12 @@ namespace ChemInfo
                                     if (distance < 10) distance = 10;
                                     double delX = v.Location2D.X - u.Location2D.X;
                                     double delY = v.Location2D.Y - u.Location2D.Y;
-                                    double deltaX = 0.75 * ((double)delX / (double)distance) * frAttractiveForce(distance);
-                                    double deltaY = 0.75 * ((double)delY / (double)distance) * frAttractiveForce(distance);
-                                    v.deltaX = v.deltaX - deltaX;
-                                    v.deltaY = v.deltaY - deltaY;
-                                    u.deltaX = u.deltaX + deltaX;
-                                    u.deltaY = u.deltaY + deltaY;
+                                    double deltaX = 0.75 * ((double)delX / (double)distance) * AttractiveForce(distance);
+                                    double deltaY = 0.75 * ((double)delY / (double)distance) * AttractiveForce(distance);
+                                    v.DeltaX = v.DeltaX - deltaX;
+                                    v.DeltaY = v.DeltaY - deltaY;
+                                    u.DeltaX = u.DeltaX + deltaX;
+                                    u.DeltaY = u.DeltaY + deltaY;
                                 }
                             }
                         }
@@ -1141,12 +1148,12 @@ namespace ChemInfo
             }
             foreach (Atom v in m_Atoms)
             {
-                double displacement = Math.Sqrt((v.deltaX * v.deltaX) + (v.deltaY * v.deltaY));
+                double displacement = Math.Sqrt((v.DeltaX * v.DeltaX) + (v.DeltaY * v.DeltaY));
                 double x = v.Location2D.X;
-                x = x + ((v.deltaX / displacement) * Math.Min(displacement, Temperature));
+                x = x + ((v.DeltaX / displacement) * Math.Min(displacement, Temperature));
                 x = Math.Min(Size.Width, Math.Max(0, x));
                 double y = v.Location2D.Y;
-                y = y + ((v.deltaY / displacement) * Math.Min(displacement, Temperature));
+                y = y + ((v.DeltaY / displacement) * Math.Min(displacement, Temperature));
                 y = Math.Min(Size.Height, Math.Max(0, y));
                 v.Location2D = new System.Drawing.Point((int)x, (int)y);
             }
