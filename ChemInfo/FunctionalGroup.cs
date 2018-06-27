@@ -13,7 +13,6 @@ namespace ChemInfo
         List<Reference> m_refList;
         [NonSerialized]
         System.Drawing.Image m_FunctGroupImage;
-        [NonSerialized] List<string> m_ByProducts;
 
         public FunctionalGroup(string str)
         {   
@@ -24,13 +23,15 @@ namespace ChemInfo
             string URL = parts[3].Trim();
             string ReactantA = parts[4].Trim();
             string ReactantB = parts[5].Trim();
-            string ReactantC = parts[5].Trim();
-            string Catalyst = parts[6].Trim();
-            string Solvent = parts[7].Trim();
-            string Product = parts[8].Trim();
-            string[] ByProducts = new string[]{ parts[9].Trim()};
+            string ReactantC = parts[6].Trim();
+            string AcidBase = parts[7].Trim();
+            string Heat = parts[8].Trim();
+            string Catalyst = parts[9].Trim();
+            string Solvent = parts[10].Trim();
+            string Product = parts[11].Trim();
+            string[] ByProducts = new string[]{ parts[12].Trim() };
             m_Reactions = new NamedReactionCollection();
-            m_Reactions.Add(new NamedReaction(this, ReactionName, URL, ReactantA, ReactantB, ReactantC, Product, Catalyst, Solvent, ByProducts));
+            m_Reactions.Add(new NamedReaction(this, ReactionName, URL, ReactantA, ReactantB, ReactantC, Product, AcidBase, Heat, Catalyst, Solvent, ByProducts));
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\Images\\" + Name + ".jpg";
             if (System.IO.File.Exists(fileName)) m_FunctGroupImage = System.Drawing.Image.FromFile(fileName);
         }

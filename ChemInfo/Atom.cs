@@ -260,7 +260,7 @@ namespace ChemInfo
             this.m_CovalentRadius = ChemInfo.Element.CovalentRadius(e);
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
-            m_WeiningerInvariant = new WeiningerInvariant(this);
+            //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, AtomType type)
@@ -278,7 +278,7 @@ namespace ChemInfo
             else this.SetColor(System.Drawing.Color.FromName("olivedrab"));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
-            m_WeiningerInvariant = new WeiningerInvariant(this);
+            //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, AtomType type, Chirality chirality)
@@ -295,7 +295,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
-            m_WeiningerInvariant = new WeiningerInvariant(this);
+            //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, int isotope)
@@ -312,7 +312,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
-            m_WeiningerInvariant = new WeiningerInvariant(this);
+            //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
         public Atom(string element, AtomType type, int isotope, Chirality chirality, int hCount, int charge, int atomClass)
@@ -328,7 +328,7 @@ namespace ChemInfo
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
-            m_WeiningerInvariant = new WeiningerInvariant(this);
+            //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
          public ELEMENTS Element { get { return e; } }
@@ -663,7 +663,7 @@ namespace ChemInfo
                 {
 
                 }
-                return this.ConnectedAtoms.Length;
+                return this.ConnectedAtoms.Length + this.NumHydrogens;
             }
         }
 
@@ -718,7 +718,7 @@ namespace ChemInfo
                     case ELEMENTS.I:
                     case ELEMENTS.Br:
                         return new int[] { 1 };
-                    default: // handles Chlorine
+                    default: 
                         return new int[0];
                 }
             }

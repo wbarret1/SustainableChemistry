@@ -283,7 +283,11 @@ namespace ChemInfo
                     if (current.Element != ELEMENTS.H)
                     {
                         retVal.AddAtom(current);
-                        if (addExplicitHToNext) current.ExplicitHydrogens++;
+                        if (addExplicitHToNext)
+                        {
+                            current.ExplicitHydrogens++;
+                            addExplicitHToNext = false;
+                        }
                         if (last != null)
                         {
                             if (last.AtomType == AtomType.AROMATIC && current.AtomType == AtomType.AROMATIC) nextBond = BondType.Aromatic;

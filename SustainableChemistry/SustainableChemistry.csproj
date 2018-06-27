@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll</HintPath>
     </Reference>
@@ -57,6 +61,7 @@
     <Compile Include="AddNewReference.Designer.cs">
       <DependentUpon>AddNewReference.cs</DependentUpon>
     </Compile>
+    <Compile Include="DSSToxChemicals.cs" />
     <Compile Include="FunctionalGroupEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,6 +181,7 @@
     <None Include="Resources\achs_jacsat105_661.ris" />
     <None Include="Resources\achs_oprdfk4_175.ris" />
     <None Include="Resources\BIB.RIS" />
+    <None Include="Resources\DSSTox_ToxCastRelease_20151019.xlsx" />
     <None Include="Resources\europepmc.ris" />
     <None Include="Resources\europepmc1.ris" />
     <None Include="Resources\S0040403900813763.ris" />
@@ -197,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\10.1002%252Fchin.199605199.txt" />
+    <None Include="Resources\DSSTox_ToxCastRelease_20151019.txt" />
     <None Include="Resources\Functional Group List.txt" />
     <None Include="Resources\Full Functional Group List 20180301.txt" />
     <None Include="Resources\HarvardCiteThemRight.txt" />

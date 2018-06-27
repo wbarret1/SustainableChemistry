@@ -335,8 +335,9 @@ namespace ChemInfo
         FunctionalGroup m_FunctionalGroup;
         [NonSerialized] List<string> m_ByProducts;
         SOLVENT m_Solvent;
+        AcidBase m_AcidBase;
 
-        public NamedReaction(FunctionalGroup functGroup, string name, string url, string reactA, string reactB, string reactC, string product, string catalyst, string solvent, string[] byPrduct)
+        public NamedReaction(FunctionalGroup functGroup, string name, string url, string reactA, string reactB, string reactC, string product, string acidBase, string heat, string catalyst, string solvent, string[] byPrduct)
         {
             Name = name;
             m_FunctionalGroup = functGroup;
@@ -358,6 +359,8 @@ namespace ChemInfo
             ReactantB = reactB;
             ReactantC = reactC;
             Product = product;
+            Heat = heat;
+            this.SetAcidBase(acidBase);
             Catalyst = catalyst;
             this.SetAcidBase(catalyst);
             this.SetSolvent(solvent);
@@ -390,6 +393,8 @@ namespace ChemInfo
                 if (value.Length > 3) ReactantC = value[2];
             }
         }
+        //public string AcidBase { get; set; }
+        public string Heat { get; set; }
         public string Catalyst { get; set; }
         public string Solvent {
             get
@@ -414,7 +419,20 @@ namespace ChemInfo
                 m_ByProducts.AddRange(value);
             }
         }
-        public AcidBase AcidBase { get; set; }
+        public string AcidBase {
+            get
+            {
+                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "acid";
+                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base";
+                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base/heat";
+                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base/acid";
+                return "N/A";
+            }
+            set
+            {
+                this.SetAcidBase(value);
+            }
+        }
 
         public System.Drawing.Image[] ReactionImage
         {
@@ -432,13 +450,23 @@ namespace ChemInfo
             }
         }
 
-        void SetAcidBase(string acidBase)
+        public void SetAcidBase(string acidBase)
         {
-            this.AcidBase = ChemInfo.AcidBase.NONE;
-            if (acidBase.ToLower() == "acid") this.AcidBase = ChemInfo.AcidBase.ACID;
-            if (acidBase.ToLower() == "base") this.AcidBase = ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/heat") this.AcidBase = ChemInfo.AcidBase.BASE;
-            if (acidBase.ToLower() == "base/acid") this.AcidBase = ChemInfo.AcidBase.ACID_BASE;
+            m_AcidBase = ChemInfo.AcidBase.NONE;
+            if (acidBase.ToLower() == "acid") m_AcidBase = ChemInfo.AcidBase.ACID;
+            if (acidBase.ToLower() == "base") m_AcidBase = ChemInfo.AcidBase.BASE;
+            if (acidBase.ToLower() == "base/heat") m_AcidBase = ChemInfo.AcidBase.BASE;
+            if (acidBase.ToLower() == "base/acid") m_AcidBase = ChemInfo.AcidBase.ACID_BASE;
+        }
+
+        public AcidBase GetAcidBase()
+        {
+            return m_AcidBase;
+        }
+
+        public void SetAcidBase(AcidBase acidBase)
+        {
+            m_AcidBase = acidBase;
         }
 
         void SetSolvent(String solvent)

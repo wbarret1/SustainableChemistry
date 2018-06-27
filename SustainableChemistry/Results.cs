@@ -49,6 +49,7 @@ namespace SustainableChemistry
             }
         }
     }
+
     public class ReactionOutput
     {
         //[NonSerialized] List<string> m_Reactants;
@@ -61,8 +62,9 @@ namespace SustainableChemistry
             Product = reaction.Product;
             ByProducts =  reaction.ByProducts;
             Reactants = reaction.Reactants;
-
-
+            Catalyst = reaction.Catalyst;
+            Solvent = reaction.Solvent;
+            AcidBase = reaction.AcidBase;
         }
 
         public string Name { get; set; }

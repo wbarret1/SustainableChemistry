@@ -210,8 +210,9 @@ namespace ChemInfo
                 groups.Add(new FunctionalGroup(b[0], b[1]));
                 line = reader.ReadLine();
             }
-            var json = new System.Web.Script.Serialization.JavaScriptSerializer();
-            return json.Serialize(groups);
+            //var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+            //return json.Serialize(groups);
+            return string.Empty;
         }
     }
 }

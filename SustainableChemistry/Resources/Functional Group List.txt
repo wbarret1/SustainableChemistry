@@ -1,16 +1,16 @@
 ACETAL	COC(C)(C)OC	Acetalisation	https://en.wikipedia.org/wiki/Acetylation	ALDEHYDE	ALCOHOL	None	Acid				Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA																																						
 ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				Alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
-ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		1	CH3  AA	1	OH    AA																																								
-ALCOHOL, ALLYLIC	C=CCO	Luche reduction/ Prins 	https://www.name-reaction.com/luche-reduction	KETONE	ALKENE		Acid			Water	Allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
-ALDEHYDE	C(=O)[H]	Swern oxidation	https://www.name-reaction.com/swern-oxidation	PRIMARY ALCOHOL					oxidant	DCM	Aldehyde		1	R        AA	1	CH2   AA																																								
+ALCOHOL	O[H]	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		1	CH3  AA	1	OH    AA																																								
+ALCOHOL, ALLYLIC	C=CCO[H]	Luche reduction/ Prins 	https://www.name-reaction.com/luche-reduction	KETONE	ALKENE		Acid			Water	Allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
+ALDEHYDE	[H]C=O	Swern oxidation	https://www.name-reaction.com/swern-oxidation	PRIMARY ALCOHOL					oxidant	DCM	Aldehyde		1	R        AA	1	CH2   AA																																								
 ALKANE	CC	Clemmensen reduction	https://www.name-reaction.com/clemmensen-reduction	CARBON MONOXIDE	HYDROGEN						Alkanes 		2	CH3     AA																																										
 ALKANE		Wolff-Kishner reduction	https://www.name-reaction.com/wolff-kishner-reduction																																																					
 ALKANE		Wurtz reaction	https://www.name-reaction.com/wurtz-reaction	ALKYL HALIDE					Sodium Metal 		Alkane 																																													
-ALKENE-ALCOHOL	C=CCO			ALKENE	WATER		Acid				Alkene alcohol		3	CH2   AA	1	CH3  AA	1	OH    AA																																						
+ALKENE-ALCOHOL	C=CCO[H]			ALKENE	WATER		Acid				Alkene alcohol		3	CH2   AA	1	CH3  AA	1	OH    AA																																						
 ALKENE-ALDEHYDE	[H]C(=O)CC=C												2	CH2   AA	2	CH3  AA	1	C=O   AA																																						
 ALKENE-ALKYNE	C#CC=CC												1	#C   AA	1	#CH   AA	1	CH3  AA	2	C=CH  AA																																				
 ALKENE-AMINE	[H][N+](C)(C)C=CC												3	CH3  AA	1	N<    AA	2	C=CH  AA																																						
-ALKENE-CARBOXYLIC ACID	CC=CC(=O)O												1	CH3  AA	1	COOH   AA	2	C=CH  AA																																						
+ALKENE-CARBOXYLIC ACID	CC=CC(=O)O[H]												1	CH3  AA	1	COOH   AA	2	C=CH  AA																																						
 ALKENE-KETONE	CC=CC=O												1	CH3  AA	1	CHO    AA	2	C=CH  AA																																						
 ALKENE-THIOETHER	CCC=C[S+](C)C												3	CH3  AA	2	C=CH  AA																																								
 ALKENE	C=C	Hofmann elimination	https://www.name-reaction.com/hofmann-elimination	ALKANE				Heat	catalyst/heat 		Alkane	Alkene	2	CH3  AA	2	C=CH  AA																																								
@@ -55,12 +55,12 @@ BORONIC ACID	CB(O)O	Grignards	http://www.organic-chemistry.org/synthesis/C1B/bor
 BUNTE SALT	CSS(=O)(=O)[O-]			RX	SODIUM THIOSULFATE						Bunte		1	CH3      AA	1	S(=O)(=O)   AA	1	S       SA	1	O																																				
 CARBAMATES	COC(=O)N(C)C	Curtius Rearrangemnet 	https://www.name-reaction.com/curtius-rearrangement	AMMONIA	CARBON DIOXIDE						Ammonium carbamate		1	C(=O)O-  AA	3	CH3      AA	1	N<   AA																																						
 CARBONATE	O=C([O-])[O-]			ALCOHOL	ESTER				Oxidizer		Carbonates		1	OC(=O)O																																										
-CARBOXYLIC ACID	CC(=O)O	Jones oxidation	https://www.name-reaction.com/jones-oxidation	ALCOHOL	ALCOHOL				Oxidizer 		Carboxylic acid		1	CH3      AA	1	COOH    AA																																								
+CARBOXYLIC ACID	C(=O)O[H]	Jones oxidation	https://www.name-reaction.com/jones-oxidation	ALCOHOL	ALCOHOL				Oxidizer 		Carboxylic acid		1	CH3      AA	1	COOH    AA																																								
 CARBOXYLIC ESTER	COC(C)=O	Fisher Esterfication	https://www.name-reaction.com/fischer-esterification	CARBOXYL	ALCOHOL		Acid				Carboxylic Ester 	Water	1	C(=O)O   AA	1	CH2       AA	2	CH3    AA				CONJUGATED ALDEHYDE			Propene	 H2 + CO			Aldehyde																											
 COUMARIN	O=c2ccc1ccccc1o2	Pechmann Courmarins 	http://www.organic-chemistry.org/namedreactions/pechmann-condensation.shtm	PHENOL	B-KETO ESTER				Aluminum trichloride 		Coumarin		1	C(=O)O  CY	1	CH         ArA	1	[=CH]     AA	2	AC	4	ACH																																		
 CUMULENE	C=C=C=C	Dimerization	https://chem.libretexts.org/Reference/Organic_Chemistry_Glossary/Dimerization	CARBENES					metal Catalyst 		Cumulenes		2	[=C=]	2	[=CH2]   AA																																								
 CYANAMIDE	[H]N([H])C#N	Hydrolysis 	https://pubs.acs.org/doi/abs/10.1021/ja01193a010	CALCIUM CYANAMIDE	WATER + CO2						Cyanamide	Calcium carbonate	1	C#N     ANA	1	NH2       AA						"CYANATES, ARYL"	N#C[O-]		Phenol 	Cyanogen chloride	Base		Aryl Cyanates		1	C#N      AA	1	[O-]																						
-"CYANIDES, ACYL"	CC(=O)C#N			KETENE	HYDROGEN CYANIDE			Heat			Acyl cyanides 		1	C#N     AA	1	CH3       AA	1	C=O      AA																																						
+CYANIDES, ACYL	CC(=O)C#N			KETENE	HYDROGEN CYANIDE			Heat			Acyl cyanides 		1	C#N     AA	1	CH3       AA	1	C=O      AA																																						
 CYANO IMINE	CN=C(C)C#N												1	C#N     AA	2	CH3       AA	1	>C=N																																						
 CYANOHYDRIN	CC(C)(O)C#N	Cyanohydrin Reaction	https://en.wikipedia.org/wiki/Cyanohydrin_reaction	KETONE	HYDROGEN CYANIDE				Sodium cyanide		Cyanohydrins		1	#C        AA	1	#CH      AA	2	CH3       AA	1	OH    AA	1	>C<      AA																																		
 CYCLOBUTANE	C1CCC1	Alkene dimerize		2 ALKENES					Uv Light		Cyclobutanes		1	CH2     AA																																										

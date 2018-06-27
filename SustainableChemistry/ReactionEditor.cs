@@ -39,7 +39,7 @@ namespace SustainableChemistry
             reactantAComboBox.SelectedItem = r.ReactantA.ToUpper();
             reactantBComboBox.SelectedItem = r.ReactantB.ToUpper();
             this.Solvent = (ChemInfo.SOLVENT)Enum.Parse(typeof(ChemInfo.SOLVENT), r.Solvent);
-            this.AcidBase = r.AcidBase;
+            this.AcidBase = r.GetAcidBase();
             this.HeatButton.Checked = false;
             if (r.Catalyst.ToLower().Contains("heat")) this.HeatButton.Checked = true;
             this.SmartsLabel.Text = "SMARTS: " + m_FunctionalGroup.Smart;

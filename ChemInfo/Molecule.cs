@@ -595,32 +595,32 @@ namespace ChemInfo
 
         internal int InEdgeCount(int node)
         {
-            return m_Atoms[node].Degree;
+            return m_Atoms[node].ConnectedAtoms.Length;
         }
 
         internal int InEdgeCount(Atom node)
         {
-            return node.Degree;
+            return node.ConnectedAtoms.Length;
         }
 
         internal int OutEdgeCount(int node)
         {
-            return m_Atoms[node].Degree;
+            return m_Atoms[node].ConnectedAtoms.Length;
         }
 
         internal int OutEdgeCount(Atom node)
         {
-            return node.Degree;
+            return node.ConnectedAtoms.Length;
         }
 
         internal int EdgeCount(int node)
         {
-            return m_Atoms[node].Degree;
+            return m_Atoms[node].ConnectedAtoms.Length;
         }
 
         internal int EdgeCount(Atom node)
         {
-            return node.Degree;
+            return node.ConnectedAtoms.Length;
         }
 
         internal int GetInEdge(int node, int i)
@@ -699,7 +699,8 @@ namespace ChemInfo
             }
             if (atom1.Element != atom2.Element) return false;
             if (atom1.ExplicitHydrogens > atom2.NumHydrogens) return false;
-            if (atom1.Degree > 1 && atom1.Degree != atom2.Degree) return false;
+            if (atom1.Degree == 1) return true;
+            if (atom1.Degree != atom2.Degree) return false;
             return true;
         }
 
