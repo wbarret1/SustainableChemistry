@@ -160,7 +160,4 @@
   <data name="Functional_Group_List" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Functional Group List.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="DSSTox_ToxCastRelease_20151019" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DSSTox_ToxCastRelease_20151019.xlsx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>

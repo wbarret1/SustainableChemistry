@@ -122,16 +122,6 @@ namespace SustainableChemistry.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] DSSTox_ToxCastRelease_20151019 {
-            get {
-                object obj = ResourceManager.GetObject("DSSTox_ToxCastRelease_20151019", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] europepmc {
             get {
                 object obj = ResourceManager.GetObject("europepmc", resourceCulture);
