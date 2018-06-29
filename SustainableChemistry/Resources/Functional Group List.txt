@@ -1,7 +1,7 @@
 ACETAL	COC(C)(C)OC	Acetalisation	https://en.wikipedia.org/wiki/Acetylation	ALDEHYDE	ALCOHOL	None	Acid				Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	>C<    AA																																						
 ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				Alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
-ALCOHOL	O[H]	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		1	CH3  AA	1	OH    AA																																								
-ALCOHOL, ALLYLIC	C=CCO[H]	Luche reduction/ Prins 	https://www.name-reaction.com/luche-reduction	KETONE	ALKENE		Acid			Water	Allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
+ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		1	CH3  AA	1	OH    AA																																								
+ALCOHOL, ALLYLIC	C=CCO	Luche reduction/ Prins 	https://www.name-reaction.com/luche-reduction	KETONE	ALKENE		Acid			Water	Allylic alcohol		1	CH2  AA	1	OH    AA	1	C=CH  AA	1	C=CH2  AA																																				
 ALDEHYDE	[H]C=O	Swern oxidation	https://www.name-reaction.com/swern-oxidation	PRIMARY ALCOHOL					oxidant	DCM	Aldehyde		1	R        AA	1	CH2   AA																																								
 ALKANE	CC	Clemmensen reduction	https://www.name-reaction.com/clemmensen-reduction	CARBON MONOXIDE	HYDROGEN						Alkanes 		2	CH3     AA																																										
 ALKANE		Wolff-Kishner reduction	https://www.name-reaction.com/wolff-kishner-reduction																																																					

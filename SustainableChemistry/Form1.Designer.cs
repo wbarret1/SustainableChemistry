@@ -52,6 +52,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
@@ -62,11 +63,10 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.moleculeViewer1 = new SustainableChemistry.MoleculeViewer();
+            this.button1 = new System.Windows.Forms.Button();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -300,6 +300,40 @@
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 0;
             // 
+            // moleculeViewer1
+            // 
+            this.moleculeViewer1.AutoScroll = true;
+            this.moleculeViewer1.AutoScrollMinSize = new System.Drawing.Size(1824, 1409);
+            this.moleculeViewer1.AutoSize = true;
+            this.moleculeViewer1.BackColor = System.Drawing.SystemColors.Window;
+            this.moleculeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.moleculeViewer1.GridLineColor = System.Drawing.Color.LightBlue;
+            this.moleculeViewer1.GridLineDashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            this.moleculeViewer1.GridLineWidth = 1;
+            this.moleculeViewer1.GridSize = 50D;
+            this.moleculeViewer1.Location = new System.Drawing.Point(0, 0);
+            this.moleculeViewer1.Margin = new System.Windows.Forms.Padding(4);
+            this.moleculeViewer1.MarginColor = System.Drawing.Color.Green;
+            this.moleculeViewer1.MarginLineDashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            this.moleculeViewer1.MarginLineWidth = 1;
+            this.moleculeViewer1.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.moleculeViewer1.MinimumGridSize = 1D;
+            this.moleculeViewer1.Name = "moleculeViewer1";
+            this.moleculeViewer1.NonPrintingAreaColor = System.Drawing.Color.Gray;
+            this.moleculeViewer1.PrintGrid = false;
+            this.moleculeViewer1.PrintMargins = false;
+            this.moleculeViewer1.SelectedObject = null;
+            this.moleculeViewer1.SelectedObjects = new SustainableChemistry.GraphicObject[0];
+            this.moleculeViewer1.ShowGrid = false;
+            this.moleculeViewer1.ShowMargins = false;
+            this.moleculeViewer1.Size = new System.Drawing.Size(614, 485);
+            this.moleculeViewer1.SurfaceBounds = new System.Drawing.Rectangle(0, 0, 1100, 850);
+            this.moleculeViewer1.SurfaceMargins = new System.Drawing.Rectangle(100, 100, 900, 650);
+            this.moleculeViewer1.TabIndex = 0;
+            this.moleculeViewer1.Zoom = 1.7272727272727273D;
+            this.moleculeViewer1.SelectionChanged += new SustainableChemistry.MoleculeViewer.SelectionChangedHandler(this.moleculeViewer1_SelectionChanged);
+            this.moleculeViewer1.Load += new System.EventHandler(this.moleculeViewer1_Load);
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -328,7 +362,7 @@
             this.trackBar1.Maximum = 250;
             this.trackBar1.Minimum = 20;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(193, 45);
+            this.trackBar1.Size = new System.Drawing.Size(193, 55);
             this.trackBar1.TabIndex = 0;
             this.trackBar1.Value = 20;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
@@ -428,32 +462,6 @@
             this.tabPage4.Text = "Test Page";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(39, 35);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(447, 429);
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(523, 35);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(269, 334);
-            this.checkedListBox1.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(523, 407);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Error";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(717, 407);
@@ -464,39 +472,31 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // moleculeViewer1
+            // button1
             // 
-            this.moleculeViewer1.AutoScroll = true;
-            this.moleculeViewer1.AutoScrollMinSize = new System.Drawing.Size(1824, 1409);
-            this.moleculeViewer1.AutoSize = true;
-            this.moleculeViewer1.BackColor = System.Drawing.SystemColors.Window;
-            this.moleculeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.moleculeViewer1.GridLineColor = System.Drawing.Color.LightBlue;
-            this.moleculeViewer1.GridLineDashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            this.moleculeViewer1.GridLineWidth = 1;
-            this.moleculeViewer1.GridSize = 50D;
-            this.moleculeViewer1.Location = new System.Drawing.Point(0, 0);
-            this.moleculeViewer1.Margin = new System.Windows.Forms.Padding(4);
-            this.moleculeViewer1.MarginColor = System.Drawing.Color.Green;
-            this.moleculeViewer1.MarginLineDashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            this.moleculeViewer1.MarginLineWidth = 1;
-            this.moleculeViewer1.MaximumSize = new System.Drawing.Size(1000, 1000);
-            this.moleculeViewer1.MinimumGridSize = 1D;
-            this.moleculeViewer1.Name = "moleculeViewer1";
-            this.moleculeViewer1.NonPrintingAreaColor = System.Drawing.Color.Gray;
-            this.moleculeViewer1.PrintGrid = false;
-            this.moleculeViewer1.PrintMargins = false;
-            this.moleculeViewer1.SelectedObject = null;
-            this.moleculeViewer1.SelectedObjects = new SustainableChemistry.GraphicObject[0];
-            this.moleculeViewer1.ShowGrid = false;
-            this.moleculeViewer1.ShowMargins = false;
-            this.moleculeViewer1.Size = new System.Drawing.Size(614, 485);
-            this.moleculeViewer1.SurfaceBounds = new System.Drawing.Rectangle(0, 0, 1100, 850);
-            this.moleculeViewer1.SurfaceMargins = new System.Drawing.Rectangle(100, 100, 900, 650);
-            this.moleculeViewer1.TabIndex = 0;
-            this.moleculeViewer1.Zoom = 1.7272727272727273D;
-            this.moleculeViewer1.SelectionChanged += new SustainableChemistry.MoleculeViewer.SelectionChangedHandler(this.moleculeViewer1_SelectionChanged);
-            this.moleculeViewer1.Load += new System.EventHandler(this.moleculeViewer1_Load);
+            this.button1.Location = new System.Drawing.Point(523, 407);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Error";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(523, 35);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(269, 334);
+            this.checkedListBox1.TabIndex = 1;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox2.Location = new System.Drawing.Point(39, 35);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(447, 429);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
             // 
             // Form1
             // 

@@ -427,6 +427,17 @@ namespace ChemInfo
 
         // VF2 Implementation
 
+        private void MakeHydrogens(Molecule m)
+        {
+            foreach (Atom a in m.GetAtoms())
+            {
+                while (a.NumberOfBonds < a.Valence)
+                {
+
+                }
+            }
+        }
+
         public bool FindFunctionalGroup(string smart, ref int[] group)
         {
             Molecule m = new Molecule(smart);
@@ -698,9 +709,9 @@ namespace ChemInfo
                 return false;
             }
             if (atom1.Element != atom2.Element) return false;
+            //if (atom1.Degree == 1) return true;
             if (atom1.ExplicitHydrogens > atom2.NumHydrogens) return false;
-            if (atom1.Degree == 1) return true;
-            if (atom1.Degree != atom2.Degree) return false;
+            //if (atom1.Degree != atom2.Degree) return false;
             return true;
         }
 
@@ -1043,7 +1054,7 @@ namespace ChemInfo
                 Temperature *= (1.0 - (double)i / (double)maxIter);
             }
             ResetHydrogens();
-            
+
         }
 
         protected void IterateFGD(bool addBonds)

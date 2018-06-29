@@ -989,8 +989,8 @@ namespace ChemInfo
             if (!g1.CompatibleNode(g1.GetNodeAttr(node1), g2.GetNodeAttr(node2)))
                 return false;
 
-            if (!g1.CompatibleNode(g1.GetNodeDegree(node1), g2.GetNodeDegree(node2)))
-                return false;
+            //if (!g1.CompatibleNode(g1.GetNodeDegree(node1), g2.GetNodeDegree(node2)))
+            //    return false;
 
             int i, other1, other2;
             Bond attr1 = null;
