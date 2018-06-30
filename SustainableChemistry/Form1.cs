@@ -44,8 +44,7 @@ namespace SustainableChemistry
             fGroups = new ChemInfo.FunctionalGroupCollection();
             m_NamedReactions = fGroups.NamedReactions;
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
-            documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            documentPath = documentPath + "\\USEPA\\SustainableChemistry";
+            documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry";
 
             this.OpenFunctionGroupExcelResource();
 
@@ -67,7 +66,7 @@ namespace SustainableChemistry
                 fs.Close();
             }
 
-            
+
             //Reads in functional groups from JSON file. This should be used after Excel file is completed.
             //var json = new System.Web.Script.Serialization.JavaScriptSerializer();
             //functionalGroups = (List<ChemInfo.FunctionalGroup>)json.Deserialize(ChemInfo.Functionalities.AvailableFunctionalGroups(), typeof(List<ChemInfo.FunctionalGroup>));            // string text = ChemInfo.Functionalities.FunctionalGroups("P(c1ccccc1)(c1ccccc1)(N)=O", "json");
@@ -90,62 +89,12 @@ namespace SustainableChemistry
             //m_References.Add(new ChemInfo.Reference("phosphoramidite", "Catalyst Solvent", enc8.GetString(Properties.Resources.BIB)));
         }
 
-        private void OpenFunctionGroupTextResource()
-        {
-            // Reads functional Groups from tab-delimited text file.
-            string[] functionalGroupStrs = SustainableChemistry.Properties.Resources.Functional_Group_List.Split('\n');
-
-            // This next line creates a list of strings that don't have images. Can be commented out!
-            List<string> missingImages = new List<string>();
-
-            // Creates the collection of functional groups.
-            foreach (string line in functionalGroupStrs)
-            {
-                ChemInfo.FunctionalGroup temp = fGroups.Add(line);
-                string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
-                if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
-
-                //this line adds the missing image to the list of missing images. Can be commented out.
-                else missingImages.Add(temp.Name);
-            }
-            // Writes the missing images to a file.
-
-            // Write the string array to a new file named "WriteLines.txt".
-            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\MissingImages.txt"))
-            {
-                foreach (string line in missingImages)
-                    outputFile.WriteLine(line);
-            }
-
-            string[] imageFiles = System.IO.Directory.GetFiles(documentPath + "\\Images\\");
-            string[] groupNames = fGroups.FunctionalGroups;
-            List<string> extraImages = new List<string>();
-            foreach (string name in imageFiles)
-            {
-                string temp = name.Replace(documentPath + "\\Images\\", string.Empty);
-                temp = temp.Replace(".jpg", string.Empty);
-                bool add = true;
-                foreach (string gName in groupNames)
-                {
-                    if (temp.ToUpper() == gName.ToUpper()) add = false;
-                }
-                if (add) extraImages.Add(temp);
-            }
-
-            // Write the string array to a new file named "WriteLines.txt".
-            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\ExtraImages.txt"))
-            {
-                foreach (string line in extraImages)
-                    outputFile.WriteLine(line);
-            }
-        }
-
         private void OpenFunctionGroupExcelResource()
         {
             // Reads functional Groups from Excel file.
             List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
-
-            using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(new System.IO.MemoryStream(Properties.Resources.Copy_of_Full_Functional_Group_List_20180423), false))
+            string fileName = documentPath + "\\Full Functional Group List 20180629.xlsx";
+            using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
                 DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData = GetWorkSheetFromSheet(wbPart, GetSheetFromName(wbPart, "Full Functional Group List 2018")).Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
@@ -504,7 +453,8 @@ namespace SustainableChemistry
         {
             List<DSSToxChemicals> chemicals = new List<DSSToxChemicals>();
             // Open the document for editing.
-            using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(new System.IO.MemoryStream(Properties.Resources.DSSTox_ToxCastRelease_20151019), false))
+            string fileName = documentPath + "\\DSSTox_ToxCastRelease_20151019.xlsx";
+            using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
                 DocumentFormat.OpenXml.Packaging.WorksheetPart wsPart = wbPart.WorksheetParts.First();
@@ -543,9 +493,8 @@ namespace SustainableChemistry
                     }
                 }
             }
-            string documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            documentPath = documentPath + "\\USEPA\\SustainableChemistry\\chemcials.json";
-            System.IO.File.WriteAllText(documentPath, Newtonsoft.Json.JsonConvert.SerializeObject(chemicals, Newtonsoft.Json.Formatting.Indented));
+            fileName = documentPath + "\\chemcials.json";
+            System.IO.File.WriteAllText(fileName, Newtonsoft.Json.JsonConvert.SerializeObject(chemicals, Newtonsoft.Json.Formatting.Indented));
         }
 
         private string GetExcelCellValue(DocumentFormat.OpenXml.Spreadsheet.Cell cell, DocumentFormat.OpenXml.Packaging.WorkbookPart wbpart)
@@ -602,13 +551,12 @@ namespace SustainableChemistry
             if (this.tabPage4.Tag != null) return;
             if (((System.Windows.Forms.TabControl)sender).SelectedIndex == 3)
             {
-                string documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                documentPath = documentPath + "\\USEPA\\SustainableChemistry\\chemcials.json";
+                string fileName = documentPath + "\\chemcials.json";
                 //Reads in functional groups from JSON file. This should be used after Excel file is completed.
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 json.MaxJsonLength = 20000000;
                 List<DSSToxChemicals> chemicals = null;
-                using (System.IO.StreamReader sr = new System.IO.StreamReader(documentPath))
+                using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName))
                 {
                     chemicals = (List<DSSToxChemicals>)json.Deserialize(sr.ReadToEnd(), typeof(List<DSSToxChemicals>));
                 }

@@ -181,8 +181,6 @@
     <None Include="Resources\achs_jacsat105_661.ris" />
     <None Include="Resources\achs_oprdfk4_175.ris" />
     <None Include="Resources\BIB.RIS" />
-    <None Include="Resources\Copy of Full Functional Group List 20180423.xlsx" />
-    <None Include="Resources\DSSTox_ToxCastRelease_20151019.xlsx" />
     <None Include="Resources\europepmc.ris" />
     <None Include="Resources\europepmc1.ris" />
     <None Include="Resources\S0040403900813763.ris" />
@@ -204,9 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\10.1002%252Fchin.199605199.txt" />
-    <None Include="Resources\DSSTox_ToxCastRelease_20151019.txt" />
-    <None Include="Resources\Functional Group List.txt" />
-    <None Include="Resources\Full Functional Group List 20180301.txt" />
     <None Include="Resources\HarvardCiteThemRight.txt" />
     <None Include="Resources\harvard.txt.txt" />
     <None Include="Resources\References.txt" />

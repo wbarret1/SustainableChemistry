@@ -140,17 +140,6 @@ namespace SustainableChemistry.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ACETAL	COC(C)(C)OC	Acetalisation	https://en.wikipedia.org/wiki/Acetylation	ALDEHYDE	ALCOHOL	None	Acid				Hemi Acetyl	Water	4	CH3  AA	2	O    AA	1	&gt;C&lt;    AA																																						
-        ///ACYLOIN	CC(=O)C(C)O	Acyloin condensation	https://en.wikipedia.org/wiki/Acyloin_condensation	CARBOXYLIC ESTER			Base				Alph-hydroxyketone		2	CH3  AA	1	CH   AA	1	OH    AA	1	C=O   AA																																				
-        ///ALCOHOL	CO	Grignard	https://en.wikipedia.org/wiki/Grignard_reaction	ALKENE	WATER		Acid				Alcohol 		 [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Functional_Group_List {
-            get {
-                return ResourceManager.GetString("Functional_Group_List", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;style xmlns=&quot;http://purl.org/net/xbiblio/csl&quot; class=&quot;in-text&quot; version=&quot;1.0&quot; demote-non-dropping-particle=&quot;sort-only&quot; default-locale=&quot;en-GB&quot;&gt;
         ///  &lt;info&gt;
