@@ -42,7 +42,7 @@ namespace ChemInfo
                 if (typeof(smilesParser.ChainContext).IsAssignableFrom(item.GetType()))
                     VisitChain((smilesParser.ChainContext)item);
             }
-            return retVal.GetAtoms();
+            return retVal.Atoms;
         }
 
         public override object VisitAromatic(smilesParser.AromaticContext context)
@@ -63,16 +63,19 @@ namespace ChemInfo
                 if (typeof(smilesParser.AromaticContext).IsAssignableFrom(tree.GetType()))
                 {
                     Atom a = (Atom)VisitAromatic((smilesParser.AromaticContext)tree);
+                    a.AtomType = ChemInfo.AtomType.AROMATIC;
                     return a;
                 }
                 else if (typeof(smilesParser.OrganicContext).IsAssignableFrom(tree.GetType()))
                 {
                     Atom a = (Atom)VisitOrganic((smilesParser.OrganicContext)tree);
+                    a.AtomType = ChemInfo.AtomType.ORGANIC;
                     return a;
                 }
                 else if (typeof(smilesParser.HalogenContext).IsAssignableFrom(tree.GetType()))
                 {
                     Atom a = (Atom)VisitHalogen((smilesParser.HalogenContext)tree);
+                    a.AtomType = ChemInfo.AtomType.ORGANIC;
                     return a;
                 }
                 else
@@ -108,7 +111,7 @@ namespace ChemInfo
                 hCount++;
                 this.addExplicitHToNext = false;
             }
-            string[] organics = { "B", "C", "N", "O", "S", "P", "F", "Cl", "Br", "I" };
+            string[] organics = { "B", "C", "N", "O", "S", "P", "F", "Cl", "Br", "I", "X" };
             string[] aromatics = { "b", "c", "n", "o", "p", "s", "se", "as" };
             AtomType type = AtomType.NONE;
             if (organics.Contains(symbol)) type = AtomType.ORGANIC;

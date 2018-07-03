@@ -224,11 +224,11 @@ namespace ChemInfo
 
     [Serializable]
     [System.ComponentModel.TypeConverter(typeof(AtomTypeConverter))]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public class Atom
     {
-        BondCollection m_Bonds = new ChemInfo.BondCollection();
-        List<Atom> m_ConnectedAtoms = new List<Atom>();
-        WeiningerInvariant m_WeiningerInvariant;
+        private BondCollection m_Bonds = new BondCollection();
+        private List<Atom> m_ConnectedAtoms = new List<Atom>();
 
         //int degree;
         ELEMENTS e;
@@ -236,8 +236,7 @@ namespace ChemInfo
         int m_Charge;
         int m_ExplicitHydrogens;
         Chirality m_Chiral;
-        AtomType atomType;
-        int color;
+        System.Drawing.Color m_Color;
         int _x = 0;
         int _y = 0;
         public bool Visited { get; set; } = false;
@@ -253,11 +252,9 @@ namespace ChemInfo
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
-            atomType = AtomType.NONE;
             m_Chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
-            this.m_AtomicMass = ChemInfo.Element.ExactMass(e);
-            this.m_CovalentRadius = ChemInfo.Element.CovalentRadius(e);
+            //this.m_AtomicMass = ChemInfo.Element.ExactMass(e);
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
@@ -272,7 +269,7 @@ namespace ChemInfo
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
-            atomType = type;
+            AtomType = type;
             m_Chiral = Chirality.UNSPECIFIED;
             if (this.Element != ELEMENTS.Halogen) this.SetColor(ChemInfo.Element.ElementColor(e));
             else this.SetColor(System.Drawing.Color.FromName("olivedrab"));
@@ -290,7 +287,7 @@ namespace ChemInfo
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
-            atomType = AtomType.NONE;
+            AtomType = AtomType.NONE;
             m_Chiral = chirality;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
@@ -307,7 +304,7 @@ namespace ChemInfo
             isotope = (byte)isotope;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
-            atomType = AtomType.NONE;
+            AtomType = AtomType.NONE;
             m_Chiral = Chirality.UNSPECIFIED;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
@@ -324,15 +321,14 @@ namespace ChemInfo
             m_Isotope = isotope;
             m_Charge = charge;
             m_Chiral = chirality;
-            atomType = type;
+            AtomType = type;
             this.SetColor(ChemInfo.Element.ElementColor(e));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
-         public ELEMENTS Element { get { return e; } }
-
+        [Newtonsoft.Json.JsonProperty]
         public int AtomicNumber
         {
             get
@@ -340,6 +336,206 @@ namespace ChemInfo
                 return (int)e;
             }
         }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string AtomicSymbol
+        {
+            get
+            {
+                return e.ToString();
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string AtomicName
+        {
+            get
+            {
+                return ChemInfo.Element.Name(e);
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public System.Drawing.Color Color
+        {
+            get
+            {
+                return m_Color;
+            }
+            set
+            {
+                m_Color = value;
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int Degree
+        {
+            get
+            {
+                if (this.ExplicitHydrogens > 0)
+                {
+
+                }
+                return this.ConnectedAtoms.Length + this.NumHydrogens;
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int NumberOfBonds
+        {
+            get
+            {
+                int retVal = 0;
+                foreach (Atom a in this.ConnectedAtoms)
+                {
+                    Bond b = null;
+                    foreach (Bond testBond in this.BondedAtoms)
+                    {
+                        if (testBond.ConnectedAtom == a) b = testBond;
+                    }
+                    if (b == null)
+                    {
+                        foreach (Bond testBond in a.BondedAtoms)
+                        {
+                            if (testBond.ConnectedAtom == this) b = testBond;
+                        }
+                    }
+                    if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
+                    if (b.BondType == BondType.Double) retVal = retVal + 2;
+                    if (b.BondType == BondType.Triple) retVal = retVal + 3;
+                }
+                return retVal;
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int NumHydrogens
+        {
+            get
+            {
+                //if (HydrogenCount != 0) return HydrogenCount;
+                //if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
+                if (this.AtomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
+                {
+                    return this.Valence - this.NumberOfBonds;
+                }
+                if (this.AtomType == AtomType.AROMATIC)
+                {
+                    switch (this.Element)
+                    {
+                        case ELEMENTS.B:
+                            return 2;
+                        case ELEMENTS.C:
+                            return 3 - this.ConnectedAtoms.Length;
+                        case ELEMENTS.N:
+                            return 0;
+                        case ELEMENTS.O:
+                            return 0;
+                        case ELEMENTS.S:
+                            return 2;
+                        case ELEMENTS.P:
+                            return 1;
+                        default:
+                            return 0;
+                    }
+                }
+                return 0;
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int NumPiElectrons
+        {
+            get
+            {
+                int bonds = this.NumberOfBonds + this.NumHydrogens;
+                switch (this.Element)
+                {
+                    case ELEMENTS.B:
+                        if (this.Degree == 2 && bonds == 3) return 1;
+                        return 0;
+                    case ELEMENTS.C:
+                        if (this.Degree == 3)
+                        {
+                            if (bonds == 3) return 1;
+                            if (bonds == 4 && this.Charge == 0)
+                            {
+                                foreach (Atom a in this.ConnectedAtoms)
+                                {
+                                    if (a.Element != ELEMENTS.C)
+                                        if (this.GetBond(a).BondType == BondType.Double) return 0;
+                                }
+                                return 1;
+                            }
+                            if (this.Charge == -1 && bonds == 3) return 2;
+                        }
+                        if (this.Degree == 2 && bonds == 3 && (this.Charge == 1 || this.Charge == -1)) return 1;
+                        return 0;
+                    case ELEMENTS.N:
+                        if (this.Degree == 3)
+                        {
+                            if (this.NumberOfBonds == 3 && Charge == 0) return 2;
+                            if (this.NumberOfBonds == 4 && this.Charge == 1) return 1;
+                            if (this.NumberOfBonds == 5 && this.Charge == 1) return 1;
+                        }
+                        if (this.Degree == 2)
+                        {
+                            if (this.NumberOfBonds == 2 && this.Charge == -1) return 2;
+                            if (this.NumberOfBonds == 3 && this.Charge == 0) return 1;
+                        }
+                        return 0;
+                    case ELEMENTS.O:
+                        if (this.Charge == 0 && this.ConnectedAtoms.Length == 2) return 2;
+                        if (this.Charge == +1 && this.NumberOfBonds == 3 && this.ConnectedAtoms.Length == 2) return 2;
+                        return 0;
+                    case ELEMENTS.S:
+                        if (this.Degree == 2 && this.ConnectedAtoms.Length == 2) return 2;
+                        if (this.Degree == 2 && this.ConnectedAtoms.Length == 2 && this.NumberOfBonds == 3 && this.Charge == +1) return 1;
+                        if (this.Degree == 3 && this.NumberOfBonds == 4)
+                        {
+                            foreach (Atom a in this.ConnectedAtoms)
+                            {
+                                if (a.Element == ELEMENTS.O && this.GetBond(a).BondType == BondType.Double) return 2;
+                            }
+                        }
+                        if (this.Degree == 3 && this.NumberOfBonds == 3)
+                        {
+                            foreach (Atom a in this.ConnectedAtoms)
+                            {
+                                if (a.Element == ELEMENTS.O && this.Charge == +1 && a.Charge == -1) return 2;
+                            }
+                        }
+                        return 0;
+                    case ELEMENTS.P:
+                        if (this.Degree == 3) return 0;
+                        return 1;
+                    case ELEMENTS.As:
+                        if (this.Degree == 3) return 0;
+                        return 1;
+                    case ELEMENTS.Se:
+                        if (this.Degree == 2 && this.NumberOfBonds == 2 && this.Charge == 0) return 2;
+                        if (this.Degree == 2 && this.NumberOfBonds == 3 && this.Charge == +1) return 1;
+                        if (this.Degree == 3)
+                        {
+                            foreach (Atom a in this.ConnectedAtoms)
+                            {
+                                if (a.Element == ELEMENTS.O)
+                                {
+                                    if (this.GetBond(a).BondType == BondType.Double && a.Charge == 0) return 2;
+                                    if (this.Charge == +1 && a.Charge == -1 && this.GetBond(a).BondType == BondType.Single) return 1;
+                                }
+                            }
+                        }
+                        return 0;
+
+                    default:
+                        return 0;
+                }
+            }
+        }
+
+        public ELEMENTS Element { get { return e; } }
 
         public int Isotope
         {
@@ -361,37 +557,12 @@ namespace ChemInfo
             }
             set
             {
-               m_ExplicitHydrogens = value;
+                m_ExplicitHydrogens = value;
             }
         }
 
-        public AtomType AtomType
-        {
-            get
-            {
-                return atomType;
-            }
-            set
-            {
-                atomType = value;
-            }
-        }
-
-        public string AtomicSymbol
-        {
-            get
-            {
-                return e.ToString();
-            }
-        }
-
-        public string AtomicName
-        {
-            get
-            {
-                return ChemInfo.Element.Name(e);
-            }
-        }
+        [Newtonsoft.Json.JsonProperty]
+        public AtomType AtomType { get; set; } = AtomType.NONE;
 
         public int WeiningerRank { get; set; } = 0;
 
@@ -475,25 +646,29 @@ namespace ChemInfo
 
         void SetColor(int[] argb)
         {
-            if (argb.Length == 3) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]).ToArgb();
-            else if (argb.Length == 4) this.color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]).ToArgb();
-            else color = System.Drawing.Color.Black.ToArgb();
+            if (argb.Length == 3) this.m_Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]);
+            else if (argb.Length == 4) this.m_Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);
+            else m_Color = System.Drawing.Color.Black;
         }
 
         void SetColor(System.Drawing.Color color)
         {
-            this.color = color.ToArgb();
+            this.m_Color = color;
         }
 
-        public System.Drawing.Color Color
+        void ResetColor(System.Drawing.Color color)
+        {
+            this.SetColor(ChemInfo.Element.ElementColor(e));
+        }
+
+        public System.Drawing.Color DefaultColor
         {
             get
             {
-                return System.Drawing.Color.FromArgb(color);
-            }
-            set
-            {
-                color = value.ToArgb();
+                int[] c = ChemInfo.Element.ElementColor(e);
+                if (c.Length == 3) return System.Drawing.Color.FromArgb(c[0], c[1], c[2]);
+                else if (c.Length == 4) return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3]);
+                else return System.Drawing.Color.Black;
             }
         }
 
@@ -517,21 +692,22 @@ namespace ChemInfo
         public double DeltaX { get; set; } = 0;
         public double DeltaY { get; set; } = 0;
 
-        double m_AtomicMass;
+        //double m_AtomicMass;
         public double AtomicMass
         {
             get
             {
-                return m_AtomicMass;
+                return ChemInfo.Element.ExactMass(e);
             }
         }
 
-        double m_CovalentRadius;
         public double CovalentRadius
         {
             get
             {
-                return m_CovalentRadius;
+                if (e == ELEMENTS.Halogen) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.Cl);
+                if (e == ELEMENTS.WILD_CARD) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.C);
+                return ChemInfo.Element.CovalentRadius(e);
             }
         }
 
@@ -611,6 +787,11 @@ namespace ChemInfo
                 if (b.ConnectedAtom == a)
                     return b;
             }
+            foreach (Bond b in a.BondedAtoms)
+            {
+                if (b.ConnectedAtom == this)
+                    return b;
+            }
             return null;
         }
 
@@ -655,44 +836,6 @@ namespace ChemInfo
             return bonds.ToArray<Bond>();
         }
 
-        public int Degree
-        {
-            get
-            {
-                if(this.ExplicitHydrogens > 0)
-                {
-
-                }
-                return this.ConnectedAtoms.Length + this.NumHydrogens;
-            }
-        }
-
-        public int NumberOfBonds
-        {
-            get
-            {
-                int retVal = 0;
-                foreach (Atom a in this.ConnectedAtoms)
-                {
-                    Bond b = null;
-                    foreach (Bond testBond in this.BondedAtoms)
-                    {
-                        if (testBond.ConnectedAtom == a) b = testBond;
-                    }
-                    if (b == null)
-                    {
-                        foreach (Bond testBond in a.BondedAtoms)
-                        {
-                            if (testBond.ConnectedAtom == this) b = testBond;
-                        }
-                    }
-                    if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
-                    if (b.BondType == BondType.Double) retVal = retVal + 2;
-                    if (b.BondType == BondType.Triple) retVal = retVal + 3;
-                }
-                return retVal;
-            }
-        }
 
         [System.ComponentModel.TypeConverter(typeof(IntArrayTypeConverter))]
         public int[] PossibleValences
@@ -718,7 +861,7 @@ namespace ChemInfo
                     case ELEMENTS.I:
                     case ELEMENTS.Br:
                         return new int[] { 1 };
-                    default: 
+                    default:
                         return new int[0];
                 }
             }
@@ -737,40 +880,6 @@ namespace ChemInfo
             }
         }
 
-
-        public int NumHydrogens
-        {
-            get
-            {
-                //if (HydrogenCount != 0) return HydrogenCount;
-                //if (m_ExplicitHydrogens != 0) return m_ExplicitHydrogens;
-                if (this.atomType == AtomType.ORGANIC || this.AtomType == AtomType.NONE)
-                {
-                    return this.Valence - this.NumberOfBonds;
-                }
-                if (this.atomType == AtomType.AROMATIC)
-                {
-                    switch (this.Element)
-                    {
-                        case ELEMENTS.B:
-                            return 2;
-                        case ELEMENTS.C:
-                            return 3 - this.ConnectedAtoms.Length;
-                        case ELEMENTS.N:
-                            return 0;
-                        case ELEMENTS.O:
-                            return 0;
-                        case ELEMENTS.S:
-                            return 2;
-                        case ELEMENTS.P:
-                            return 1;
-                        default:
-                            return 0;
-                    }
-                }
-                return 0;
-            }
-        }
 
         public int Charge
         {
@@ -810,13 +919,7 @@ namespace ChemInfo
             }
         }
 
-        public WeiningerInvariant WeiningerInvariant
-        {
-            get
-            {
-                return this.m_WeiningerInvariant;
-            }
-        }
+        public WeiningerInvariant WeiningerInvariant { get; internal set; }
 
         public int WeiningerSymmetryClass { get; set; } = 0;
         public int WeiningerProductOfPrimes

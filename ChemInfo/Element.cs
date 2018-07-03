@@ -215,7 +215,7 @@ namespace ChemInfo
                 }
             }
             listAtomLabel a = (listAtomLabel)((listAtom)elements.atom[(int)e]).Items[2];
-            return string.Empty;
+            return "0";
         }
 
         static public double Mass(ELEMENTS e)

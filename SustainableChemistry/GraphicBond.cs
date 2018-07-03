@@ -15,7 +15,7 @@ namespace SustainableChemistry
         {
             m_parentAtom = parent;
             m_connectedAtom = connected;
-            m_BondType = bond.BondType;
+            m_BondType = bond.DrawType;
             this.Tag = bond;
         }
 

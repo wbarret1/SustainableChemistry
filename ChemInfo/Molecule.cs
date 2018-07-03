@@ -17,21 +17,32 @@ namespace ChemInfo
 
 
     [Serializable]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public class Molecule
     {
         List<Atom> m_Atoms;
         List<List<Atom>> cycles;
+        List<Atom[]> groupAtoms;
         List<Atom[]> paths;
         bool[,] touching;
         bool[,] fused;
         bool ringsFound;
         bool pathsFound;
         System.Collections.Hashtable atomsCount;
+        FunctionalGroupCollection m_FunctionalGroups;
+        bool aromaticitySet;
+        bool[] isRingAromatic;
+        bool[] isRingHeterocyclic;
+        bool[] isRingHeterocyclicAromatic;
 
         public Molecule()
         {
             m_Atoms = new List<Atom>();
+            m_FunctionalGroups = new FunctionalGroupCollection();
+            groupAtoms = new List<Atom[]>();
             atomsCount = new System.Collections.Hashtable();
+            aromaticitySet = false;
+            Aromatic = false;
             ringsFound = false;
             pathsFound = false;
         }
@@ -40,17 +51,49 @@ namespace ChemInfo
         {
             m_Atoms = new List<Atom>();
             atomsCount = new System.Collections.Hashtable();
+            aromaticitySet = false;
+            Aromatic = false;
             ringsFound = false;
             pathsFound = false;
             smilesLexer lexer = new smilesLexer(new Antlr4.Runtime.AntlrInputStream(smiles));
             smilesParser parser = new smilesParser(new Antlr4.Runtime.CommonTokenStream(lexer));
             int err = parser.NumberOfSyntaxErrors;
             this.m_Atoms.AddRange((Atom[])new SmilesVisitor().Visit(parser.smiles()));
+            m_FunctionalGroups = new FunctionalGroupCollection();
+            this.FindRings();
+            groupAtoms = new List<Atom[]>();
+            Smiles = smiles;
         }
 
-        public Atom[] GetAtoms()
+        [Newtonsoft.Json.JsonProperty]
+        public bool Aromatic { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool Heterocyclic { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool HeterocyclicAromatic { get; internal set; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string Smiles { get; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public Atom[] Atoms
         {
-            return m_Atoms.ToArray<Atom>();
+            get
+            {
+                return m_Atoms.ToArray<Atom>();
+            }
+        }
+
+        [Newtonsoft.Json.JsonProperty]
+        public double MolecularWeight
+        {
+            get
+            {
+                double retval = 0.0;
+                foreach (Atom a in m_Atoms)
+                    retval = retval + a.AtomicMass;
+                return retval;
+            }
         }
 
         public Atom GetNextAtom(Atom a)
@@ -68,14 +111,14 @@ namespace ChemInfo
             pathsFound = false;
         }
 
-        public void AddAtom(string element)
-        {
-            Atom a = new Atom(element);
-            if (m_Atoms.Contains(a)) return;
-            m_Atoms.Add(a);
-            ringsFound = false;
-            pathsFound = false;
-        }
+        //public void AddAtom(string element)
+        //{
+        //    Atom a = new Atom(element);
+        //    if (m_Atoms.Contains(a)) return;
+        //    m_Atoms.Add(a);
+        //    ringsFound = false;
+        //    pathsFound = false;
+        //}
 
         void IncrementAtomCount(Atom a)
         {
@@ -100,52 +143,6 @@ namespace ChemInfo
             return null;
         }
 
-        //public int GetBondAngle(Atom atom1, Atom atom2)
-        //{
-        //    foreach (Bond b in atom1.BondedAtoms)
-        //    {
-        //        if (b.ConnectedAtom == atom2) return b.Angle;
-        //    }
-        //    foreach (Bond b in atom2.BondedAtoms)
-        //    {
-        //        if (b.ConnectedAtom == atom1) return (b.Angle + 180) % 360;
-        //    }
-        //    return -1;
-        //}
-
-        //public int SetBondAngle(Atom atom1, Atom atom2, int angle)
-        //{
-        //    foreach (Bond b in atom1.BondedAtoms)
-        //    {
-        //        if (b.ConnectedAtom == atom2)
-        //        {
-        //            b.Angle = angle;
-        //            //b.SetBondededAtomLocation();
-        //            return angle;
-        //        }
-        //    }
-        //    foreach (Bond b in atom2.BondedAtoms)
-        //    {
-        //        if (b.ConnectedAtom == atom1)
-        //        {
-        //            b.Angle = (angle + 180) % 360;
-        //            //b.SetParentAtomLocation();
-        //            return (angle + 180) % 360;
-        //        }
-        //    }
-        //    return 0;
-        //}
-
-        public double MolecularWeight
-        {
-            get
-            {
-                double retval = 0.0;
-                foreach (Atom a in m_Atoms)
-                    retval = retval + a.AtomicMass;
-                return retval;
-            }
-        }
 
         /// <summary>
         /// Returns the <see cref="ChemInfo.Bond"/> between two <see cref="ChemInfo.Atom"/> objects.
@@ -170,7 +167,7 @@ namespace ChemInfo
         /// 
         /// </summary>
         /// <returns></returns>
-        public Atom[][] FindRings()
+        internal Atom[][] FindRings()
         {
             if (ringsFound) return ConvertToArrayArray(cycles);
             Stack<Atom> myStack = new Stack<Atom>();
@@ -182,6 +179,8 @@ namespace ChemInfo
             }
             ExtractRings();
             FusedRings();
+            TestHeterocyclic();
+            TestAromaticity();
             ringsFound = true;
             return ConvertToArrayArray(cycles);
         }
@@ -408,42 +407,131 @@ namespace ChemInfo
 
         void FusedRings()
         {
-            touching = new bool[cycles.Count, cycles.Count];
-            fused = new bool[cycles.Count, cycles.Count];
-            for (int i = 0; i < cycles.Count; i++)
+            touching = new bool[this.cycles.Count, this.cycles.Count];
+            fused = new bool[this.cycles.Count, this.cycles.Count];
+            for (int i = 0; i < this.cycles.Count; i++)
             {
-                for (int j = i + 1; j < cycles.Count; j++)
+                for (int j = i + 1; j < this.cycles.Count; j++)
                 {
                     int common = 0;
-                    foreach (Atom a in cycles[j])
+                    foreach (Atom a in this.cycles[j])
                     {
-                        if (cycles[i].Contains(a)) common = common + 1;
+                        if (this.cycles[i].Contains(a)) common = common + 1;
                     }
                     if (common == 1) touching[i, j] = true;
                     if (common == 2) fused[i, j] = true;
                 }
             }
         }
+        //C1=NC=CC=C1
 
-        // VF2 Implementation
-
-        private void MakeHydrogens(Molecule m)
+        void TestHeterocyclic()
         {
-            foreach (Atom a in m.GetAtoms())
+            isRingHeterocyclic = new bool[cycles.Count];
+            for (int i = 0; i < cycles.Count; i++)
             {
-                while (a.NumberOfBonds < a.Valence)
+                foreach (Atom a in cycles[i])
                 {
-
+                    isRingHeterocyclic[i] = false;
+                    if (a.Element != ELEMENTS.C)
+                    {
+                        isRingHeterocyclic[i] = true;
+                        Heterocyclic = true;
+                    }
                 }
             }
         }
 
-        public bool FindFunctionalGroup(string smart, ref int[] group)
+        void TestAromaticity()
+        {
+            //if weve already done this, don't do it again.
+            if (this.aromaticitySet) return;
+            this.aromaticitySet = true;
+            if (this.cycles.Count == 0) Aromatic = false;
+            foreach(Atom a in this.Atoms)
+            {
+                if (a.AtomType == ChemInfo.AtomType.AROMATIC)
+                {
+                    Aromatic = true;
+                    return;
+                }
+            }
+            isRingAromatic = new bool[cycles.Count];
+            isRingHeterocyclicAromatic = new bool[cycles.Count];
+            for (int i = 0; i < cycles.Count; i++)
+            {
+                int numPi = 0;
+                isRingAromatic[i] = false;
+                isRingHeterocyclicAromatic[i] = false;
+                foreach (Atom a in cycles[i])
+                {
+                    numPi = numPi + a.NumPiElectrons;
+                }
+                if ((numPi - 2) % 4 == 0)
+                {
+                    isRingAromatic[i] = true;
+                    isRingHeterocyclicAromatic[i] = true;
+                    Aromatic = true;
+                    foreach (Atom a in cycles[i])
+                    {
+                        a.AtomType = AtomType.AROMATIC;
+                        if (a.Element != ELEMENTS.C)
+                        {
+                            isRingHeterocyclicAromatic[i] = true;
+                            HeterocyclicAromatic = true;
+                        }
+                        foreach (Atom connected in a.ConnectedAtoms)
+                        {
+                            int aIndex = this.m_Atoms.IndexOf(a);
+                            int connectedIndex = this.m_Atoms.IndexOf(connected);
+                            if (connected.AtomType == AtomType.AROMATIC) a.GetBond(connected).BondType = BondType.Aromatic;
+                        }
+                    }
+                }
+            }
+        }
+
+        // VF2 Implementation
+
+        [Newtonsoft.Json.JsonProperty]
+        public string[] FunctionalGroups
+        {
+            get
+            {
+                List<string> groups = new List<string>();
+                foreach (FunctionalGroup g in this.m_FunctionalGroups)
+                    groups.Add(g.Name);
+                return groups.ToArray<string>();
+            }
+        }
+
+        public bool FindFunctionalGroup(string smart, ref int[] atoms)
         {
             Molecule m = new Molecule(smart);
             int pn = 0;
             int[] matches = null;
-            return this.Match(ref pn, ref matches, ref group, new FunctionalGroupState(m, this, false));
+            return this.Match(ref pn, ref matches, ref atoms, new FunctionalGroupState(m, this, false));
+        }
+
+        public bool FindFunctionalGroup(FunctionalGroup group)
+        {
+            Molecule m = new Molecule(group.Smart);
+            int pn = 0;
+            int[] matches = null;
+            int[] at = null;
+            if (this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false)))
+            {
+                this.m_FunctionalGroups.Add(group);
+                Atom[] a = null;
+                if (at != null)
+                {
+                    a = new Atom[at.Length];
+                    for (int i = 0; i < at.Length; i++) a[i] = this.Atoms[i];
+                }
+                this.groupAtoms.Add(a);
+                return true;
+            }
+            return false;
         }
 
         public bool FindSmarts(string smart, ref int[] group)
@@ -521,7 +609,7 @@ namespace ChemInfo
 
         internal bool Match(Atom currentInGroup, Atom currentInMolecule, Stack<Atom> atomsInGroup, Stack<Atom> matchedInMolecule, Molecule groupToMatch)
         {
-            if (atomsInGroup.Count == groupToMatch.GetAtoms().Length)
+            if (atomsInGroup.Count == groupToMatch.Atoms.Length)
             {
                 //pn = s.CoreLen();
                 //s.GetCoreSet(ref c1, ref c2);
@@ -1171,5 +1259,42 @@ namespace ChemInfo
                 v.Location2D = new System.Drawing.Point((int)x, (int)y);
             }
         }
+
+        //public int GetBondAngle(Atom atom1, Atom atom2)
+        //{
+        //    foreach (Bond b in atom1.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom2) return b.Angle;
+        //    }
+        //    foreach (Bond b in atom2.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom1) return (b.Angle + 180) % 360;
+        //    }
+        //    return -1;
+        //}
+
+        //public int SetBondAngle(Atom atom1, Atom atom2, int angle)
+        //{
+        //    foreach (Bond b in atom1.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom2)
+        //        {
+        //            b.Angle = angle;
+        //            //b.SetBondededAtomLocation();
+        //            return angle;
+        //        }
+        //    }
+        //    foreach (Bond b in atom2.BondedAtoms)
+        //    {
+        //        if (b.ConnectedAtom == atom1)
+        //        {
+        //            b.Angle = (angle + 180) % 360;
+        //            //b.SetParentAtomLocation();
+        //            return (angle + 180) % 360;
+        //        }
+        //    }
+        //    return 0;
+        //}
+
     }
 }

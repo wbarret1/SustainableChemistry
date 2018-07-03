@@ -145,8 +145,8 @@ namespace ChemInfo
         {
             g1 = ag1;
             g2 = ag2;
-            n1 = g1.GetAtoms().Length;
-            n2 = g2.GetAtoms().Length;
+            n1 = g1.Atoms.Length;
+            n2 = g2.Atoms.Length;
 
             //if (sortNodes)
             //    order = SortNodesByFrequency(ag1);
@@ -263,12 +263,12 @@ namespace ChemInfo
 
         public override Atom[] GetGraph1()
         {
-            return g1.GetAtoms();
+            return g1.Atoms;
         }
 
         public override Atom[] GetGraph2()
         {
-            return g2.GetAtoms();
+            return g2.Atoms;
         }
 
         /*--------------------------------------------------------------------------
@@ -732,8 +732,8 @@ namespace ChemInfo
         {
             g1 = ag1;
             g2 = ag2;
-            n1 = g1.GetAtoms().Length;
-            n2 = g2.GetAtoms().Length;
+            n1 = g1.Atoms.Length;
+            n2 = g2.Atoms.Length;
 
             //if (sortNodes)
             //    order = SortNodesByFrequency(ag1);
@@ -850,12 +850,12 @@ namespace ChemInfo
 
         public override Atom[] GetGraph1()
         {
-            return g1.GetAtoms();
+            return g1.Atoms;
         }
 
         public override Atom[] GetGraph2()
         {
-            return g2.GetAtoms();
+            return g2.Atoms;
         }
 
         /*--------------------------------------------------------------------------
@@ -1352,11 +1352,11 @@ namespace ChemInfo
 
             if (prevAtom1 == null)
             {
-                prevAtom1 = m1.GetAtoms()[0];
+                prevAtom1 = m1.Atoms[0];
             }
             if (prevAtom2 == null)
             {
-                prevAtom2 = m2.GetAtoms()[0];
+                prevAtom2 = m2.Atoms[0];
             }
             else prevAtom2 = m2.GetNextAtom(prevAtom2);
 
@@ -1365,7 +1365,7 @@ namespace ChemInfo
                 while (prevAtom1 != null && (core_1.Contains(prevAtom1) || !terminal_1.Contains(prevAtom1)))
                 {
                     prevAtom1 = m1.GetNextAtom(prevAtom1);
-                    prevAtom2 = m2.GetAtoms()[0];
+                    prevAtom2 = m2.Atoms[0];
                 }
             }
             else
@@ -1373,7 +1373,7 @@ namespace ChemInfo
                 while (prevAtom1 != null && core_1.Contains(prevAtom1))
                 {
                     prevAtom1 = m1.GetNextAtom(prevAtom1);
-                    prevAtom2 = m2.GetAtoms()[0];
+                    prevAtom2 = m2.Atoms[0];
                 }
             }
 
@@ -1477,12 +1477,12 @@ namespace ChemInfo
 
         public override bool IsGoal()
         {
-            return core_1.Count == m1.GetAtoms().Length;
+            return core_1.Count == m1.Atoms.Length;
         }
 
         public override bool IsDead()
         {
-            return m1.GetAtoms().Length > m2.GetAtoms().Length;
+            return m1.Atoms.Length > m2.Atoms.Length;
             //bool b2 = t_1.Count > t_2.Count;
             //bool b3 = out_1.Count > out_2.Count;
             //bool b4 = in_1.Count > in_2.Count;

@@ -53,8 +53,8 @@ namespace SustainableChemistry
             if (!String.IsNullOrEmpty(group.Smart))
             {
                 molecule = new ChemInfo.Molecule(group.Smart);
-                molecule.FindRings();
-                molecule.FindAllPaths();
+                // molecule.FindRings();
+                //molecule.FindAllPaths();
                 this.moleculeViewer1.Molecule = molecule;
             }
         }

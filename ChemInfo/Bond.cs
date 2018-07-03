@@ -73,111 +73,52 @@ namespace ChemInfo
     {
         public Bond(Atom parent, Atom connectedAtom, BondType type, BondStereo stereo, BondTopology topology, BondReactingCenterStatus rcStatus)
         {
-            m_ParentAtom = parent;
-            m_connectedAtom = connectedAtom;
-            m_bondType = type;
-            m_bondStereo = stereo;
-            m_BondTopology = topology;
-            m_bondReactingCenter = rcStatus;
-            m_BondLength = parent.CovalentRadius + connectedAtom.CovalentRadius;
+            ParentAtom = parent;
+            ConnectedAtom = connectedAtom;
+            BondType = type;
+            DrawType = type;
+            Stereo = stereo;
+            Topology = topology;
+            ReactingCenter = rcStatus;
+            BondLength = 0; // parent.CovalentRadius + connectedAtom.CovalentRadius;
         }
 
-        Atom m_ParentAtom;
-        public Atom ParentAtom
-        {
-            get
-            {
-                return m_ParentAtom;
-            }
-        }
-
-        Atom m_connectedAtom;
-        public Atom ConnectedAtom
-        {
-            get
-            {
-                return m_connectedAtom;
-            }
-        }
-
-        BondType m_bondType;
-        public BondType BondType
-        {
-            get
-            {
-                return m_bondType;
-            }
-        }
-
-        BondStereo m_bondStereo;
-        public BondStereo Stereo
-        {
-            get
-            {
-                return m_bondStereo;
-            }
-            internal set
-            {
-                m_bondStereo = value;
-            }
-        }
-
-        public string xNotUsed;
-        BondTopology m_BondTopology;
-        public BondTopology Topology
-        {
-            get
-            {
-                return m_BondTopology;
-            }
-        }
-
-        BondReactingCenterStatus m_bondReactingCenter;
-        public BondReactingCenterStatus ReactingCenter
-        {
-            get
-            {
-                return m_bondReactingCenter;
-            }
-        }
+        public Atom ParentAtom { get; }
+        public Atom ConnectedAtom { get; }
+        public double BondLength { get; }
+        public BondType BondType { get; internal set; }
+        public BondType DrawType { get; internal set; }
+        public BondStereo Stereo { get; internal set; }
+        public BondTopology Topology { get; internal set; }
+        public BondReactingCenterStatus ReactingCenter { get; internal set; }
 
         public bool CompareTo(Bond b)
         {
             if (b.ParentAtom.Element != this.ParentAtom.Element) return false;
             if (b.ConnectedAtom.Element != this.ConnectedAtom.Element) return false;
-            if (b.BondType != m_bondType) return false;
-            if (b.Stereo != m_bondStereo) return false;
-            if (b.Topology != m_BondTopology) return false;
+            if (b.BondType != BondType) return false;
+            if (b.Stereo != Stereo) return false;
+            if (b.Topology != Topology) return false;
             return true;
         }
 
-        public double DistanceBetweenAtoms
-        {
-            get
-            {
-                return Math.Sqrt(this.DistanceBetweenAtomsSquared);
-            }
+        //public double DistanceBetweenAtoms
+        //{
+        //    get
+        //    {
+        //        return Math.Sqrt(this.DistanceBetweenAtomsSquared);
+        //    }
 
-        }
+        //}
 
-        double m_BondLength;
-        public double BondLength
-        {
-            get
-            {
-                return m_BondLength;
-            }
 
-        }
-
-        public double DistanceBetweenAtomsSquared
-        {
-            get
-            {
-                return Math.Pow((this.ParentAtom.Location2D.X - this.ConnectedAtom.Location2D.X), 2) + Math.Pow((this.ParentAtom.Location2D.Y - this.ConnectedAtom.Location2D.Y), 2);
-            }
-
-        }
+        //public double DistanceBetweenAtomsSquared
+        //{
+        //    get
+        //    {
+        //        return Math.Pow((this.ParentAtom.Location2D.X - this.ConnectedAtom.Location2D.X), 2) + Math.Pow((this.ParentAtom.Location2D.Y - this.ConnectedAtom.Location2D.Y), 2);
+        //    }
+        //}
 
         //public int Angle
         //{
@@ -192,18 +133,18 @@ namespace ChemInfo
         //    }
         //}
 
-        public System.Drawing.Point StartPoint
-        {
-            get
-            {
-                return this.ParentAtom.Location2D;
-            }
-            //set
-            //{
-            //    this.m_ParentAtom.Location2D = new System.Drawing.Point(value.X, value.Y);
-            //    this.m_StaringPoint = value;
-            //}
-        }
+        //public System.Drawing.Point StartPoint
+        //{
+        //    get
+        //    {
+        //        return this.ParentAtom.Location2D;
+        //    }
+        //    //set
+        //    //{
+        //    //    this.m_ParentAtom.Location2D = new System.Drawing.Point(value.X, value.Y);
+        //    //    this.m_StaringPoint = value;
+        //    //}
+        //}
 
         //bool m_SettingLocation = false;
         //public void SetParentAtomLocation()
@@ -228,17 +169,17 @@ namespace ChemInfo
         //    m_SettingLocation = false;
         //}
 
-        public System.Drawing.Point EndPoint
-        {
-            get
-            {
-                return m_connectedAtom.Location2D;
-            }
-            //set
-            //{
-            //    this.m_EndingPoint = value;
-            //    //this.m_connectedAtom.Location.X
-            //}
-        }
+        //public System.Drawing.Point EndPoint
+        //{
+        //    get
+        //    {
+        //        return m_connectedAtom.Location2D;
+        //    }
+        //    //set
+        //    //{
+        //    //    this.m_EndingPoint = value;
+        //    //    //this.m_connectedAtom.Location.X
+        //    //}
+        //}
     }
 }

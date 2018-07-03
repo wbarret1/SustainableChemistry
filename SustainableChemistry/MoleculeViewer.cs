@@ -116,7 +116,7 @@ namespace SustainableChemistry
                 m.CenterMolecule(m_MoleculeRectangle);
 
                 List<GraphicAtom> graphicAtoms = new List<GraphicAtom>();
-                foreach (ChemInfo.Atom a in m.GetAtoms())
+                foreach (ChemInfo.Atom a in m.Atoms)
                 {
                     long l = a.WeiningerInitialInvariant;
                     graphicAtoms.Add(new GraphicAtom(a, Font));

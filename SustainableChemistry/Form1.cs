@@ -93,7 +93,7 @@ namespace SustainableChemistry
         {
             // Reads functional Groups from Excel file.
             List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
-            string fileName = documentPath + "\\Full Functional Group List 20180629.xlsx";
+            string fileName = documentPath + "\\Full Functional Group List 20180702.xlsx";
             using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
@@ -176,9 +176,9 @@ namespace SustainableChemistry
             test.ShowDialog();
             string filepath = test.FilePath;
             if (string.IsNullOrEmpty(filepath)) return;
-            ChemInfo.MoleFileReader reader = new ChemInfo.MoleFileReader(test.FilePath);
-            molecule = reader.ReadMoleFile();
-            molecule.FindRings();
+            //ChemInfo.MoleFileReader reader = new ChemInfo.MoleFileReader(test.FilePath);
+            molecule = ChemInfo.MoleFileReader.ReadMoleFile(test.FilePath);
+            // molecule.FindRings();
             this.listBox1.Items.Clear();
             this.moleculeViewer1.Molecule = molecule;
         }
@@ -188,14 +188,18 @@ namespace SustainableChemistry
             smilesInput smiles = new smilesInput();
             smiles.ShowDialog();
             if (string.IsNullOrEmpty(smiles.SMILES)) return;
-            molecule = new ChemInfo.Molecule(smiles.SMILES);
+            this.molecule = new ChemInfo.Molecule(smiles.SMILES);
             this.listBox1.Items.Clear();
             if (molecule == null) return;
-            molecule.FindRings();
-            molecule.FindAllPaths();
-            this.moleculeViewer1.Molecule = molecule;
-            this.propertyGrid1.SelectedObject = molecule;
-            this.findSmarts();
+            // molecule.FindRings();
+            // molecule.FindAllPaths();
+            this.moleculeViewer1.Molecule = this.molecule;
+            this.propertyGrid1.SelectedObject = this.molecule;
+            foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+            {
+                this.molecule.FindFunctionalGroup(f);
+            }
+            this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(this.molecule, Newtonsoft.Json.Formatting.Indented);
         }
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -244,44 +248,49 @@ namespace SustainableChemistry
             this.moleculeViewer1.Zoom = (double)(this.trackBar1.Value) / 100.0;
         }
 
-        private string[] FunctionalGroups()
-        {
-            if (this.molecule == null) return new string[0];
-            int[] atoms = null;
-            //List<FunctionalGroupOutput> groups = new List<FunctionalGroupOutput>();
-            System.Collections.Generic.List<string> foundGroups = new List<string>();
-            foreach (ChemInfo.FunctionalGroup f in this.fGroups)
-            {
-                if (this.molecule.FindSmarts(f.Smart, ref atoms))
-                {
-                    foundGroups.Add(f.Name);
-                    //groups.Add(new FunctionalGroupOutput(f));
-                }
-            }
-            //this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(groups, Newtonsoft.Json.Formatting.Indented);
-            return foundGroups.ToArray<String>();
-        }
+        //private string[] FunctionalGroups()
+        //{
+        //    if (this.molecule == null) return new string[0];
+        //    int[] atoms = null;
+        //    //List<FunctionalGroupOutput> groups = new List<FunctionalGroupOutput>();
+        //    System.Collections.Generic.List<string> foundGroups = new List<string>();
+        //    foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+        //    {
+        //        if (this.molecule.FindSmarts(f.Smart, ref atoms))
+        //        {
+        //            foundGroups.Add(f.Name);
+        //            //groups.Add(new FunctionalGroupOutput(f));
+        //        }
+        //    }
+        //    //this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(groups, Newtonsoft.Json.Formatting.Indented);
+        //    return foundGroups.ToArray<String>();
+        //}
 
-        private void findSmarts()
-        {
-            if (this.molecule == null) return;
-            int[] atoms = null;
-            List<FunctionalGroupOutput> groups = new List<FunctionalGroupOutput>();
-            System.Collections.Generic.List<string> foundGroups = new List<string>();
-            foreach (ChemInfo.FunctionalGroup f in this.fGroups)
-            {
-                if (this.molecule.FindSmarts(f.Smart, ref atoms))
-                {
-                    foundGroups.Add(f.Name);
-                    groups.Add(new FunctionalGroupOutput(f));
-                }
-            }
-            this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(groups, Newtonsoft.Json.Formatting.Indented);
-        }
+        //private void findSmarts()
+        //{
+        //    if (this.molecule == null) return;
+        //    int[] atoms = null;
+        //    List<FunctionalGroupOutput> groups = new List<FunctionalGroupOutput>();
+        //    System.Collections.Generic.List<string> foundGroups = new List<string>();
+        //    foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+        //    {
+        //        if (this.molecule.FindSmarts(f.Smart, ref atoms))
+        //        {
+        //            foundGroups.Add(f.Name);
+        //            groups.Add(new FunctionalGroupOutput(f));
+        //        }
+        //    }
+        //    this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(groups, Newtonsoft.Json.Formatting.Indented);
+        //}
 
         private void findSMARTSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.findSmarts();
+            //this.findSmarts();
+            foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+            {
+                this.molecule.FindFunctionalGroup(f);
+            }
+            this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(molecule, Newtonsoft.Json.Formatting.Indented);
         }
 
         private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
@@ -485,15 +494,19 @@ namespace SustainableChemistry
                     //this.listBox1.Items.Clear();
                     if (molecule != null)
                     {
-                        molecule.FindRings();
-                        molecule.FindAllPaths();
+                        // molecule.FindRings();
+                        //molecule.FindAllPaths();
                         //this.moleculeViewer1.Molecule = molecule;
                         //this.propertyGrid1.SelectedObject = molecule;
-                        chem.FunctionalGroups = this.FunctionalGroups();
+                        //chem.FunctionalGroups = this.FunctionalGroups();
+                        foreach (ChemInfo.FunctionalGroup f in this.fGroups)
+                        {
+                            this.molecule.FindFunctionalGroup(f);
+                        }
                     }
                 }
             }
-            fileName = documentPath + "\\chemcials.json";
+            fileName = documentPath + "\\Chemicals.json";
             System.IO.File.WriteAllText(fileName, Newtonsoft.Json.JsonConvert.SerializeObject(chemicals, Newtonsoft.Json.Formatting.Indented));
         }
 
@@ -596,12 +609,14 @@ namespace SustainableChemistry
             if (string.IsNullOrEmpty(enumerator.Current.Structure_SMILES)) return;
             molecule = new ChemInfo.Molecule(enumerator.Current.Structure_SMILES);
             if (molecule == null) return;
-            molecule.FindRings();
-            molecule.FindAllPaths();
+            // molecule.FindAllPaths();
             this.moleculeViewer1.Molecule = molecule;
             this.propertyGrid1.SelectedObject = molecule;
             pictureBox2.Image = PUGGetCompoundImage(enumerator.Current.Structure_SMILES, enumerator.Current.Substance_CASRN);
             checkedListBox1.Items.Add("Other");
+            if (molecule.Aromatic) checkedListBox1.Items.Add("AROMATIC");
+            if (molecule.Heterocyclic) checkedListBox1.Items.Add("HETEROCYCLIC");
+            if (molecule.HeterocyclicAromatic) checkedListBox1.Items.Add("HETEROCYCLICAROMATIC");
             checkedListBox1.Items.AddRange(enumerator.Current.FunctionalGroups);
             tabPage4.Tag = enumerator;
         }

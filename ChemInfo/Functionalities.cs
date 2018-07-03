@@ -29,7 +29,7 @@ namespace ChemInfo
         static public String[] Elements(Molecule m)
         {
             List<string> retVal = new List<string>();
-            Atom[] atoms = m.GetAtoms();
+            Atom[] atoms = m.Atoms;
             foreach (Atom a in atoms)
             {
                 if (!retVal.Contains(a.Element.ToString())) retVal.Add(a.Element.ToString());
@@ -40,7 +40,7 @@ namespace ChemInfo
         static public Atom[] FindElement(Molecule m, String element)
         {
             List<Atom> retVal = new List<Atom>();
-            Atom[] atoms = m.GetAtoms();
+            Atom[] atoms = m.Atoms;
             foreach (Atom a in atoms)
             {
                 if (a.Element.ToString() == element)
@@ -54,7 +54,7 @@ namespace ChemInfo
         static public Atom[] FindElements(Molecule m, string[] elements)
         {
             List<Atom> retVal = new List<Atom>();
-            Atom[] atoms = m.GetAtoms();
+            Atom[] atoms = m.Atoms;
             foreach (Atom a in atoms)
             {
                 if (elements.Contains(a.Element.ToString()))
@@ -84,7 +84,7 @@ namespace ChemInfo
         static public Atom[] BranchAtoms(Molecule m)
         {
             List<Atom> retVal = new List<Atom>();
-            foreach (Atom a in m.GetAtoms())
+            foreach (Atom a in m.Atoms)
             {
                 if (a.BondedAtoms.Count > 2) retVal.Add(a);
             }

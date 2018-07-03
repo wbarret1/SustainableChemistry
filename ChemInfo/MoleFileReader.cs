@@ -6,38 +6,38 @@ using System.Threading.Tasks;
 
 namespace ChemInfo
 {
-    public class MoleFileReader
+    public static class MoleFileReader
     {
-        string m_molefile;
+        //string m_molefile;
 
-        public MoleFileReader(string filename)
-        {
-            m_molefile = filename;
-        }
+        //public MoleFileReader(string filename)
+        //{
+        //    m_molefile = filename;
+        //}
 
-        public Molecule ReadMoleFile()
-        {
-            using (var reader = new System.IO.StreamReader(m_molefile))
-            {
-                string s = reader.ReadToEnd();
-                if (s.Contains("V2000")) return this.ParseMoleFile2(s);
-                if (s.Contains("V3000")) throw new Exception("Version 3000 Mol file is currently not supported.");
-                throw new Exception("Mol file type not recognized. It is does not contain a version number.");
-            }
-        }
-
-        Molecule ReadMoleFile(string filename)
+        static public Molecule ReadMoleFile(string filename)
         {
             using (var reader = new System.IO.StreamReader(filename))
             {
                 string s = reader.ReadToEnd();
-                if (s.Contains("V2000")) return this.ParseMoleFile2(s);
+                if (s.Contains("V2000")) return MoleFileReader.ParseMoleFile2(s);
                 if (s.Contains("V3000")) throw new Exception("Version 3000 Mol file is currently not supported.");
                 throw new Exception("Mol file type not recognized. It is does not contain a version number.");
             }
         }
 
-        Molecule ParseMoleFile2(string moleFile)
+        //static Molecule ReadMoleFile(string filename)
+        //{
+        //    using (var reader = new System.IO.StreamReader(filename))
+        //    {
+        //        string s = reader.ReadToEnd();
+        //        if (s.Contains("V2000")) return MoleFileReader.ParseMoleFile2(s);
+        //        if (s.Contains("V3000")) throw new Exception("Version 3000 Mol file is currently not supported.");
+        //        throw new Exception("Mol file type not recognized. It is does not contain a version number.");
+        //    }
+        //}
+
+        static Molecule ParseMoleFile2(string moleFile)
         {
             Molecule molecule = new Molecule();
             //atoms.Clear();
@@ -173,8 +173,9 @@ namespace ChemInfo
                 else if (rc == 9) reactingCenter = BondReactingCenterStatus.bondOrderChanges | BondReactingCenterStatus.aCenter;
                 else if (rc == 5) reactingCenter = BondReactingCenterStatus.bondMadeOrBroken | BondReactingCenterStatus.aCenter;
                 else reactingCenter = (BondReactingCenterStatus)rc;
-                molecule.AddBond(molecule.GetAtoms()[firstAtom - 1], molecule.GetAtoms()[secondAtom - 1], bondType, bondStereo, bondTopology, reactingCenter);
+                molecule.AddBond(molecule.Atoms[firstAtom - 1], molecule.Atoms[secondAtom - 1], bondType, bondStereo, bondTopology, reactingCenter);
             }
+            molecule.FindRings();
             return molecule;
         }
     }
