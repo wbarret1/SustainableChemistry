@@ -126,8 +126,8 @@ namespace ChemInfo
         private int[] out_2;
         private int[] order;
 
-        Molecule g1, g2;
-        int n1, n2;
+        Molecule functionalGroup, testMolecule;
+        int numAtomsinFunctionalGroup, numAtomsInTestMolecule;
 
         int share_count;
 
@@ -141,12 +141,12 @@ namespace ChemInfo
          * If sortNodes is true, computes an initial ordering
          * for the nodes based on the frequency of their valence.
          ---------------------------------------------------------*/
-        public VF2SubState(Molecule ag1, Molecule ag2, bool sortNodes)
+        public VF2SubState(Molecule groupToFind, Molecule moleculeToSearch, bool sortNodes)
         {
-            g1 = ag1;
-            g2 = ag2;
-            n1 = g1.Atoms.Length;
-            n2 = g2.Atoms.Length;
+            functionalGroup = groupToFind;
+            testMolecule = moleculeToSearch;
+            numAtomsinFunctionalGroup = functionalGroup.Atoms.Length;
+            numAtomsInTestMolecule = testMolecule.Atoms.Length;
 
             //if (sortNodes)
             //    order = SortNodesByFrequency(ag1);
@@ -159,25 +159,25 @@ namespace ChemInfo
 
             added_node1 = NULL_NODE;
 
-            core_1 = new int[n1];
-            core_2 = new int[n2];
-            in_1 = new int[n1];
-            in_2 = new int[n2];
-            out_1 = new int[n1];
-            out_2 = new int[n2];
+            core_1 = new int[numAtomsinFunctionalGroup];
+            core_2 = new int[numAtomsInTestMolecule];
+            in_1 = new int[numAtomsinFunctionalGroup];
+            in_2 = new int[numAtomsInTestMolecule];
+            out_1 = new int[numAtomsinFunctionalGroup];
+            out_2 = new int[numAtomsInTestMolecule];
             //share_count = 0;
             //if (!core_1 || !core_2 || !in_1 || !in_2
             //    || !out_1 || !out_2 || !share_count)
             //    error("Out of memory");
 
             int i;
-            for (i = 0; i < n1; i++)
+            for (i = 0; i < numAtomsinFunctionalGroup; i++)
             {
                 core_1[i] = NULL_NODE;
                 in_1[i] = 0;
                 out_1[i] = 0;
             }
-            for (i = 0; i < n2; i++)
+            for (i = 0; i < numAtomsInTestMolecule; i++)
             {
                 core_2[i] = NULL_NODE;
                 in_2[i] = 0;
@@ -190,12 +190,12 @@ namespace ChemInfo
 
         public override bool IsGoal()
         {
-            return core_len == n1;
+            return core_len == numAtomsinFunctionalGroup;
         }
 
         public override bool IsDead()
         {
-            return n1 > n2 ||
+            return numAtomsinFunctionalGroup > numAtomsInTestMolecule ||
                t1both_len > t2both_len ||
                t1out_len > t2out_len ||
                t1in_len > t2in_len;
@@ -212,10 +212,10 @@ namespace ChemInfo
          ---------------------------------------------------------*/
         VF2SubState(VF2SubState state)
         {
-            g1 = state.g1;
-            g2 = state.g2;
-            n1 = state.n1;
-            n2 = state.n2;
+            functionalGroup = state.functionalGroup;
+            testMolecule = state.testMolecule;
+            numAtomsinFunctionalGroup = state.numAtomsinFunctionalGroup;
+            numAtomsInTestMolecule = state.numAtomsInTestMolecule;
 
             order = state.order;
 
@@ -263,12 +263,12 @@ namespace ChemInfo
 
         public override Atom[] GetGraph1()
         {
-            return g1.Atoms;
+            return functionalGroup.Atoms;
         }
 
         public override Atom[] GetGraph2()
         {
-            return g2.Atoms;
+            return testMolecule.Atoms;
         }
 
         /*--------------------------------------------------------------------------
@@ -290,7 +290,7 @@ namespace ChemInfo
 
             if (t1both_len > core_len && t2both_len > core_len)
             {
-                while (prev_n1 < n1 &&
+                while (prev_n1 < numAtomsinFunctionalGroup &&
                    (core_1[prev_n1] != NULL_NODE || out_1[prev_n1] == 0
                             || in_1[prev_n1] == 0))
                 {
@@ -300,7 +300,7 @@ namespace ChemInfo
             }
             else if (t1out_len > core_len && t2out_len > core_len)
             {
-                while (prev_n1 < n1 &&
+                while (prev_n1 < numAtomsinFunctionalGroup &&
                    (core_1[prev_n1] != NULL_NODE || out_1[prev_n1] == 0))
                 {
                     prev_n1++;
@@ -309,7 +309,7 @@ namespace ChemInfo
             }
             else if (t1in_len > core_len && t2in_len > core_len)
             {
-                while (prev_n1 < n1 &&
+                while (prev_n1 < numAtomsinFunctionalGroup &&
                    (core_1[prev_n1] != NULL_NODE || in_1[prev_n1] == 0))
                 {
                     prev_n1++;
@@ -319,14 +319,14 @@ namespace ChemInfo
             else if (prev_n1 == 0 && order != null)
             {
                 int i = 0;
-                while (i < n1 && core_1[prev_n1 = order[i]] != NULL_NODE)
+                while (i < numAtomsinFunctionalGroup && core_1[prev_n1 = order[i]] != NULL_NODE)
                     i++;
-                if (i == n1)
-                    prev_n1 = n1;
+                if (i == numAtomsinFunctionalGroup)
+                    prev_n1 = numAtomsinFunctionalGroup;
             }
             else
             {
-                while (prev_n1 < n1 && core_1[prev_n1] != NULL_NODE)
+                while (prev_n1 < numAtomsinFunctionalGroup && core_1[prev_n1] != NULL_NODE)
                 {
                     prev_n1++;
                     prev_n2 = 0;
@@ -337,7 +337,7 @@ namespace ChemInfo
 
             if (t1both_len > core_len && t2both_len > core_len)
             {
-                while (prev_n2 < n2 &&
+                while (prev_n2 < numAtomsInTestMolecule &&
                    (core_2[prev_n2] != NULL_NODE || out_2[prev_n2] == 0
                             || in_2[prev_n2] == 0))
                 {
@@ -346,7 +346,7 @@ namespace ChemInfo
             }
             else if (t1out_len > core_len && t2out_len > core_len)
             {
-                while (prev_n2 < n2 &&
+                while (prev_n2 < numAtomsInTestMolecule &&
                    (core_2[prev_n2] != NULL_NODE || out_2[prev_n2] == 0))
                 {
                     prev_n2++;
@@ -354,7 +354,7 @@ namespace ChemInfo
             }
             else if (t1in_len > core_len && t2in_len > core_len)
             {
-                while (prev_n2 < n2 &&
+                while (prev_n2 < numAtomsInTestMolecule &&
                    (core_2[prev_n2] != NULL_NODE || in_2[prev_n2] == 0))
                 {
                     prev_n2++;
@@ -362,14 +362,14 @@ namespace ChemInfo
             }
             else
             {
-                while (prev_n2 < n2 && core_2[prev_n2] != NULL_NODE)
+                while (prev_n2 < numAtomsInTestMolecule && core_2[prev_n2] != NULL_NODE)
                 {
                     prev_n2++;
                 }
             }
 
 
-            if (prev_n1 < n1 && prev_n2 < n2)
+            if (prev_n1 < numAtomsinFunctionalGroup && prev_n2 < numAtomsInTestMolecule)
             {
                 pn1 = prev_n1;
                 pn2 = prev_n2;
@@ -399,7 +399,7 @@ namespace ChemInfo
             //assert(core_1[node1] == NULL_NODE);
             //assert(core_2[node2] == NULL_NODE);
 
-            if (!g1.CompatibleNode(g1.GetNodeAttr(node1), g2.GetNodeAttr(node2)))
+            if (!functionalGroup.CompatibleNode(functionalGroup.GetNodeAttr(node1), testMolecule.GetNodeAttr(node2)))
                 return false;
 
             int i, other1, other2;
@@ -407,14 +407,14 @@ namespace ChemInfo
             int termout1 = 0, termout2 = 0, termin1 = 0, termin2 = 0, new1 = 0, new2 = 0;
 
             // Check the 'out' edges of node1
-            for (i = 0; i < g1.OutEdgeCount(node1); i++)
+            for (i = 0; i < functionalGroup.OutEdgeCount(node1); i++)
             {
-                other1 = g1.GetOutEdge(node1, i, ref attr1);
+                other1 = functionalGroup.GetOutEdge(node1, i, ref attr1);
                 if (core_1[other1] != NULL_NODE)
                 {
                     other2 = core_1[other1];
-                    if (!g2.HasEdge(node2, other2) ||
-                        !g1.CompatibleEdge(attr1, g2.GetEdgeAttr(node2, other2)))
+                    if (!testMolecule.HasEdge(node2, other2) ||
+                        !functionalGroup.CompatibleEdge(attr1, testMolecule.GetEdgeAttr(node2, other2)))
                         return false;
                 }
                 else
@@ -429,14 +429,14 @@ namespace ChemInfo
             }
 
             // Check the 'in' edges of node1
-            for (i = 0; i < g1.InEdgeCount(node1); i++)
+            for (i = 0; i < functionalGroup.InEdgeCount(node1); i++)
             {
-                other1 = g1.GetInEdge(node1, i, ref attr1);
+                other1 = functionalGroup.GetInEdge(node1, i, ref attr1);
                 if (core_1[other1] != NULL_NODE)
                 {
                     other2 = core_1[other1];
-                    if (!g2.HasEdge(other2, node2) ||
-                        !g1.CompatibleEdge(attr1, g2.GetEdgeAttr(other2, node2)))
+                    if (!testMolecule.HasEdge(other2, node2) ||
+                        !functionalGroup.CompatibleEdge(attr1, testMolecule.GetEdgeAttr(other2, node2)))
                         return false;
                 }
                 else
@@ -452,13 +452,13 @@ namespace ChemInfo
 
 
             // Check the 'out' edges of node2
-            for (i = 0; i < g2.OutEdgeCount(node2); i++)
+            for (i = 0; i < testMolecule.OutEdgeCount(node2); i++)
             {
-                other2 = g2.GetOutEdge(node2, i);
+                other2 = testMolecule.GetOutEdge(node2, i);
                 if (core_2[other2] != NULL_NODE)
                 {
                     other1 = core_2[other2];
-                    if (!g1.HasEdge(node1, other1))
+                    if (!functionalGroup.HasEdge(node1, other1))
                         return false;
                 }
                 else
@@ -473,13 +473,13 @@ namespace ChemInfo
             }
 
             // Check the 'in' edges of node2
-            for (i = 0; i < g2.InEdgeCount(node2); i++)
+            for (i = 0; i < testMolecule.InEdgeCount(node2); i++)
             {
-                other2 = g2.GetInEdge(node2, i);
+                other2 = testMolecule.GetInEdge(node2, i);
                 if (core_2[other2] != NULL_NODE)
                 {
                     other1 = core_2[other2];
-                    if (!g1.HasEdge(other1, node1))
+                    if (!functionalGroup.HasEdge(other1, node1))
                         return false;
                 }
                 else
@@ -548,9 +548,9 @@ namespace ChemInfo
 
 
             int i, other;
-            for (i = 0; i < g1.InEdgeCount(node1); i++)
+            for (i = 0; i < functionalGroup.InEdgeCount(node1); i++)
             {
-                other = g1.GetInEdge(node1, i);
+                other = functionalGroup.GetInEdge(node1, i);
                 if (in_1[other] == 0)
                 {
                     in_1[other] = core_len;
@@ -560,9 +560,9 @@ namespace ChemInfo
                 }
             }
 
-            for (i = 0; i < g1.OutEdgeCount(node1); i++)
+            for (i = 0; i < functionalGroup.OutEdgeCount(node1); i++)
             {
-                other = g1.GetOutEdge(node1, i);
+                other = functionalGroup.GetOutEdge(node1, i);
                 if (out_1[other] == 0)
                 {
                     out_1[other] = core_len;
@@ -572,9 +572,9 @@ namespace ChemInfo
                 }
             }
 
-            for (i = 0; i < g2.InEdgeCount(node2); i++)
+            for (i = 0; i < testMolecule.InEdgeCount(node2); i++)
             {
-                other = g2.GetInEdge(node2, i);
+                other = testMolecule.GetInEdge(node2, i);
                 if (in_2[other] == 0)
                 {
                     in_2[other] = core_len;
@@ -584,9 +584,9 @@ namespace ChemInfo
                 }
             }
 
-            for (i = 0; i < g2.OutEdgeCount(node2); i++)
+            for (i = 0; i < testMolecule.OutEdgeCount(node2); i++)
             {
-                other = g2.GetOutEdge(node2, i);
+                other = testMolecule.GetOutEdge(node2, i);
                 if (out_2[other] == 0)
                 {
                     out_2[other] = core_len;
@@ -610,7 +610,7 @@ namespace ChemInfo
             List<int> temp1 = new List<int>();
             List<int> temp2 = new List<int>();
             int i;
-            for (i = 0; i < n1; i++)
+            for (i = 0; i < numAtomsinFunctionalGroup; i++)
                 if (core_1[i] != NULL_NODE)
                 {
                     temp1.Add(i);
@@ -645,18 +645,18 @@ namespace ChemInfo
 
                 if (in_1[added_node1] == core_len)
                     in_1[added_node1] = 0;
-                for (i = 0; i < g1.InEdgeCount(added_node1); i++)
+                for (i = 0; i < functionalGroup.InEdgeCount(added_node1); i++)
                 {
-                    int other = g1.GetInEdge(added_node1, i);
+                    int other = functionalGroup.GetInEdge(added_node1, i);
                     if (in_1[other] == core_len)
                         in_1[other] = 0;
                 }
 
                 if (out_1[added_node1] == core_len)
                     out_1[added_node1] = 0;
-                for (i = 0; i < g1.OutEdgeCount(added_node1); i++)
+                for (i = 0; i < functionalGroup.OutEdgeCount(added_node1); i++)
                 {
-                    int other = g1.GetOutEdge(added_node1, i);
+                    int other = functionalGroup.GetOutEdge(added_node1, i);
                     if (out_1[other] == core_len)
                         out_1[other] = 0;
                 }
@@ -665,18 +665,18 @@ namespace ChemInfo
 
                 if (in_2[node2] == core_len)
                     in_2[node2] = 0;
-                for (i = 0; i < g2.InEdgeCount(node2); i++)
+                for (i = 0; i < testMolecule.InEdgeCount(node2); i++)
                 {
-                    int other = g2.GetInEdge(node2, i);
+                    int other = testMolecule.GetInEdge(node2, i);
                     if (in_2[other] == core_len)
                         in_2[other] = 0;
                 }
 
                 if (out_2[node2] == core_len)
                     out_2[node2] = 0;
-                for (i = 0; i < g2.OutEdgeCount(node2); i++)
+                for (i = 0; i < testMolecule.OutEdgeCount(node2); i++)
                 {
-                    int other = g2.GetOutEdge(node2, i);
+                    int other = testMolecule.GetOutEdge(node2, i);
                     if (out_2[other] == core_len)
                         out_2[other] = 0;
                 }

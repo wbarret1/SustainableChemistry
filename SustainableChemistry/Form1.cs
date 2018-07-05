@@ -194,11 +194,13 @@ namespace SustainableChemistry
             // molecule.FindRings();
             // molecule.FindAllPaths();
             this.moleculeViewer1.Molecule = this.molecule;
-            this.propertyGrid1.SelectedObject = this.molecule;
+            this.propertyGrid1.SelectedObject = this.molecule;            
             foreach (ChemInfo.FunctionalGroup f in this.fGroups)
             {
-                this.molecule.FindFunctionalGroup(f);
+                if ((f.Name != "LACTONE") || (f.Name!= "LACTAM")) this.molecule.FindFunctionalGroup(f);
             }
+            this.molecule.FindRingFunctionalGroup("LACTAM", "CNC(=O)C", fGroups);
+            this.molecule.FindRingFunctionalGroup("LACTONE", "COC=O", fGroups);
             this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(this.molecule, Newtonsoft.Json.Formatting.Indented);
         }
 

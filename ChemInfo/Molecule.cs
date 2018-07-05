@@ -65,6 +65,21 @@ namespace ChemInfo
             Smiles = smiles;
         }
 
+        public Molecule(Atom[] atoms, string smiles)
+        {
+            atomsCount = new System.Collections.Hashtable();
+            m_Atoms = new List<Atom>();
+            m_Atoms.AddRange(atoms);
+            aromaticitySet = false;
+            Aromatic = false;
+            ringsFound = false;
+            pathsFound = false;
+            m_FunctionalGroups = new FunctionalGroupCollection();
+            this.FindRings();
+            groupAtoms = new List<Atom[]>();
+            Smiles = smiles;
+        }
+
         [Newtonsoft.Json.JsonProperty]
         public bool Aromatic { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -530,6 +545,32 @@ namespace ChemInfo
                 }
                 this.groupAtoms.Add(a);
                 return true;
+            }
+            return false;
+        }
+        public bool FindRingFunctionalGroup(string name, string smart, FunctionalGroupCollection fGroups)
+        {
+            Molecule m = new Molecule(smart);
+            int pn = 0;
+            int[] matches = null;
+            int[] at = null;
+            foreach (List<Atom> ring in cycles)
+            {
+                if (this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false)))
+                {
+                    foreach (FunctionalGroup f in fGroups)
+                    {
+                        if (f.Name == smart) this.m_FunctionalGroups.Add(f);
+                    }
+                    Atom[] a = null;
+                    if (at != null)
+                    {
+                        a = new Atom[at.Length];
+                        for (int i = 0; i < at.Length; i++) a[i] = this.Atoms[i];
+                    }
+                    this.groupAtoms.Add(a);
+                    return true;
+                }
             }
             return false;
         }
