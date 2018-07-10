@@ -8,6 +8,7 @@ namespace SustainableChemistry
 {
     class DSSToxChemicals
     {
+        ChemInfo.FunctionalGroupCollection m_FunctionalGroups;
 
         public int ToxCast_chid { get; set; }
         public string DSSTox_Substance_Id { get; set; }
@@ -25,7 +26,9 @@ namespace SustainableChemistry
         public string[] FunctionalGroups { get; set; }
 
         public DSSToxChemicals()
-        { }
+        {
+            m_FunctionalGroups = new ChemInfo.FunctionalGroupCollection();
+        }
 
         public DSSToxChemicals(string newChem)
         {
@@ -45,6 +48,16 @@ namespace SustainableChemistry
             if (parts.Length > 10) Structure_InChIKey = parts[10];
             if (parts.Length > 11) Structure_Formula = parts[11];
             if (parts.Length > 12) Structure_MolWt = parts[12];
+            m_FunctionalGroups = new ChemInfo.FunctionalGroupCollection();
+        }
+
+        public void AddFunctionalGroups(ChemInfo.FunctionalGroup[] groups)
+        {
+            m_FunctionalGroups.AddRange(groups);
+            List<string> retVal = new List<string>();
+            foreach (ChemInfo.FunctionalGroup g in m_FunctionalGroups) retVal.Add(g.Name);
+            this.FunctionalGroups = retVal.ToArray<string>();
+
         }
     }
 }

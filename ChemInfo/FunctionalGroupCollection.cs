@@ -103,6 +103,11 @@ namespace ChemInfo
             return this[group.Name];
         }
 
+        public void AddRange(FunctionalGroup[] groups)
+        {
+            foreach (FunctionalGroup g in groups) this.Add(g);
+        }
+
         public void AddReactionToFunctionalGroup(string groupName, NamedReaction reaction)
         {
             this[groupName].AddNamedReaction(reaction);

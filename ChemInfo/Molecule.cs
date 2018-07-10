@@ -65,20 +65,20 @@ namespace ChemInfo
             Smiles = smiles;
         }
 
-        public Molecule(Atom[] atoms, string smiles)
-        {
-            atomsCount = new System.Collections.Hashtable();
-            m_Atoms = new List<Atom>();
-            m_Atoms.AddRange(atoms);
-            aromaticitySet = false;
-            Aromatic = false;
-            ringsFound = false;
-            pathsFound = false;
-            m_FunctionalGroups = new FunctionalGroupCollection();
-            this.FindRings();
-            groupAtoms = new List<Atom[]>();
-            Smiles = smiles;
-        }
+        //public Molecule(Atom[] atoms)
+        //{
+        //    atomsCount = new System.Collections.Hashtable();
+        //    m_Atoms = new List<Atom>();
+        //    m_Atoms.AddRange(atoms);
+        //    aromaticitySet = false;
+        //    Aromatic = false;
+        //    ringsFound = false;
+        //    pathsFound = false;
+        //    m_FunctionalGroups = new FunctionalGroupCollection();
+        //    this.FindRings();
+        //    groupAtoms = new List<Atom[]>();
+        //    //Smiles = smiles;
+        //}
 
         [Newtonsoft.Json.JsonProperty]
         public bool Aromatic { get; internal set; }
@@ -506,17 +506,29 @@ namespace ChemInfo
             }
         }
 
+        public bool RingContains(Atom[] indices)
+        {
+            foreach (List<Atom> atoms in cycles)
+            {
+                bool contained = true;
+                foreach (Atom a in indices)
+                    if (!atoms.Contains(a)) contained = false;
+                if (contained) return true;
+            }
+            return false;
+        }
+
         // VF2 Implementation
 
         [Newtonsoft.Json.JsonProperty]
-        public string[] FunctionalGroups
+        public FunctionalGroup[] FunctionalGroups
         {
             get
             {
-                List<string> groups = new List<string>();
-                foreach (FunctionalGroup g in this.m_FunctionalGroups)
-                    groups.Add(g.Name);
-                return groups.ToArray<string>();
+                //List<FunctionalGroup> groups = new List<FunctionalGroup>();
+                //foreach (FunctionalGroup g in this.m_FunctionalGroups)
+                //    groups.Add(g.Name);
+                return m_FunctionalGroups.ToArray<FunctionalGroup>();
             }
         }
 
@@ -530,68 +542,100 @@ namespace ChemInfo
 
         public bool FindFunctionalGroup(FunctionalGroup group)
         {
+            bool retVal = false;
             Molecule m = new Molecule(group.Smart);
             int pn = 0;
             int[] matches = null;
             int[] at = null;
-            if (this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false)))
-            {
-                this.m_FunctionalGroups.Add(group);
+            foreach (Atom a in m_Atoms) a.inGroup = false;
+            bool matched = this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false));
+            while (matched)
+            {                
                 Atom[] a = null;
                 if (at != null)
                 {
                     a = new Atom[at.Length];
-                    for (int i = 0; i < at.Length; i++) a[i] = this.Atoms[i];
+                    for (int i = 0; i < at.Length; i++)
+                    {
+                        a[i] = this.Atoms[at[i]];
+                        a[i].inGroup = true;
+                    }
                 }
-                this.groupAtoms.Add(a);
-                return true;
-            }
-            return false;
-        }
-        public bool FindRingFunctionalGroup(string name, string smart, FunctionalGroupCollection fGroups)
-        {
-            Molecule m = new Molecule(smart);
-            int pn = 0;
-            int[] matches = null;
-            int[] at = null;
-            foreach (List<Atom> ring in cycles)
-            {
-                if (this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false)))
+                if (group.Name == "LACTONE")
                 {
-                    foreach (FunctionalGroup f in fGroups)
+                    Atom[] atoms = { m_Atoms[at[0]], m_Atoms[at[1]] };
+                    if (this.RingContains(atoms))
                     {
-                        if (f.Name == smart) this.m_FunctionalGroups.Add(f);
+                        group.AddAtoms(at);
+                        retVal = true;
                     }
-                    Atom[] a = null;
-                    if (at != null)
-                    {
-                        a = new Atom[at.Length];
-                        for (int i = 0; i < at.Length; i++) a[i] = this.Atoms[i];
-                    }
-                    this.groupAtoms.Add(a);
-                    return true;
                 }
+                else if (group.Name == "LACTAM")
+                {
+                    Atom[] atoms = { m_Atoms[at[0]], m_Atoms[at[1]] };
+                    if (this.RingContains(atoms))
+                    {
+                        group.AddAtoms(at);
+                        retVal = true;
+                    }
+                }
+                else
+                {
+                    group.AddAtoms(at);
+                    retVal = true;
+                }
+                matched = this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, this, false));
             }
-            return false;
+            if (retVal) this.m_FunctionalGroups.Add(group);
+            return retVal;
         }
 
-        public bool FindSmarts(string smart, ref int[] group)
-        {
-            Molecule m = new Molecule(smart);
-            int pn = 0;
-            int[] matches = null;
-            return this.Match(ref pn, ref matches, ref group, new VF2SubState(m, this, false));
-        }
+        //public bool FindRingFunctionalGroup(string name, string smart, FunctionalGroupCollection fGroups)
+        //{
+        //    Molecule m = new Molecule(smart);
+        //    int pn = 0;
+        //    int[] matches = null;
+        //    int[] at = null;
+        //    foreach (List<Atom> ring in cycles)
+        //    {
+        //        Molecule ringMolecule = new Molecule(ring.ToArray());
+        //        bool found = this.Match(ref pn, ref matches, ref at, new FunctionalGroupState(m, ringMolecule, false));
+        //        if (found)
+        //        {
+        //            foreach (FunctionalGroup f in fGroups)
+        //            {
+        //                if (f.Name == smart) this.m_FunctionalGroups.Add(f);
+        //            }
+        //            Atom[] a = null;
+        //            if (at != null)
+        //            {
+        //                a = new Atom[at.Length];
+        //                for (int i = 0; i < at.Length; i++) a[i] = this.Atoms[i];
+        //            }
+        //            this.groupAtoms.Add(a);
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-        public bool FindSmarts2(string smart, ref Atom[] group)
-        {
-            Molecule m = new Molecule(smart);
-            Stack<Atom> temp = new Stack<Atom>();
-            Stack<Atom> matches = new Stack<Atom>();
-            bool result = this.Match(temp, matches, new VF2SubState2(m, this, false));
-            //bool result = this.Match(null, null, temp, matches, m);
-            return result;
-        }
+        //public bool FindSmarts(string smart, ref int[] group)
+        //{
+        //    Molecule m = new Molecule(smart);
+        //    int pn = 0;
+        //    int[] matches = null;
+        //    return this.Match(ref pn, ref matches, ref group, new VF2SubState(m, this, false));
+        //}
+
+        //public bool FindSmarts2(string smart, ref Atom[] group)
+        //{
+        //    Molecule m = new Molecule(smart);
+        //    Stack<Atom> temp = new Stack<Atom>();
+        //    Stack<Atom> matches = new Stack<Atom>();
+        //    bool result = this.Match(temp, matches, new VF2SubState2(m, this, false));
+        //    //bool result = this.Match(null, null, temp, matches, m);
+        //    return result;
+        //}
 
         internal bool Match(ref int pn, ref int[] c1, ref int[] c2, State s)
         {
@@ -826,6 +870,7 @@ namespace ChemInfo
 
         internal bool CompatibleNode(Atom atom1, Atom atom2)
         {
+            if (atom2.inGroup) return false;
             if (atom1.Element == ELEMENTS.WILD_CARD) return true;
             if (atom2.Element == ELEMENTS.WILD_CARD) return true;
             if (atom1.Element == ELEMENTS.Halogen)

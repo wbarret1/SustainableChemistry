@@ -138,7 +138,7 @@ namespace ChemInfo
             while (!String.IsNullOrEmpty(line))
             {
                 string[] b = line.Split('\t');
-                if (m.FindSmarts(b[1], ref atoms)) retVal.Add(b[0]);
+                if (m.FindFunctionalGroup(b[1], ref atoms)) retVal.Add(b[0]);
                 line = reader.ReadLine();
             }
             return retVal.ToArray<string>();

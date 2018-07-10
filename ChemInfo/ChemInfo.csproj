@@ -57,6 +57,7 @@
     <Compile Include="Catalyst.cs" />
     <Compile Include="CatalystCollection.cs" />
     <Compile Include="Element.cs" />
+    <Compile Include="ForceDirectedGraph.cs" />
     <Compile Include="FunctionalGroup.cs" />
     <Compile Include="FunctionalGroupCollection.cs" />
     <Compile Include="Functionalities.cs" />

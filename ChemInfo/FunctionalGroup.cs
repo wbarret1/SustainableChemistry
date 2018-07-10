@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 namespace ChemInfo
 {
     [Serializable]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
     public class FunctionalGroup
     {
         NamedReactionCollection m_Reactions;
         List<Reference> m_refList;
         [NonSerialized]
         System.Drawing.Image m_FunctGroupImage;
+        List<int[]> m_AtomIndices;
 
         public FunctionalGroup(string str)
         {   
@@ -34,6 +36,7 @@ namespace ChemInfo
             m_Reactions.Add(new NamedReaction(this, ReactionName, URL, ReactantA, ReactantB, ReactantC, Product, AcidBase, Heat, Catalyst, Solvent, ByProducts));
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\Images\\" + Name + ".jpg";
             if (System.IO.File.Exists(fileName)) m_FunctGroupImage = System.Drawing.Image.FromFile(fileName);
+            m_AtomIndices = new List<int[]>();
         }
 
         public FunctionalGroup(string func, string directory)
@@ -47,6 +50,7 @@ namespace ChemInfo
             foreach (string file in references)
                 m_refList.Add(new Reference(this.Name, "", System.IO.File.ReadAllText(file)));
             m_Reactions = new NamedReactionCollection();
+            m_AtomIndices = new List<int[]>();
         }
 
         public void AddNamedReaction(NamedReaction reaction)
@@ -54,7 +58,21 @@ namespace ChemInfo
             m_Reactions.Add(reaction);
         }
 
+        public void AddAtoms(int[] atomIndices)
+        {
+            this.m_AtomIndices.Add(atomIndices);
+        }
+
+        [Newtonsoft.Json.JsonProperty]
         public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int[][] AtomIndices {
+            get
+            {
+                return this.m_AtomIndices.ToArray<int[]>();
+            }
+        }
         public System.Drawing.Image Image { get; set; }
         //public string URL { get; set; }
         public string Smart { get; set; }

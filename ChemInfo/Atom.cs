@@ -241,6 +241,7 @@ namespace ChemInfo
         int _y = 0;
         public bool Visited { get; set; } = false;
         System.Random random = new Random();
+        public bool inGroup { get; set; } = false;
 
         // Constructors
         public Atom(string element)

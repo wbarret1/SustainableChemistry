@@ -35,14 +35,12 @@ namespace SustainableChemistry
         ChemInfo.References m_References;
         string documentPath;
         ChemInfo.FunctionalGroupCollection fGroups;
-        ChemInfo.NamedReactionCollection m_NamedReactions;
 
         public Form1()
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
             fGroups = new ChemInfo.FunctionalGroupCollection();
-            m_NamedReactions = fGroups.NamedReactions;
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry";
 
@@ -93,7 +91,7 @@ namespace SustainableChemistry
         {
             // Reads functional Groups from Excel file.
             List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
-            string fileName = documentPath + "\\Full Functional Group List 20180702.xlsx";
+            string fileName = documentPath + "\\Full Functional Group List 20180710.xlsx";
             using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
@@ -176,9 +174,7 @@ namespace SustainableChemistry
             test.ShowDialog();
             string filepath = test.FilePath;
             if (string.IsNullOrEmpty(filepath)) return;
-            //ChemInfo.MoleFileReader reader = new ChemInfo.MoleFileReader(test.FilePath);
             molecule = ChemInfo.MoleFileReader.ReadMoleFile(test.FilePath);
-            // molecule.FindRings();
             this.listBox1.Items.Clear();
             this.moleculeViewer1.Molecule = molecule;
         }
@@ -191,16 +187,13 @@ namespace SustainableChemistry
             this.molecule = new ChemInfo.Molecule(smiles.SMILES);
             this.listBox1.Items.Clear();
             if (molecule == null) return;
-            // molecule.FindRings();
-            // molecule.FindAllPaths();
             this.moleculeViewer1.Molecule = this.molecule;
             this.propertyGrid1.SelectedObject = this.molecule;            
             foreach (ChemInfo.FunctionalGroup f in this.fGroups)
             {
-                if ((f.Name != "LACTONE") || (f.Name!= "LACTAM")) this.molecule.FindFunctionalGroup(f);
+                if ((f.Name != "ESTER-SULFIDE") || (f.Name != "KETENIMINE")) this.molecule.FindFunctionalGroup(f);
             }
-            this.molecule.FindRingFunctionalGroup("LACTAM", "CNC(=O)C", fGroups);
-            this.molecule.FindRingFunctionalGroup("LACTONE", "COC=O", fGroups);
+
             this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(this.molecule, Newtonsoft.Json.Formatting.Indented);
         }
 
@@ -295,74 +288,75 @@ namespace SustainableChemistry
             this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(molecule, Newtonsoft.Json.Formatting.Indented);
         }
 
-        private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string[] molecules = {"COP(OC)OC",
-                "CCOP(C)OCC",
-                "COP(C1=CC=CC=C1)C2=CC=CC=C2",
-                "P(c1ccccc1)(c1ccccc1)c1ccccc1",
-                "CCN(CC)P(OC)OC",
-                "CC(C)N(C(C)C)P(N(C(C)C)C(C)C)OCCC#N",
-                "O(P(N(C)C)C)C",
-                "C(COP(O)S)NC(=O)CS",
-                "CCOP(SC)SC(C)C",
-                "COP(=O)(OC)OC",
-                "COP(=O)(C)OC",
-                "CCOP(=O)(C1=CC=CC=C1)C2=CC=CC=C2",
-                "P(c1ccccc1)(c1ccccc1)(c1ccccc1)=O",
-                "CCOP(=O)(N)OCC",
-                "CCOP(=O)(N(C)C)N(C)C",
-                "CN(C)P(=O)(N(C)C)N(C)C",
-                "CCCc1ccccc1NP(=O)(C)Oc1ccccc1CC",
-                "P(c1ccccc1)(c1ccccc1)(N)=O",
-                "CCOP(=S)(OCC)OCC",
-                "CCOP(=S)(OCC)SCC",
-                "CN(C)P(=O)(C)N(C)C"};
-            string[] groups = {"OP(O)O",
-                "OP(C)O",
-                "OP(C)C",
-                "CP(C)C",
-                "NP(O)O",
-                "NP(N)O",
-                "OP(N)C",
-                "OP(O)S",
-                "OP(S)S",
-                "OP(=O)(O)O",
-                "OP(=O)(O)C",
-                "OP(=O)(C)C",
-                "CP(=O)(C)C",
-                "OP(=O)(N)O",
-                "OP(=O)(N)N",
-                "NP(=O)(N)N",
-                "NP(=O)(C)O",
-                "NP(=O)(C)C",
-                "OP(=S)(O)O",
-                "OP(=S)(O)S",
-                "NP(=O)(C)N"};
-            DateTime start = DateTime.Now;
-            ChemInfo.Molecule m = null;
-            int[] indices = null;
-            foreach (string molecule in molecules)
-            {
-                m = new ChemInfo.Molecule(molecule);
-                bool found = false;
-                int numFound = 0;
-                foreach (string smart in groups)
-                {
-                    if (m.FindSmarts(smart, ref indices))
-                    {
-                        found = true;
-                        numFound++;
-                    }
-                    //if (m.FindSmarts2(smart, ref temp)) found = true;
-                }
-                if (!found || numFound > 1)
-                {
-                    MessageBox.Show(molecule);
-                }
-            }
-            MessageBox.Show("Time Required is: " + (double)DateTime.Now.Subtract(start).Milliseconds + " milliseconds", "Test Completed Successfully");
-        }
+        private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e) { }
+        //private void testSubgraphToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    string[] molecules = {"COP(OC)OC",
+        //        "CCOP(C)OCC",
+        //        "COP(C1=CC=CC=C1)C2=CC=CC=C2",
+        //        "P(c1ccccc1)(c1ccccc1)c1ccccc1",
+        //        "CCN(CC)P(OC)OC",
+        //        "CC(C)N(C(C)C)P(N(C(C)C)C(C)C)OCCC#N",
+        //        "O(P(N(C)C)C)C",
+        //        "C(COP(O)S)NC(=O)CS",
+        //        "CCOP(SC)SC(C)C",
+        //        "COP(=O)(OC)OC",
+        //        "COP(=O)(C)OC",
+        //        "CCOP(=O)(C1=CC=CC=C1)C2=CC=CC=C2",
+        //        "P(c1ccccc1)(c1ccccc1)(c1ccccc1)=O",
+        //        "CCOP(=O)(N)OCC",
+        //        "CCOP(=O)(N(C)C)N(C)C",
+        //        "CN(C)P(=O)(N(C)C)N(C)C",
+        //        "CCCc1ccccc1NP(=O)(C)Oc1ccccc1CC",
+        //        "P(c1ccccc1)(c1ccccc1)(N)=O",
+        //        "CCOP(=S)(OCC)OCC",
+        //        "CCOP(=S)(OCC)SCC",
+        //        "CN(C)P(=O)(C)N(C)C"};
+        //    string[] groups = {"OP(O)O",
+        //        "OP(C)O",
+        //        "OP(C)C",
+        //        "CP(C)C",
+        //        "NP(O)O",
+        //        "NP(N)O",
+        //        "OP(N)C",
+        //        "OP(O)S",
+        //        "OP(S)S",
+        //        "OP(=O)(O)O",
+        //        "OP(=O)(O)C",
+        //        "OP(=O)(C)C",
+        //        "CP(=O)(C)C",
+        //        "OP(=O)(N)O",
+        //        "OP(=O)(N)N",
+        //        "NP(=O)(N)N",
+        //        "NP(=O)(C)O",
+        //        "NP(=O)(C)C",
+        //        "OP(=S)(O)O",
+        //        "OP(=S)(O)S",
+        //        "NP(=O)(C)N"};
+        //    DateTime start = DateTime.Now;
+        //    ChemInfo.Molecule m = null;
+        //    int[] indices = null;
+        //    foreach (string molecule in molecules)
+        //    {
+        //        m = new ChemInfo.Molecule(molecule);
+        //        bool found = false;
+        //        int numFound = 0;
+        //        foreach (string smart in groups)
+        //        {
+        //            if (m.FindSmarts(smart, ref indices))
+        //            {
+        //                found = true;
+        //                numFound++;
+        //            }
+        //            //if (m.FindSmarts2(smart, ref temp)) found = true;
+        //        }
+        //        if (!found || numFound > 1)
+        //        {
+        //            MessageBox.Show(molecule);
+        //        }
+        //    }
+        //    MessageBox.Show("Time Required is: " + (double)DateTime.Now.Subtract(start).Milliseconds + " milliseconds", "Test Completed Successfully");
+        //}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -492,23 +486,18 @@ namespace SustainableChemistry
             {
                 if (!string.IsNullOrEmpty(chem.Structure_SMILES))
                 {
-                    molecule = new ChemInfo.Molecule(chem.Structure_SMILES);
-                    //this.listBox1.Items.Clear();
-                    if (molecule != null)
+                    ChemInfo.Molecule mol = new ChemInfo.Molecule(chem.Structure_SMILES);
+                    if (mol != null)
                     {
-                        // molecule.FindRings();
-                        //molecule.FindAllPaths();
-                        //this.moleculeViewer1.Molecule = molecule;
-                        //this.propertyGrid1.SelectedObject = molecule;
-                        //chem.FunctionalGroups = this.FunctionalGroups();
                         foreach (ChemInfo.FunctionalGroup f in this.fGroups)
                         {
-                            this.molecule.FindFunctionalGroup(f);
+                            if ((f.Name != "ESTER-SULFIDE") || (f.Name != "KETENIMINE")) mol.FindFunctionalGroup(f);
                         }
                     }
+                    chem.AddFunctionalGroups(mol.FunctionalGroups);
                 }
             }
-            fileName = documentPath + "\\Chemicals.json";
+            fileName = documentPath + "\\chemicals.json";
             System.IO.File.WriteAllText(fileName, Newtonsoft.Json.JsonConvert.SerializeObject(chemicals, Newtonsoft.Json.Formatting.Indented));
         }
 
@@ -566,7 +555,7 @@ namespace SustainableChemistry
             if (this.tabPage4.Tag != null) return;
             if (((System.Windows.Forms.TabControl)sender).SelectedIndex == 3)
             {
-                string fileName = documentPath + "\\chemcials.json";
+                string fileName = documentPath + "\\chemicals.json";
                 //Reads in functional groups from JSON file. This should be used after Excel file is completed.
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 json.MaxJsonLength = 20000000;
@@ -588,7 +577,7 @@ namespace SustainableChemistry
 
         public static Image PUGGetCompoundImage(string smiles, string casNo)
         {
-            string imageReference = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" + smiles + "/PNG";
+            string imageReference = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/" + casNo + "/PNG";
             System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(imageReference);
             try
             {
@@ -614,6 +603,7 @@ namespace SustainableChemistry
             // molecule.FindAllPaths();
             this.moleculeViewer1.Molecule = molecule;
             this.propertyGrid1.SelectedObject = molecule;
+            this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(this.molecule, Newtonsoft.Json.Formatting.Indented);
             pictureBox2.Image = PUGGetCompoundImage(enumerator.Current.Structure_SMILES, enumerator.Current.Substance_CASRN);
             checkedListBox1.Items.Add("Other");
             if (molecule.Aromatic) checkedListBox1.Items.Add("AROMATIC");
