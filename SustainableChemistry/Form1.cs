@@ -391,8 +391,10 @@ namespace SustainableChemistry
                 var refs = m_References.GetReferences(f);
                 foreach (ChemInfo.Reference r in refs) references.Add(r.ToString());
             }
-            ReferenceList form = new ReferenceList();
-            form.References = m_References;
+            ReferenceList form = new ReferenceList
+            {
+                References = m_References
+            };
             form.ShowDialog();
         }
 
@@ -557,8 +559,10 @@ namespace SustainableChemistry
             {
                 string fileName = documentPath + "\\chemicals.json";
                 //Reads in functional groups from JSON file. This should be used after Excel file is completed.
-                var json = new System.Web.Script.Serialization.JavaScriptSerializer();
-                json.MaxJsonLength = 20000000;
+                var json = new System.Web.Script.Serialization.JavaScriptSerializer
+                {
+                    MaxJsonLength = 20000000
+                };
                 List<DSSToxChemicals> chemicals = null;
                 using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName))
                 {

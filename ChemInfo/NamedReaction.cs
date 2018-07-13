@@ -331,8 +331,8 @@ namespace ChemInfo
     public class NamedReaction
     {
         References m_refList;
-        List<System.Drawing.Image> m_RxnImage;
         FunctionalGroup m_FunctionalGroup;
+        List<System.Drawing.Image> m_RxnImage;
         [NonSerialized] List<string> m_ByProducts;
         SOLVENT m_Solvent;
         AcidBase m_AcidBase;
