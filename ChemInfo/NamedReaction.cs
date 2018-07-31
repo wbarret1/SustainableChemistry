@@ -331,19 +331,51 @@ namespace ChemInfo
     public class NamedReaction
     {
         References m_refList;
-        FunctionalGroup m_FunctionalGroup;
         List<System.Drawing.Image> m_RxnImage;
         [NonSerialized] List<string> m_ByProducts;
         SOLVENT m_Solvent;
         AcidBase m_AcidBase;
 
+        public NamedReaction(string line)
+        {
+            string[] parts = line.Split('\t');
+            Name = parts[1];
+            FunctionalGroup = parts[0];
+            m_refList = new References();
+            m_RxnImage = new List<System.Drawing.Image>();
+            string directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\" + parts[0] + "\\" + parts[1];
+            if (System.IO.Directory.Exists(directory))
+            {
+                string[] imageFiles = System.IO.Directory.GetFiles(directory, "*.jpg");
+                foreach (string file in imageFiles)
+                    m_RxnImage.Add(System.Drawing.Image.FromFile(file));
+                string[] references = System.IO.Directory.GetFiles(directory, "*.ris");
+                foreach (string file in references)
+                    m_refList.Add(new Reference(FunctionalGroup, Name, System.IO.File.ReadAllText(file)));
+            }
+            //Reactants = reactants;
+            URL = parts[2];
+            ReactantA = parts[3];
+            ReactantB = parts[4];
+            ReactantC = parts[5];
+            Product = parts[10];
+            Heat = parts[7];
+            this.SetAcidBase(parts[6]);
+            Catalyst = parts[8];
+            this.SetSolvent(parts[9]);
+            m_ByProducts = new List<string>();
+            m_ByProducts.Add(parts[11]);
+        }
+
         public NamedReaction(FunctionalGroup functGroup, string name, string url, string reactA, string reactB, string reactC, string product, string acidBase, string heat, string catalyst, string solvent, string[] byPrduct)
         {
             Name = name;
-            m_FunctionalGroup = functGroup;
+            FunctionalGroup = functGroup.Name;
             m_refList = new References();
             m_RxnImage = new List<System.Drawing.Image>();
-            string directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\" + functGroup;
+            string directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\" + functGroup + "\\" + Name;
+            if (functGroup.Name == "PHOSPHONATE ESTER")
+                directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry\\" + functGroup + "\\" + Name;
             if (System.IO.Directory.Exists(directory))
             {
                 string[] imageFiles = System.IO.Directory.GetFiles(directory, "*.jpg");
@@ -367,6 +399,12 @@ namespace ChemInfo
             m_ByProducts = new List<string>();
         }
 
+        public Reference GetReference(string value)
+        {
+            return this.m_refList[value];
+        }
+
+        public string FunctionalGroup { get; set; }
         public string Name { get; set; }
         public string URL { get; set; }
         //public string[] Reactants { get; set; }

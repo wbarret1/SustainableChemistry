@@ -29,18 +29,22 @@ namespace SustainableChemistry
     {
 
         ChemInfo.Molecule molecule;
+        System.Data.DataTable NamedReactions;
+        System.Data.DataTable FunctionalGroups;
         //List<ChemInfo.FunctionalGroup> functionalGroups;
         //List<ChemInfo.FunctionalGroup> m_FGroups;
         static Encoding enc8 = Encoding.UTF8;
         ChemInfo.References m_References;
         string documentPath;
         ChemInfo.FunctionalGroupCollection fGroups;
+        ChemInfo.NamedReactionCollection reactions;
 
         public Form1()
         {
             InitializeComponent();
             molecule = new ChemInfo.Molecule();
             fGroups = new ChemInfo.FunctionalGroupCollection();
+            reactions = new ChemInfo.NamedReactionCollection();
             this.trackBar1.Value = (int)(this.moleculeViewer1.Zoom * 100);
             documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\USEPA\\SustainableChemistry";
 
@@ -90,12 +94,12 @@ namespace SustainableChemistry
         private void OpenFunctionGroupExcelResource()
         {
             // Reads functional Groups from Excel file.
-            List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
-            string fileName = documentPath + "\\Full Functional Group List 20180710.xlsx";
+            //List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
+            string fileName = documentPath + "\\Full Functional Group List 20180731.xlsx";
             using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
-                DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData = GetWorkSheetFromSheet(wbPart, GetSheetFromName(wbPart, "Full Functional Group List 2018")).Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
+                DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData = GetWorkSheetFromSheet(wbPart, GetSheetFromName(wbPart, "Full Functional Group List")).Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
 
                 string text = string.Empty;
                 bool first = true;
@@ -107,7 +111,26 @@ namespace SustainableChemistry
                         {
                             text = text + this.GetExcelCellValue(c, wbPart) + '\t';
                         }
-                        functionalGroupStrs.Add(text);
+                        ChemInfo.FunctionalGroup temp = fGroups.Add(text);
+                        string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
+                        if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
+                    }
+                    text = string.Empty;
+                    first = false;
+                }
+                sheetData = GetWorkSheetFromSheet(wbPart, GetSheetFromName(wbPart, "Reaction List")).Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>().First();
+                text = string.Empty;
+                first = true;
+                foreach (DocumentFormat.OpenXml.Spreadsheet.Row r in sheetData.Elements<DocumentFormat.OpenXml.Spreadsheet.Row>())
+                {
+                    if (!first)
+                    {
+                        foreach (DocumentFormat.OpenXml.Spreadsheet.Cell c in r.Elements<DocumentFormat.OpenXml.Spreadsheet.Cell>())
+                        {
+                            text = text + this.GetExcelCellValue(c, wbPart) + '\t';
+                        }
+                        fGroups.AddReaction(new ChemInfo.NamedReaction(text));
+                        
                     }
                     text = string.Empty;
                     first = false;
@@ -115,49 +138,49 @@ namespace SustainableChemistry
                 document.Close();
             }
 
-            // This next line creates a list of strings that don't have images. Can be commented out!
-            List<string> missingImages = new List<string>();
+            //// This next line creates a list of strings that don't have images. Can be commented out!
+            //List<string> missingImages = new List<string>();
 
-            // Creates the collection of functional groups.
-            foreach (string line in functionalGroupStrs)
-            {
-                ChemInfo.FunctionalGroup temp = fGroups.Add(line);
-                string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
-                if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
+            //// Creates the collection of functional groups.
+            //foreach (string line in functionalGroupStrs)
+            //{
+            //    ChemInfo.FunctionalGroup temp = fGroups.Add(line);
+            //    string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
+            //    if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
 
-                //this line adds the missing image to the list of missing images. Can be commented out.
-                else missingImages.Add(temp.Name);
-            }
-            // Writes the missing images to a file.
+            //    //this line adds the missing image to the list of missing images. Can be commented out.
+            //    else missingImages.Add(temp.Name);
+            //}
+            //// Writes the missing images to a file.
 
-            // Write the string array to a new file named "WriteLines.txt".
-            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\MissingImages.txt"))
-            {
-                foreach (string line in missingImages)
-                    outputFile.WriteLine(line);
-            }
+            //// Write the string array to a new file named "WriteLines.txt".
+            //using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\MissingImages.txt"))
+            //{
+            //    foreach (string line in missingImages)
+            //        outputFile.WriteLine(line);
+            //}
 
-            string[] imageFiles = System.IO.Directory.GetFiles(documentPath + "\\Images\\");
-            string[] groupNames = fGroups.FunctionalGroups;
-            List<string> extraImages = new List<string>();
-            foreach (string name in imageFiles)
-            {
-                string temp = name.Replace(documentPath + "\\Images\\", string.Empty);
-                temp = temp.Replace(".jpg", string.Empty);
-                bool add = true;
-                foreach (string gName in groupNames)
-                {
-                    if (temp.ToUpper() == gName.ToUpper()) add = false;
-                }
-                if (add) extraImages.Add(temp);
-            }
+            //string[] imageFiles = System.IO.Directory.GetFiles(documentPath + "\\Images\\");
+            //string[] groupNames = fGroups.FunctionalGroups;
+            //List<string> extraImages = new List<string>();
+            //foreach (string name in imageFiles)
+            //{
+            //    string temp = name.Replace(documentPath + "\\Images\\", string.Empty);
+            //    temp = temp.Replace(".jpg", string.Empty);
+            //    bool add = true;
+            //    foreach (string gName in groupNames)
+            //    {
+            //        if (temp.ToUpper() == gName.ToUpper()) add = false;
+            //    }
+            //    if (add) extraImages.Add(temp);
+            //}
 
-            // Write the string array to a new file named "WriteLines.txt".
-            using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\ExtraImages.txt"))
-            {
-                foreach (string line in extraImages)
-                    outputFile.WriteLine(line);
-            }
+            //// Write the string array to a new file named "WriteLines.txt".
+            //using (System.IO.StreamWriter outputFile = new System.IO.StreamWriter(documentPath + @"\ExtraImages.txt"))
+            //{
+            //    foreach (string line in extraImages)
+            //        outputFile.WriteLine(line);
+            //}
         }
 
         private void importFormTESTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -195,6 +218,17 @@ namespace SustainableChemistry
             }
 
             this.textBox1.Text = Newtonsoft.Json.JsonConvert.SerializeObject(this.molecule, Newtonsoft.Json.Formatting.Indented);
+            foreach (ChemInfo.FunctionalGroup group in this.molecule.FunctionalGroups) this.functionalGroupComboBox.Items.Add(group.Name);
+            //if (this.molecule.FunctionalGroups.Length > 0)
+                
+            //    if (this.molecule.FunctionalGroups[0].NamedReactions.Count > 0)
+            //    {
+            //        this.pictureBox1.Image = this.molecule.FunctionalGroups[0].NamedReactions[0].ReactionImage[0];
+            //        foreach (ChemInfo.Reference r in this.molecule.FunctionalGroups[0].NamedReactions[0].References)
+            //        {
+            //            this.listBox1.Items.Add(r.ToString());
+            //        }
+            //    }
         }
 
         private void phosphorousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -615,6 +649,32 @@ namespace SustainableChemistry
             if (molecule.HeterocyclicAromatic) checkedListBox1.Items.Add("HETEROCYCLICAROMATIC");
             checkedListBox1.Items.AddRange(enumerator.Current.FunctionalGroups);
             tabPage4.Tag = enumerator;
+        }
+
+        private void functionalGroupComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.namedReactionComboBox.Items.Clear();
+            foreach (ChemInfo.NamedReaction reaction in fGroups[this.functionalGroupComboBox.SelectedItem.ToString()].NamedReactions)
+                this.namedReactionComboBox.Items.Add(reaction.Name);
+        }
+        // O=P(OC)(OC)C
+
+        private void namedReactionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChemInfo.NamedReaction reaction = fGroups[this.functionalGroupComboBox.SelectedItem.ToString()].NamedReactions[this.namedReactionComboBox.SelectedItem.ToString()];
+            if (reaction.ReactionImage.Length > 0)
+                this.pictureBox1.Image = reaction.ReactionImage[0];
+            this.listBox1.Items.Clear();
+            this.listBox1.Items.AddRange(reaction.References.ToArray());
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            ChemInfo.NamedReaction reaction = fGroups[this.functionalGroupComboBox.SelectedItem.ToString()].NamedReactions[this.namedReactionComboBox.SelectedItem.ToString()];
+            ChemInfo.Reference r = reaction.GetReference(this.listBox1.SelectedItem.ToString());
+            if (r != null)
+                if (!string.IsNullOrEmpty(r.URL))
+                    System.Diagnostics.Process.Start(r.URL);
         }
     }
 }

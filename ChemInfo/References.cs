@@ -45,6 +45,22 @@ namespace ChemInfo
             return retVal.ToArray<Reference>();
         }
 
+        public Reference this[string text]
+        {
+            get
+            {
+                foreach (Reference r in this)
+                {
+                    if (r.ToString() == text)
+                    {
+                        return r;
+                    }
+                }
+                return null;
+            }
+        }
+
+
         public List<string[]> ReferenceList
         {
             get

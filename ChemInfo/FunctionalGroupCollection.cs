@@ -114,6 +114,12 @@ namespace ChemInfo
             m_NamedReactions.Add(reaction);
         }
 
+        public void AddReaction(NamedReaction reaction)
+        {
+            this[reaction.FunctionalGroup].AddNamedReaction(reaction);
+            m_NamedReactions.Add(reaction);
+        }
+
         //[System.ComponentModel.Browsable(false)]
         //public string AtomList
         //{
