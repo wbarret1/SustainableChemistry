@@ -231,30 +231,27 @@ namespace ChemInfo
         private List<Atom> m_ConnectedAtoms = new List<Atom>();
 
         //int degree;
-        ELEMENTS e;
+        ELEMENTS m_Element;
         int m_Isotope;
         int m_Charge;
         int m_ExplicitHydrogens;
         Chirality m_Chiral;
-        System.Drawing.Color m_Color;
         int _x = 0;
         int _y = 0;
-        public bool Visited { get; set; } = false;
         System.Random random = new Random();
-        public bool inGroup { get; set; } = false;
 
         // Constructors
         public Atom(string element)
         {
-            if (element == "*") e = ELEMENTS.WILD_CARD;
-            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") m_Element = ELEMENTS.WILD_CARD;
+            else m_Element = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = 0;
             //degree = 0;
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
             m_Chiral = Chirality.UNSPECIFIED;
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.SetColor(ChemInfo.Element.ElementColor(m_Element));
             //this.m_AtomicMass = ChemInfo.Element.ExactMass(e);
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
@@ -263,17 +260,17 @@ namespace ChemInfo
 
         public Atom(string element, AtomType type)
         {
-            if (element == "*") e = ELEMENTS.WILD_CARD;
-            else if (element == "X") e = ELEMENTS.Halogen;
-            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") m_Element = ELEMENTS.WILD_CARD;
+            else if (element == "X") m_Element = ELEMENTS.Halogen;
+            else m_Element = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = 0;
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
             AtomType = type;
             m_Chiral = Chirality.UNSPECIFIED;
-            if (this.Element != ELEMENTS.Halogen) this.SetColor(ChemInfo.Element.ElementColor(e));
-            else this.SetColor(System.Drawing.Color.FromName("olivedrab"));
+            if (this.Element != ELEMENTS.Halogen) this.SetColor(ChemInfo.Element.ElementColor(m_Element));
+            else Color = System.Drawing.Color.FromName("olivedrab");
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
@@ -282,15 +279,15 @@ namespace ChemInfo
         public Atom(string element, AtomType type, Chirality chirality)
         {
             //degree = 0;
-            if (element == "*") e = ELEMENTS.WILD_CARD;
-            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") m_Element = ELEMENTS.WILD_CARD;
+            else m_Element = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = 0;
             m_Isotope = 0;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
             AtomType = AtomType.NONE;
             m_Chiral = chirality;
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.SetColor(ChemInfo.Element.ElementColor(m_Element));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
@@ -299,15 +296,15 @@ namespace ChemInfo
         public Atom(string element, int isotope)
         {
             //degree = 0;
-            if (element == "*") e = ELEMENTS.WILD_CARD;
-            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") m_Element = ELEMENTS.WILD_CARD;
+            else m_Element = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = 0;
             isotope = (byte)isotope;
             m_Charge = 0;
             m_Chiral = Chirality.UNSPECIFIED;
             AtomType = AtomType.NONE;
             m_Chiral = Chirality.UNSPECIFIED;
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.SetColor(ChemInfo.Element.ElementColor(m_Element));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
@@ -316,25 +313,36 @@ namespace ChemInfo
         public Atom(string element, AtomType type, int isotope, Chirality chirality, int hCount, int charge, int atomClass)
         {
             //degree = 0;
-            if (element == "*") e = ELEMENTS.WILD_CARD;
-            else e = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
+            if (element == "*") m_Element = ELEMENTS.WILD_CARD;
+            else m_Element = (ELEMENTS)Enum.Parse(typeof(ELEMENTS), element);
             m_ExplicitHydrogens = hCount;
             m_Isotope = isotope;
             m_Charge = charge;
             m_Chiral = chirality;
             AtomType = type;
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.SetColor(ChemInfo.Element.ElementColor(m_Element));
             _x = (int)(random.NextDouble() * 100);
             _y = (int)(random.NextDouble() * 100);
             //m_WeiningerInvariant = new WeiningerInvariant(this);
         }
 
+        [System.ComponentModel.Browsable(false)]
+        public bool Visited { get; set; } = false;
+        [System.ComponentModel.Browsable(false)]
+        public bool inGroup { get; set; } = false;
+
+        /// <summary>
+        /// Gets the atomic number of the current element.
+        /// </summary>
+        /// <remarks>
+        /// The atomic number is the 
+        /// </remarks>
         [Newtonsoft.Json.JsonProperty]
         public int AtomicNumber
         {
             get
             {
-                return (int)e;
+                return (int)m_Element;
             }
         }
 
@@ -343,7 +351,7 @@ namespace ChemInfo
         {
             get
             {
-                return e.ToString();
+                return m_Element.ToString();
             }
         }
 
@@ -352,33 +360,35 @@ namespace ChemInfo
         {
             get
             {
-                return ChemInfo.Element.Name(e);
+                return ChemInfo.Element.Name(m_Element);
             }
         }
 
+        /// <summary>
+        /// Gets the atom's color.
+        /// </summary>
+        /// <remarks>
+        /// The atom color is represented as a <see cref="System.Drawing.Color"/> value.
+        /// </remarks>
+        /// <value>The atom's color.</value>
         [Newtonsoft.Json.JsonProperty]
-        public System.Drawing.Color Color
-        {
-            get
-            {
-                return m_Color;
-            }
-            set
-            {
-                m_Color = value;
-            }
-        }
+        public System.Drawing.Color Color { get; set; }
 
+        /// <summary>
+        /// Gets the number of non-Hydrogen atoms connected to the current atom.
+        /// </summary>
+        /// <remarks>
+        /// The degree is the number of non-Hydrogen atoms connected to the current atom. Hydrogens are excluded from the connected atom count because 
+        /// of the way that hydrogens are handled on organic atoms. The <a href="http://opensmiles.org/opensmiles.html#orgsbst">OpenSmiles Specification</a> for an
+        /// organic atom indicates that implicit hydrogens are added such that the valence of the atom is in its lowest normal state for the element. 
+        /// </remarks>
+        /// <value>Number of connected non-Hydrogen atoms.</value>
         [Newtonsoft.Json.JsonProperty]
         public int Degree
         {
             get
             {
-                if (this.ExplicitHydrogens > 0)
-                {
-
-                }
-                return this.ConnectedAtoms.Length + this.NumHydrogens;
+                return this.ConnectedAtoms.Length;
             }
         }
 
@@ -402,10 +412,12 @@ namespace ChemInfo
                             if (testBond.ConnectedAtom == this) b = testBond;
                         }
                     }
-                    if ((b.BondType == BondType.Single) || (b.BondType == BondType.Aromatic)) retVal = retVal + 1;
+                    if (b.BondType == BondType.Single) retVal = retVal + 1;
+                    if (b.BondType == BondType.Aromatic) retVal = retVal + 1;
                     if (b.BondType == BondType.Double) retVal = retVal + 2;
                     if (b.BondType == BondType.Triple) retVal = retVal + 3;
                 }
+                if (this.AtomType == AtomType.AROMATIC) retVal = retVal + 1;
                 return retVal;
             }
         }
@@ -536,7 +548,7 @@ namespace ChemInfo
             }
         }
 
-        public ELEMENTS Element { get { return e; } }
+        public ELEMENTS Element { get { return m_Element; } }
 
         public int Isotope
         {
@@ -647,26 +659,21 @@ namespace ChemInfo
 
         void SetColor(int[] argb)
         {
-            if (argb.Length == 3) this.m_Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]);
-            else if (argb.Length == 4) this.m_Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);
-            else m_Color = System.Drawing.Color.Black;
+            if (argb.Length == 3) this.Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2]);
+            else if (argb.Length == 4) this.Color = System.Drawing.Color.FromArgb(argb[0], argb[1], argb[2], argb[3]);
+            else this.Color = System.Drawing.Color.Black;
         }
-
-        void SetColor(System.Drawing.Color color)
-        {
-            this.m_Color = color;
-        }
-
+ 
         void ResetColor(System.Drawing.Color color)
         {
-            this.SetColor(ChemInfo.Element.ElementColor(e));
+            this.SetColor(ChemInfo.Element.ElementColor(m_Element));
         }
 
         public System.Drawing.Color DefaultColor
         {
             get
             {
-                int[] c = ChemInfo.Element.ElementColor(e);
+                int[] c = ChemInfo.Element.ElementColor(m_Element);
                 if (c.Length == 3) return System.Drawing.Color.FromArgb(c[0], c[1], c[2]);
                 else if (c.Length == 4) return System.Drawing.Color.FromArgb(c[0], c[1], c[2], c[3]);
                 else return System.Drawing.Color.Black;
@@ -698,7 +705,7 @@ namespace ChemInfo
         {
             get
             {
-                return ChemInfo.Element.ExactMass(e);
+                return ChemInfo.Element.ExactMass(m_Element);
             }
         }
 
@@ -706,9 +713,9 @@ namespace ChemInfo
         {
             get
             {
-                if (e == ELEMENTS.Halogen) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.Cl);
-                if (e == ELEMENTS.WILD_CARD) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.C);
-                return ChemInfo.Element.CovalentRadius(e);
+                if (m_Element == ELEMENTS.Halogen) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.Cl);
+                if (m_Element == ELEMENTS.WILD_CARD) return ChemInfo.Element.CovalentRadius(ChemInfo.ELEMENTS.C);
+                return ChemInfo.Element.CovalentRadius(m_Element);
             }
         }
 

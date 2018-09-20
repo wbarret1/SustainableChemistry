@@ -883,8 +883,8 @@ namespace ChemInfo
                 return false;
             }
             if (atom1.Element != atom2.Element) return false;
-            //if (atom1.Degree == 1) return true;
             if (atom1.ExplicitHydrogens > atom2.NumHydrogens) return false;
+            if (atom1.Degree == 1) return true;
             if (atom1.Degree != atom2.Degree) return false;
             return true;
         }
