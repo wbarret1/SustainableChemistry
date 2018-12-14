@@ -42,6 +42,11 @@ namespace SustainableChemistry
         public Form1()
         {
             InitializeComponent();
+            //System.Data.SQLite.SQLiteConnection.CreateFile("MyDatabase.sqlite");
+
+            System.Data.SQLite.SQLiteConnection m_dbConnection = new System.Data.SQLite.SQLiteConnection("Data Source=..\\..\\Data\\SustainableChemistry.sqlite;Version=3;");
+            m_dbConnection.Open();
+
             molecule = new ChemInfo.Molecule();
             fGroups = new ChemInfo.FunctionalGroupCollection();
             reactions = new ChemInfo.NamedReactionCollection();

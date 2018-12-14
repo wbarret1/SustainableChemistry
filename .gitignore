@@ -240,3 +240,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/SustainableChemistry/Data/Full Functional Groups.txt
+/SustainableChemistry/Data/sqlite3.exe
+/SustainableChemistry/Data/Reactions.txt
