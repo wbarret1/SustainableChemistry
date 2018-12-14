@@ -461,9 +461,9 @@ namespace ChemInfo
             get
             {
                 if (m_AcidBase == ChemInfo.AcidBase.ACID) return "acid";
-                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base";
-                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base/heat";
-                if (m_AcidBase == ChemInfo.AcidBase.ACID) return "base/acid";
+                if (m_AcidBase == ChemInfo.AcidBase.BASE) return "base";
+                if (m_AcidBase == ChemInfo.AcidBase.BASE) return "base/heat";
+                if (m_AcidBase == ChemInfo.AcidBase.ACID_BASE) return "base/acid";
                 return "N/A";
             }
             set

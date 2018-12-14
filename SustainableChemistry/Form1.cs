@@ -50,7 +50,7 @@ namespace SustainableChemistry
 
             this.OpenFunctionGroupExcelResource();
 
-            System.IO.FileStream fs = new System.IO.FileStream(documentPath + "\\references.dat", System.IO.FileMode.Open);
+            System.IO.FileStream fs = new System.IO.FileStream("..\\..\\Data\\references.dat", System.IO.FileMode.Open);
 
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
             System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
@@ -95,7 +95,7 @@ namespace SustainableChemistry
         {
             // Reads functional Groups from Excel file.
             //List<string> functionalGroupStrs = new List<string>();// SustainableChemistry.Properties.Resources.Full_Functional_Group_List;
-            string fileName = documentPath + "\\Full Functional Group List 20180731.xlsx";
+            string fileName = "..\\..\\Data\\Full Functional Group List 20180731.xlsx";
             using (DocumentFormat.OpenXml.Packaging.SpreadsheetDocument document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(fileName, false))
             {
                 DocumentFormat.OpenXml.Packaging.WorkbookPart wbPart = document.WorkbookPart;
@@ -112,7 +112,7 @@ namespace SustainableChemistry
                             text = text + this.GetExcelCellValue(c, wbPart) + '\t';
                         }
                         ChemInfo.FunctionalGroup temp = fGroups.Add(text);
-                        string filename = documentPath + "\\Images\\" + temp.Name.ToLower() + ".jpg";
+                        string filename = "..\\..\\Images\\" + temp.Name.ToLower() + ".jpg";
                         if (System.IO.File.Exists(filename)) temp.Image = System.Drawing.Image.FromFile(filename);
                     }
                     text = string.Empty;
